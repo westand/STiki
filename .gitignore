@@ -1,4 +1,3 @@
-
 #############################################################################
 #
 # Andrew G. West - .gitignore - Files which should not be transferred from 
@@ -9,7 +8,7 @@
 #############################################################################
 
   # These classes have the credentials for the database connection. An
-  # examplewith redacted data is stored in the [deploy_source/] directory
+  # example with redacted data is stored in the [deploy_source/] directory
 /db_client/stiki_con_client.java
 /db_server/stiki_con_server.java
 
