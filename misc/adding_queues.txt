@@ -1,0 +1,80 @@
+#############################################################################
+#
+# Andrew G. West - adding_queues.txt - This document describes the steps
+# necessary in order to add an edit queue to STiki. This includes the
+# components to (1) enqueue/store edits on the server-side, and (2) make that
+# queue available to frontend users on the client-side.
+#
+#############################################################################
+
+  GLOBAL MODIFICATIONS
+
+  [1]:  The [SCORE_SYS] enumeration of the [stiki_utils.java] class in the
+        [core_objects] package should be extended to include the new system.
+        This serves as the system identifier throughout code.
+        
+  [2]:  In that same class, [queue_to_constant()] and [constant_to_queue()]
+        methods should be updated, mapping identifiers to integer codes.
+        Similarly, [queue_to_type()] should be updated. Table constants
+        should also be added in a similar format to other queues.
+        
+  [3]:  In the database, table [default_queue] should be updated. The update
+        should be fairly obvious per the definition of that table.
+       
+
+  SERVER-SIDE MODIFICATIONS
+
+  [1]:  Database tables need added to support the new system, one for
+        historical storage of scores (of the form [scores_*]), and another 
+        for active queueing (of the form [queue_*]). These tables must
+        duplicate the structure of existing tables of the same form, exactly.
+        See see the [db_schema.sql] document in the [misc] folder.
+       
+  [2]:  These tables need interfaced. This is done in the [qmanager_server.java]
+        class in the [db_server] package. EVERY method needs to be modified.
+        However, it is easy to duplicate the patterns in existing methods.
+       
+  [3]:  The scores for the new queue need to be calculated or obtained.
+        Whether an API call or a complete calculation engine, the code
+        that enables this should be placed in the [ext_queue] package. The
+        public methods of the modified [qmanager_server.java] class should
+        be called in order to maintain the queue.
+        
+  [4]:  The new queue needs to be "hooked" into the existing processing 
+        engine. This can take two forms. If the system PUBLISHES or PUSHES
+        edits (like the IRC feed of "Cluebot-NG"), then a reader class can
+        be created and hooked into the top-level [stiki_backend_driver.java]
+        class of the [executables] package. If scores need to be PULLED
+        on a per-edit basis (as with "WikiTrust"), then the call probably 
+        should be made in the [edit_process_thread.java] class of 
+        the [edit_processing] package.
+  
+  
+  CLIENT-SIDE MODIFICATIONS
+ 
+  [1]:  A DB stored procedure (SP) needs ADDED to support client-side queue
+        fetches. Specifically, a SP of the form [client_queue_fetch_*.sql]
+        needs authored, mimicking the other procedures of the same format
+        (changing/adding table names). The client user should also be given
+        permissions to EXCEUTE this procedure.
+  
+  [2]:  This procedure needs hooked into code by modifying the 
+        [queue_fetch()] method of the [qmanager_client.java] class in the 
+        [db_client] package. Some supporting variables are needed.
+
+  [3]:  Existing SPs need MODIFIED so queues have "cascading" behavior (i.e.,
+        a classification in one, is a classification in all). Straightforward
+        modifications are needed to [client_feedback_insert.sql] and ALL
+        SPs of the form [client_queue_*.sql].
+
+  [4]:  The queue needs added to the "Queue" selection menu. This is done
+        with an initialization in the [gui_menu_queue.java] class of the 
+        [gui_menus] package and modifications to the ActionListener therein.
+        The [set_initial_state()] method of that class will also need modified.
+        
+  [5]:  The [client_recent_use.sql] stored procedure needs modified to
+        include the new queue. Similarly, the GUI functionality which
+        issues this query will need to have its output modified. 
+
+
+#################################### END ####################################

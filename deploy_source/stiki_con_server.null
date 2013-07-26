@@ -1,0 +1,99 @@
+package db_server;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import core_objects.stiki_utils;
+
+/**
+ * Andrew G. West - stiki_con_server.java - This is a simple type wrapping
+ * a SERVER connection to the STiki database -- with full privileges.
+ * 
+ * Client and server types are being made explicit to avoid confusion
+ * and leakage of sensitive database connection parameters.
+ * 
+ * If you came to acquire this source-file as part of the STiki
+ * source code distribution, you will notice that the credential fields
+ * have been obfuscated -- and no connection using them will succeed.
+ * 
+ * Thus, this class must be modified in either of two ways: (1) You will need
+ * to setup your own STiki server and provide the connection parameters
+ * here, or (2) You will need to contact the STiki authors in order to receive
+ * a user/pass to use the main STiki server. 
+ * 
+ * The STiki authors are willing to help researchers/developers in performing
+ * either selection. Their contact information can be found in the README
+ * file that should acommpany this distribution 
+ */
+public class stiki_con_server{
+  
+  // **************************** PUBLIC FIELDS ****************************
+  
+  /**
+   * The connection itself is just a basic JDBC-SQL connection.
+   */
+  public final Connection con;
+  
+  
+  // **************************** PRIVATE FIELDS ****************************
+  
+  /**
+   * This would have once held the location of the STiki server. However,
+   * with potential employment changes on the horizon, it is prudent to
+   * build in some flexibility. Thus, this field now points to the HTTP
+   * address of a single text file, which contains the location of the
+   * STiki server. This DNS routing is under my inpendent control. Although
+   * it adds nother point of failure (the web server), it seems a
+   * necessary move at this time. 
+   * 
+   * The location current reads:
+   * jdbc:mysql://armstrong.cis.upenn.edu:3306/presta_stiki?user=#&password=#
+   * with the pound sign as a variable place-holder.
+   */
+  private static final String HTTP_CON_LOC = 
+      "http://www.andrew-g-west.com/docs/stiki_location.txt";
+
+  
+  // **************************** CONSTRUCTORS *****************************
+  
+  /**
+   * The only way to create such a connection is by connecting to the
+   * STiki server with credentials specific to a fully privileged user.
+   */
+  public stiki_con_server(){
+    this.con = get_con();
+  }
+
+  
+  // *************************** PUBLIC METHODS ****************************
+  
+  /**
+   * Close the DB connection instantiated by this class. 
+   */
+  public void shutdown() throws Exception{
+    this.con.close();
+  }
+
+  
+  // ************************** PRIVATE METHODS ****************************
+  
+  /**
+   * Retrieve a fully-privileged connection to the 'PreSTA-STiki' database.
+   * @return Connection to DB, or NULL if there was a connection error
+   */
+  private static Connection get_con(){
+    String url = "";
+    Connection con = null; 
+    try{url = stiki_utils.str_from_url(HTTP_CON_LOC, 1);
+      url = url.replaceFirst("#", "XXXXXXXXX"); // username
+      url = url.replaceFirst("#", "XXXXXXXXX"); // password
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      con = DriverManager.getConnection(url);
+    } catch(Exception e){
+      System.err.println("Error opening DB connection");
+      e.printStackTrace();
+    } // Also output a message to system.err
+    return con; 
+  }
+  
+}

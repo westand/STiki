@@ -1,0 +1,270 @@
+<HTML>
+<HEAD>
+  <TITLE>
+    STiki Help Document (v2.1)
+  </TITLE>
+</HEAD>
+<BODY>
+
+  <A NAME="sec_top"/><BR>
+  <FONT SIZE="+2"><B><CENTER>STiki Help Document (v2.1)</B></CENTER></FONT><BR>
+
+<!--###################################################################### -->
+
+<P><B>STiki</B> is a utility for the detection and reversion of <I>vandalism</I> on Wikipedia. STiki uses state-of-the-art detection methods to determine which edits should be shown to end users. If a displayed edit is vandalism, STiki then streamlines the reversion and warning process. Critically, STiki is a collaborative approach to reverting vandalism, not a user-centric one -- the list of edits to be inspected is consumed in a crowd-sourced fashion. Architecturally, STiki consists of two high-level components:
+<BR>
+<TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+  <LI><B>Backend processing</B> that watches all changes to Wikipedia and calculates/fetches the probability that each is vandalism. Multiple techniques are applied to each edit -- some developed by STiki's authors -- and others developed by third-parties. These scores are used to enqueue edits, such that those most likely to be vandalism are shown to end-users first. Backend work is done on STiki's servers and likely is not of interest to casual users. <P>
+
+  <LI><B>A frontend GUI</B> that presents likely-vandalism (found on the backend) to human users for classification. The interface is designed to enable the quick review and reversion of poor edits. Moreover, the classification process establishes a feedback loop to improve detection algorithms.</TD></TR></TABLE>
+<BR>
+This document concerns itself primarily with the user-facing GUI. Once installed, STiki requires only that: (1) an <I>Internet connection</I> is maintained (with outbound port 3306 [MySQL] open), and that (2) a user has a <I>Wikipedia account with sufficient permissions</I>, having either: (a) The <A HREF="http://en.wikipedia.org/wiki/Wikipedia:Rollback">rollback permission</A>, (b) greater than 1000 edits to Wikipedia's article namespace, or (c) explicit access as can be request at <A HREF="http://en.wikipedia.org/wiki/Wikipedia_talk:STiki">STiki's talk page</A>. This document proceeds by discussing the STiki components in greater depth. 
+<P>
+Summarily, the backend engine populates a number of <A HREF="#sec_queue">edit queues</A> -- one for each scoring technique -- determining which edits a human will classify. In particular, the <A HREF="#sec_stiki_scoring">metadata scoring technique</A> and  <A HREF="#sec_link_spam">anti-link-spam technique</A>, both developed by STiki's authors, are discussed in some detail. Having selected a queue to use, an end-user may use <A HREF="#sec_filter">revision filters</A> to further constrain the edits displayed. 
+<P>
+Edits are ultimately presented in the <A HREF="#sec_browser">diff browser</A> and their metadata in the <A HREF="#sec_metadata">edit properties panel</A>. After inspection, a classification is submitted via the <A HREF="#sec_class">classification buttons</A>. A <A HREF="#sec_login">login panel</A> and <A HREF="#sec_comment">reversion comment panel</A> customize how STiki interacts with Wikipedia, and the <A HREF="#sec_lastrevert">last revert panel</A> summarizes completed actions. Some discussion on the expected <A HREF="#sec_performance">performance</A> of STiki is also provided. 
+<P>
+Also included in this distribution is the <A HREF="#sec_ort">Offline Review Tool (ORT)</A>. The ORT takes a user provided set of edits, presents them in a reduced-functionality setting (no changes to Wikipedia are made), and writes binary classifications. The ORT should prove useful for corpus-building researchers. 
+
+<BR><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_queue"/><BR>
+  <FONT SIZE="+1"><B>Revision Queues:</B></FONT>
+
+<P>The "Queue" menu allows a user to select which scoring system is the basis for the edits that will be displayed. Here we briefly describe the different queues available (some of which may be disabled for various reasons):
+
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+    <LI><B>Cluebot-NG:</B> <A HREF="http://en.wikipedia.org/wiki/User:ClueBot_NG">Cluebot-NG</A> (CBNG) is a bot which operates on Wikipedia, using an Artificial Neural Network (ANN) to score edits. The worst scoring edits are undone automatically. However. there are many edits that CBNG is quite confident are vandalism, but cannot revert due to a low false-positive tolerance, the one-revert-rule, or other constraints. These edits form the queue used by STiki. CBNG publishes scores to an IRC feed on which the STiki backend listens. Due to expected performance, this is currently the default queue.<P>
+
+    <LI><B>STiki (metadata):</B> This scoring system uses the <I>metadata</I> associated with an edit to arrive at vandalism predictions. Metadata includes properties such as the time-of-day an edit was made, the geographical location from which it originated, and the page on which it was made. More detail about this technique is available in the <A HREF="#sec_stiki_scoring">STiki Scoring System</A> section.<P>
+
+    <LI><B>WikiTrust:</B> Built upon editor reputations calculated from content-persistence is the <A HREF="http://en.wikipedia.org/wiki/WikiTrust">WikiTrust</A> system of Adler <I>et al.</I>. More details are available at their <A HREF="http://wikitrust.soe.ucsc.edu/">website</A>. WikiTrust calculates scores on their own servers, which are accessible via a publically available API.<P>
+
+    <LI><B>Anti-link-spam:</B> This queue targets a subset of the vandalism problem, <I>external link spam</I>. When selected, this queue makes minor changes to the functionality described in this document: (1) the "vandalism" classification button becomes a "spam" one, (2) the default revision comment is altered slightly, and (3) anti-spam warnings are issued on user talk pages instead of generalized "vandalism" ones. More details about the technique can be found in the  <A HREF="#sec_link_spam">Anti-link-spam Scoring</A> section.<P>
+
+    <LI><B>Meta (combination):</B> When implemented, this queue will act as a higher-order meta-classifier. That is, it will combine the logic of all other scoring queues in an attempt to produce an even more accurate system.
+  </TD></TR></TABLE>
+
+<P>An additional option in the queue menu allows a user to view <B>"recent usage stats"</B>. The popped dialog will show usage statistics for the prior hour. Large amounts of STiki use in a short period of time may "exhaust" queues and temporarily decrease vandalism hit-rates. A user noticing a high density of recent classifications may wish to return to the tool at a later time or use one of the less popular queues.
+
+<P>A final option in the queue menu allows one to <B>"generate leaderboard"</B>. This locally generates a slightly simplified version of the <A HREF="http://en.wikipedia.org/wiki/Wikipedia:STiki/leaderboard">public STiki leaderboard</A>. It should prove useful for those looking to examine their intra-daily stats and relative performance (whereas the public version only updates once daily).
+<B></B> 
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_stiki_scoring"/><BR>
+  <FONT SIZE="+1"><B>STiki Scoring System:</B></FONT>
+
+<P>Here a particular scoring system is highlighted, one focused on metadata processing. <I>Why this one?</I>. First, it was the <I>original</I> queue developed for the GUI. As a result, it shares a code-base (and name) with the STiki frontend.  Second, the name "STiki" is derived from the metadata technique (<B>S</B>patio <B>T</B>emporal Analysis over W<B>iki</B>pedia) -- though this acronymic meaning is downplayed when discussing the frontend. Lastly, the same people who wrote this document (and all the STiki code) are vain and promoting their own system.
+<P>
+The STiki queue ("metadata queue", hereafter) examines only 4 fields of an edit when scoring: (1) timestamp, (2) editor, (3) article, and (4) revision comment. These are used to calculate features pertaining to the editors registration status, edit time-of-day, edit day-of-week, geographical origin, page history, category memberships, revision comment length, <I>etc.</I>. These signals are given to a typical machine learning classifier (ADTree) to arrive at edit scores. A rigorous discussion of technique can be found in:
+
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD><I>
+West, A.G., Kannan, S., and Lee, I (2010). Detecting Wikipedia Vandalism via Spatio-Temporal Analysis of Revision Metadata. In EUROSEC '10: Proceedings of the Third European Workshop on System Security. Paris, France. (A preliminary version was published as UPENN-MS-CIS-10-05). </I></TD></TR></TABLE><BR>
+
+That paper was an academic attempt to show that language properties were not necessary to detect Wikipedia vandalism. It succeeded in this regard, but since then system has been relaxed for general-purpose use. For example, metadata processing now includes some simple NLP features. Moreover, there was the decision to integrate other <A HREF="#sec_queue">revision queues</A> in the GUI frontend.
+<P>
+A <A HREF="http://armstrong.cis.upenn.edu/stiki_api_readme.txt">public-facing API</A> has been been made available to the STiki/metadata scores. More can be learned about the software at <A HREF="http://en.wikipedia.org/wiki/WP:STiki">STiki's website</A> (including other citations appropriate for academic use).
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_link_spam"/><BR>
+  <FONT SIZE="+1"><B>Anti-link-spam Scoring System:</B></FONT>
+
+<P>Another scoring system targets the subset of vandalism referred to as <I>external link spam</I> -- hyperlinks pointing off-wiki which are inappropriate in nature. Intuitively, these additions are interesting because the editor that adds them presumably stands to profit (monetarily or otherwise), making him/her a more motivated attacker than the immature ones seen in common vandalism.
+<P>The scoring system operates by processing every external link addition to <I>en.wiki</I>. Features are derived from: (1) Wikipedia metadata: Similar to those calculated by the <A HREF="#sec_stiki_scoring">metadata queue</A>. (2) Landing site processing: Obtaining the source of the URL added and processing it for commercial intention, SEO strategies, <I>etc.</I>. (3) Third-party information: Alexa and the Google Safe-Browsing project are queried to gleam additional information. The resulting feature set is handed off to a machine-learning algorithm (ADTree) to produce the spam probabilities/scores used to enqueue edits for GUI users. A more rigorous discussion of the technique can be found in:
+
+<BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD><I>
+West, A.G., Agarwal, A., Baker, P., Exline, B., and Lee, I. (2011). Autonomous Detection of Link Spam in Purely Collaborative Environments. In WikiSym '11: Proceedings of the Seventh International Symposium on Wikis and Open Collaboration, Mountain View, CA, USA.</I></TD></TR></TABLE><BR>
+
+The "anti-link-spam" queue is described here because it was written by STiki's authors. The source-code is separate from the core-STiki engine, but also available at the <A HREF="http://en.wikipedia.org/wiki/WP:STiki">STiki website</A>. 
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_filter"/><BR>
+  <FONT SIZE="+1"><B>Revision Filters:</B></FONT>
+
+<P>The various <A HREF="#sec_queue">revision queues</A> contain all edits made on Wikipedia, sorted by vandalism probability. If a STiki user wants to further constrain the edits they review, then local <B>revision filters</B> should be applied. These are accessible via the STiki menu-bar. The following filters are currently implemented:
+  
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+    <LI><B>Namespace-Zero (NS0):</B> When enabled, this filter permits only edits that reside in NS0 -- which constitutes the encyclopedic content. Other namespaces are reserved for article "talk" pages, user pages, <I>etc.</I><P>
+
+    <LI><B>Anonymous User Edits:</B> When enabled, this filter permits edits made by anonymous (IP) editors. The bulk of Wikipedia vandalism is caused by editors of this kind, and the presence of an IP address may enable additional analysis for some queues.<P>
+
+    <LI><B>Registered User Edits:</B> When enabled, this filter permits edits made by registered (named) editors to be displayed.<P>
+
+    <LI><B>Only Most Recent on Page:</B> When enabled, this filter permits only edits which are the most-recent edit on the article they were made (or part of a rollback chain ending at the most recent edit). Assume edit <I>x</I> is under inspection. If <I>x</I> is vandalism, and <I>x+1</I> exists, the latter might have already undone the vandalism. Further, reverting <I>x</I> may also undo constructive content added by revision <I>x+n</I>. Enabling this filter simplifies the diff-presentation, and is required in the current version.
+  </TD></TR></TABLE><BR>
+
+Currently, a number of filters cannot be disabled. These are indicative of simplifications that will be relaxed in future versions. Further, a language is being developed which will allow user's to author their own filters. 
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_browser"/><BR>
+  <FONT SIZE="+1"><B>Diff Browser:</B></FONT>
+
+<P>If edit <I>x</I> has been popped off the selected <A HREF="#sec_queue">revision queue</A> and cleared all enabled <A HREF="#sec_filter">revision filters</A>, the 'diff' between edit <I>x</I> and the previous edit on the same article (edit <I>x-1</I>, hereafter) is rendered in the <B>diff browser</B>. It may be the case that <I>x-1</I> is written by the same author as <I>x</I>, in which case we have a "rollback" situation. In this case the diff will summarizes all changes by a single user and any revert action will undo the same breadth of changes (thus we diff <I>x</I> against some <I>x-n</I>).
+<P>
+At the top-center of the diff browser is the name of the article on which <I>x</I> and <I>x-n</I> reside. If <I>n>1</I> (a "rollback" situation rather than simple revert), this fact is noted in purple font just beneath the article title. Then, the diff is visually displayed in a vertically divide, yet <B>aligned</B> manner. The left-hand side shows relevant portions of <I>x-n</I>, and the right hand-side shows the corresponding portions of <I>x</I>. 
+<P>
+The presentation is intuitive. If content exists on the left-side but the corresponding right-side is empty, this is indicative of a text block which edit <I>x</I> <B>deleted</B>. Vice versa, a populated right-side with an empty left-side shows a text block which edit <I>x</I> <B>added</B>. When text is <B>modified</B> or fine-granularity changes are made, there is content on both the left and right-hand sides and the changed text is bold-faced red.
+<P>
+Otherwise, the diff browser is unremarkable. The diff is purely text-based -- image/table/figure content is not rendered and will instead show only the `code-behind' (<I>i.e.,</I> the markup language used to add the special content). An option in the "options" menu permits external hyperlinks/references (<I>i.e.,</I> any text of the form "http://...") to be activated (made click-able). These links will open in the user's default web browser. While this may be helpful in detecting spamming and other undesirable linking behaviors, do note that external pages may contain offensive, explicit, or malicious content.
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_metadata"/><BR>
+  <FONT SIZE="+1"><B>Edit Properties (Metadata) Panel:</B></FONT>
+
+<P>The <B>edit properties panel</B> displays metadata information about the edit currently being displayed in the <A HREF="#sec_browser">diff browser</A>. The panel is straightforward, with no settings that can be manipulated by an end-user. It does, however, provide links to the page/diff/user-pages on Wikipedia. These should be used in borderline cases where more investigation is warranted.
+<P>
+One functionality of note is the display of <B>user permissions</B>. The "permissions", "rights", or "groups" of the editor under inspection are output parenthetically next to the user name. Only relevant permissions are displayed, and these include: "autoconf" (autoconfirmed), "conf" (confirmed), "review" (reviewer), "rb" (rollbacker), and "admin" (sysop). If a registered  user has none of these, then "no permissions" will be displayed. No information is displayed about IP editors (as they can have no such permissions).
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_class"/><BR>
+  <FONT SIZE="+1"><B>Classification Panel:</B></FONT>
+
+<P>Assuming an edit-diff (say, <I>x</I> against <I>x-n</I>) has been rendered into the <A HREF="#sec_browser">diff browser</A>, it is the responsibility of the user to determine the worth of revision <I>x</I> (or the entire user chain) and press the appropriately labeled <B>classification button</B>:
+
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+     <LI><B>Vandalism/Spam (Revert):</B> If clicked, the currently displayed edit(s) will be reverted/un-done on Wikipedia. This action constitutes an <U>actual change to live Wikipedia content</U> and should not be abused. Further, the classification is sent to the STiki backend to improve scoring systems. If an edit occurs on the edit-page after the edit was displayed but before the button is pressed, then no change will be made to Wikipedia. After the button is pressed, the <A HREF="#sec_lastrevert">last revert panel</A> will display whether the revert actually took place (as well as any warnings issued).<P>
+
+		<LI><B>Good-faith Revert:</B> This is reserved for cases where an edit is clearly unconstructive, but does not constitute vandalism/spam. It is a "nice way" to undo damage from clueless or well-intending authors. The edit will be reverted/rolled-back on Wikipedia, but no warning will be issued.<P>
+
+    <LI><B>Pass:</B> In cases where the user is unsure of an edit's merit, this option should be chosen. The edit <I>x</I> is allowed to persist on Wikipedia, and no feedback is sent to the STiki backend. In particular, the edit in question may be presented/assigned to another STiki client. Further, edit <I>x</I> will never again be shown to the current user.<P>
+
+    <LI><B>Innocent:</B> Edits not displaying vandalism/spam or other issues are termed 'innocent.' If clicked, edit <I>x</I> is allowed to persist on Wikipedia, and feedback is sent to the STiki backend to improve future scoring attempts.
+  </TD></TR></TABLE><BR>
+
+When <B>any</B> classification button is pressed, the <A HREF="#sec_queue">revision queue</A> will be popped, the <A HREF="#sec_filter">revision filters</A> checked, and a new diff will be rendered in the <A HREF="#sec_browser">diff browser</A>. Thus, after initially tweaking the settings, a user should interact primarily with the classification panel.
+<P>
+To this end, <I>hotkeys</I> simplify user-interaction with the GUI. Simple presses of the <B>i</B>, <B>p</B>, <B>g</B>, or <B>v</B> key perform classification (<B>i</B>nnocent - <B>p</B>ass - <B>g</B>ood faith - <B>v</B>andalism), assuming the button panel has <I>focus</I>. Focus is obtained by performing a single mnemonic (<B>ALT+[key]</B>) or mouse-driven classification. Interaction with a non-classification GUI component will cause the panel to lose focus.
+<P>
+Finally, the panel has a <B>back button</B> that allows users to revisit the previous edit displayed. Certain criteria disable the back button: (1) "Back" cannot be used after a reversion, and (2) A user may only go "back" a single edit. After a prior edit is re-classified, the diff-browser will re-show the edit displayed when "back" was pressed. 
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_login"/><BR>
+  <FONT SIZE="+1"><B>Login Panel:</B></FONT>
+
+<P>As discussed in the <A HREF="#sec_class">classification button</A> section, pressing the
+"vandalism/revert" button initiates a Wikipedia reversion. The <B>login panel</B> allows the STiki-user to control the Wikipedia-user to which this reversion (an edit) maps.
+<P>
+A STiki user may choose to <B>login</B> or edit <B>anonymously</B> (Note that anonymous login may be disabled, in order to prevent abuse). Log-in credentials are those provided by Wikipedia. It is suggested that a user login so his/her contributions may be persistently tracked. Login credentials are never stored by STiki; they are passed directly to the Wikipedia API. Credentials must be obtained directly from Wikipedia.
+<P>
+The login panel also provides a <B>watchlist option.</B>. Wikipedia has a setting that allows users to "watchlist every article edited." This checkbox allows a user to override this setting; so his/her watchlist does not become diluted from their STiki actions.
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_comment"/><BR>
+  <FONT SIZE="+1"><B>Reversion Comment Panel:</B></FONT>
+
+<P>As discussed in the <A HREF="#sec_class">classification button</A> section, pressing the
+"vandalism/spam/good-faith" revert buttons initiates a Wikipedia reversion. The <A HREF="#sec_login">login panel</A> describes how the user associated with this reversion is set. Similarly, the <B>reversion comment panel</B> allows one to set the revision comment that is left with the reversion and if the offending user should be 'warned.'
+<P>
+Use of the panel is intuitive. Further, 'placeholders' allow more personalized comments to be left without the need to re-author the comment prior to each reversion. Currently implemented placeholders are:
+
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+    <LI><B>#u#</B> - User (guilty) who made the edit being reverted.
+    <LI><B>#a#</B> - Article on which the offending edit was placed.
+		<LI><B>#q#</B> - Quantity of edits that will be reverted.
+		<LI><B>#s#</B> - Plurality switch. Returns "s" if #q# > 1; "" otherwise.
+    <LI><B>#t#</B> - Time (in seconds) which offending edit survived.
+  </TD></TR></TABLE><BR>
+
+Additionally, this panel provides the opportunity to <B>warn</B> users. A warning is a textual message which discourages users from continuing their disruptive behavior. Warnings may only be left with "vandalism/spam" grade classifications. Warning are made according to the following criteria: 
+
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+<LI>IP editors will only be warned if the vandalism is relatively recent (on the order of hours). Registered users will be warned regardless.
+<LI>A warning will not be placed if the offending-editor is blocked.
+<LI>A warning is only placed if the reversion/rollback succeeds.
+<LI>The warning left will be per template <I>{{subst:uw-vandalism#}}</I> for vandalism or <I>{{subst:uw-spam#}}</I> for spam, where <I>#</I> is the severity of the warning (1 to 4). A best attempt is made to determine what existing, temporally-relevant warnings exist on the page and elevate the severity by one level. 
+<LI>If a 4th-level vandalism/spam warning has been issued and ignored -- a warning will not be issued, but instead a post to AIV (Administrative Intervention against Vandalism) made, likely resulting in the offending user being blocked.
+<LI>An AIV post will <I>not</I> be made if the offending edit was made <I>prior</I> to the time when the user received their final associated warning (<I>i.e.,</I> a level-4 warning).
+<LI>If a non-vandalism <I>4im</I> warning has recently been issued to the offending user, STiki will report the user to AIV. The posting will note the unusual nature of this request.
+  </TD></TR></TABLE><BR>
+
+The warning which is ultimately issued (if any), is output to the <A HREF="#sec_lastrevert">last revert panel</A>, along with any necessary justification.
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_lastrevert"/><BR>
+  <FONT SIZE="+1"><B>Last Revert Panel:</B></FONT>
+
+<P>After a reversion has been attempted (via the "vandalism/spam" or "good-faith revert" <A HREF="#sec_class">classification buttons</A>), the <B>last revert panel</B> displays the outcome of that reversion, as well as any warnings that were issued (per the option in the <A HREF="#sec_comment">reversion comment panel</A>).
+<P>
+The information the panel displays is intuitive. However, it is important to note the panel sometimes <I>lags</I> behind other components. Reverting an edit on Wikipedia is a non-trivial process which sometimes requires several seconds. So as not to delay the STiki user-experience -- the GUI proceeds without waiting for the reversion to complete, allowing it to execute in the background. The <B>last revert panel</B> is eventually updated when the revert finishes.
+<P>
+Finally, the <B>last revert panel</B> provides links so that the contributions of guilty users may be examined. This may prove especially useful if you notice that a user has received a high-level warning or been reported to AIV -- in which case his/her prior edits are likely to contain additional instances of vandalism/spam (if not already reverted). 
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_performance"/><BR>
+  <FONT SIZE="+1"><B>STiki Performance:</B></FONT>
+  
+<P>We now briefly contextualize STiki relative to other spam fighting efforts and estimate the expected vandalism hit-rate (<I>i.e.,</I> the percentage of time an edit shown on the STiki frontend is actually vandalism):
+
+  <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+
+    <LI><B>Other Vandalism-Fighting Tools:</B> There are many tools in both literature and active use on Wikipedia that aim to curb vandalism. STiki does not intend to compete against these alternative systems, but complement them. STiki's novelty lies in the fact it is an <I>intelligent routing tool</I>, directing humans to those edits needing inspection. In some ways, STiki is similar to the vandalism reversion GUI, <A HREF="http://en.wikipedia.org/wiki/WP:Huggle">Huggle</A>. However, Huggle uses simple static rules to prioritize edits, whereas STiki uses dynamic machine-learning strategies. Further, STiki is written in Java and is platform independent.<P>
+
+    <LI><B>Expected Performance:</B> The performance of STiki is ultimately dependent on the <A HREF="#sec_queue">revision queue</A> being utilized. In some cases, offline/academic studies have measured the performance of these systems (for example, the <A HREF="#sec_stiki_scoring">STiki scoring system</A> <I>could</I> score around a 50% hit-rate). In practice, expected performance is much harder to quantify when running in a live fashion. Competing (often autonomous) tools cut performance rates dramatically, since STiki users won't see vandalism that has already been reverted. Even so, STiki has proven particularly adept at finding <I>embedded vandalism</I>, that which escapes initial detection.<P>
+
+    <LI><B>Improving Performance:</B> STiki development is active -- and this means not only changes to the frontend GUI -- but also improvements to backend scoring systems are pending. Every STiki classification helps to refine how (some) scoring systems are trained. Further, backend modifications can generally occur seamlessly without the need for GUI users to re-install/update.<P>
+
+    <LI><B>Depth-of-Search:</B> Realize that performance measures (both actual and user-perceived) depend on the extent to which the <A HREF="#sec_queue">revision queues</A> are "populated" (<I>i.e., </I> how full they are). While not formally defined, it is intuitive that a large user-base will progress deep into the queues. In such a circumstance, popped revisions will have a lower probability of being vandalism than if few users were occasionally using the tool. With greater depth-of-search comes decreased detection-rates.
+  </TD></TR></TABLE><BR>
+
+Suggestions for improving STiki performance are welcomed.  Feel free to contact the STiki-author(s), whose contact data is available via the "About STiki" menu, or post discussion to <A HREF="http://en.wikipedia.org/wiki/Wikipedia_talk:STiki">STiki's talk page</A>.
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+  <A NAME="sec_ort"/><BR>
+  <FONT SIZE="+1"><B>Offline Review Tool (ORT):</B></FONT>
+  
+<P>The STiki <B>Offline Review Tool (ORT)</B> is a reduced-functionality version of STiki that operates over <I>user-provided</I> edits. These edits need not pass any filters to be displayed. To this end, reversion and other "live" functionality is disabled. Binary classifications can be made (per whatever property), and written to an output file. The ORT is accessible via the "File -> Launch ORT" menu of STiki. We now provide specifics about the tool:
+
+<BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+    <LI><B>Input File:</B> When ORT is launched, a file selection dialog is displayed. The input file should be a text file containing solely one Wikipedia revision-ID (RID) per-line. Input is un-checked, and behavior is undefined for input not meeting this specification. <P>
+
+    <LI><B>ORT Operation:</B> Operation occurs per the classification buttons; <I><B>m</B>ark</I> and <I><B>u</B>n-mark</I>, or their hot-keys (as bolded). This button ambiguity is intentional, allowing users to note whatever edit properties are of interest. Each classification advances the diff-browser to the next edit, until the input-file/queue has been exhausted. Due to threading considerations, presentation order (and thus, output order) may not match that of the input file. RIDs which do not exist or have been deleted from Wikipedia will be silently skipped.<P>
+
+    <LI><B>Output File:</B> Classifications are written to a CSV output file, with lines of the form "RID,CLASS" (CLASS=0 for 'un-marked' classifications, and CLASS=1 for 'marked' ones). The output file will have the same name and location as the input file, but the extension will be changed (or added) to <B>*.marked</B>.<P>
+
+    <LI><B>Command-line Access:</B> ORT does not need to be launched from within STiki. Command-line access is also made available, per [offline_review_driver.java] in the [executables] package. One argument is required; the input file.
+  </TD></TR></TABLE><BR>
+
+STiki-ORT can be used however one sees fit. However, it was designed to simplify corpus-building for Wiki researchers. For those looking to build upon the STiki framework, ORT may be a good place to start -- its complexity is far less than the full-blown STiki tool.
+
+  <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
+
+<!--###################################################################### -->
+
+</BODY>
+</HTML>
+

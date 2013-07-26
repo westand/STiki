@@ -1,0 +1,18 @@
+#############################################################################
+#
+# Andrew G. West - periodic_updates.txt - The calculation of some features
+# are based on database tables which are provided by third parties. Thus,
+# it is necessary to manually update these tables, on occassion.
+#
+#############################################################################
+
+  [1]: The geolocation data (mapping IP addresses to physical locations) is
+       stored in tables [geo_city] and [geo_country]. These are slightly
+       slimmed down versions of the tables available at IPInfoDB:
+       [http://ipinfodb.com/ip_database.php]. After piping the tables in,
+       one can snip any fields that are not keyed, or relevant to time-zone
+       or country-code. Lastly, the tables will be renamed in order to be 
+       brought into production (and the old ones deleted). 
+       
+
+#################################### END ####################################

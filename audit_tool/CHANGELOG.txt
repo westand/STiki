@@ -1,0 +1,19 @@
+#############################################################################
+#
+# Andrew G. West - CHANGELOG.txt - This document tracks tasks changes made
+# to the audit tool by release-version (build-date).
+#
+#############################################################################
+
+########## RECENT CHANGE-LOG #########
+
+  Note that we version the audit-tool by the date (UTC locale) of the 
+  build-date. This is also the file-name under which the executable/source 
+  is released:
+
+
+  * 2012-01-17: Initial version of the audit-tool becomes available.
+    See the README.txt for usage and other information.
+    
+
+#################################### END ####################################

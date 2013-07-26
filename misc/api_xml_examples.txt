@@ -1,0 +1,302 @@
+#############################################################################
+#
+# Andrew G. West - api_xml_examples.txt - In the [mediawiki_api] package,
+# a number of URLs are built, connected-to, and the HTTP response (in XML
+# format) is parsed to get the desired data items. Following in this
+# document are some characteristic XML responses to such queries.
+#
+#############################################################################
+  
+####### SIMPLE METADATA QUERY ########
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&
+  revids=343171840&rvprop=ids|timestamp|user|comment&format=xml
+
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="134463" ns="0" title="Society Hill, South Carolina">
+        <revisions>
+          <rev revid="343171840" parentid="320828496" user="John Cardinal" 
+          timestamp="2010-02-10T16:23:34Z" comment="bla" />
+        </revisions>
+      </page>
+    </pages>
+  </query>
+</api>
+
+
+##### SIMPLE MULTIPLE-RID QUERY ######
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&revids=
+  343171840|343171841|343171842&rvprop=ids|timestamp|user|comment&format=xml
+
+<?xml version="1.0"?>
+<api>
+  <query>
+    <badrevids>
+      <rev revid="343171842" />
+    </badrevids>
+    <pages>
+      <page pageid="134463" ns="0" title="Society Hill, South Carolina">
+        <revisions>
+          <rev revid="343171840" parentid="320828496" user="John Cardinal" 
+          timestamp="2010-02-10T16:23:34Z" comment="Remove Mapit-US-cityscale,
+          add coords to title,  using [[Project:AWB|AWB]]" />
+        </revisions>
+      </page>
+      <page pageid="1962771" ns="0" title="Mamadou Niang">
+        <revisions>
+          <rev revid="343171841" parentid="342937175" user="MastiBot" 
+          timestamp="2010-02-10T16:23:34Z" 
+          comment="robot Adding: ar, de, es, fr, hu, it, lt, nl" />
+        </revisions>
+      </page>
+    </pages>
+  </query>
+</api>
+
+
+####### RECENT-PAGE-HIST QUERY #######
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=
+  15580374&rvstartid=332442135&rvlimit=10&rvprop=ids|user&rvdir=older&format=xml
+
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="15580374" ns="0" title="Main Page">
+        <revisions>
+          <rev revid="332442135" parentid="332253817" user="Valley2city" />
+          <rev revid="332253817" parentid="314438361" user="Hcatlin" />
+          <rev revid="314438361" parentid="305264274" user="Juliancolton" />
+          <rev revid="305264274" parentid="304781660" user="^demon" />
+          <rev revid="304781660" parentid="298682365" user="^demon" />
+          <rev revid="298682365" parentid="289122198" user="Hersfold" />
+          <rev revid="289122198" parentid="289122024" user="Happy-melon" />
+          <rev revid="289122024" parentid="273421236" user="Happy-melon" />
+          <rev revid="273421236" parentid="271931586" user="David Levy" />
+          <rev revid="271931586" parentid="260905624" user="Thehelpfulone" />
+        </revisions>
+      </page>
+    </pages>
+  </query>
+  <query-continue>
+    <revisions rvstartid="260905624" />
+  </query-continue>
+</api>
+
+
+
+####### USER-PERMISSION QUERY ########
+
+  http://en.wikipedia.org/w/api.php?action=query&list=allusers&
+  aufrom=David%20Levy&aulimit=1&auprop=groups&format=xml
+  
+<?xml version="1.0"?>
+<api>
+  <query>
+    <allusers>
+      <u name="David Levy">
+        <groups>
+          <g>sysop</g>
+        </groups>
+      </u>
+    </allusers>
+  </query>
+  <query-continue>
+    <allusers aufrom="David Levy&#039;s test account" />
+  </query-continue>
+</api>
+
+
+###### USER-REGISTRATION QUERY ########
+
+  http://en.wikipedia.org/w/api.php?action=query&list=usercontribs&ucuser=
+  YurikBot&uclimit=1&ucdir=newer&ucnamespace=0&ucprop=timestamp&format=xml
+  
+<?xml version="1.0"?>
+<api>
+  <query>
+    <usercontribs>
+      <item user="YurikBot" timestamp="2005-07-03T21:43:57Z" />
+    </usercontribs>
+  </query>
+  <query-continue>
+    <usercontribs ucstart="2005-07-03T21:46:20Z" />
+  </query-continue>
+</api>
+
+
+###### TIME SINCE LAST PAGE Q #########
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=10
+  &rvstartid=56681914&rvlimit=2&rvprop=timestamp&rvdir=older&format=xml
+  
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="10" ns="0" title="AccessibleComputing">
+        <revisions>
+          <rev timestamp="2006-06-03T16:55:41Z" />
+          <rev timestamp="2003-04-25T22:18:38Z" />
+        </revisions>
+      </page>
+    </pages>
+  </query>
+  <query-continue>
+    <revisions rvstartid="233192" />
+  </query-continue>
+</api>
+
+
+######### SIZE CHANGE QUERY ##########
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=3489767
+  &rvstartid=346524739&rvlimit=2&rvprop=size&rvdir=older&format=xml
+  
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="3489767" ns="0" title="Diocese of Coventry">
+        <revisions>
+          <rev size="19742" />
+          <rev size="19749" />
+        </revisions>
+      </page>
+    </pages>
+  </query>
+  <query-continue>
+    <revisions rvstartid="346524379" />
+  </query-continue>
+</api>  
+  
+
+########### RID DIFF QUERY ###########
+
+  The average diff-query produces output too volumous to display here, try:
+  
+  http://en.wikipedia.org/w/api.php?action=query&prop=revisions
+  &revids=344126068&rvdiffto=prev&format=xml
+ 
+ 
+######### MOST RECENT QUERY ##########
+
+  http://en.wikipedia.org/w/api.php?action=query&
+  prop=info&pageids=1001&format=xml
+  
+<api>
+  <query>
+    <pages>
+      <page pageid="1001" ns="1" title="Talk:Agatha Christie" 
+      touched="2010-02-18T01:39:51Z" lastrevid="343795602" 
+      counter="43" length="45730"/>
+    </pages>
+  </query>
+</api>
+
+
+########## EDIT TOKEN QUERY ##########
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=info&
+  pageids=1001&intoken=edit&format=xml
+  
+ <?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="1001" ns="1" title="Talk:Agatha Christie" 
+      touched="2010-02-18T01:39:51Z" lastrevid="343795602" counter="43" 
+      length="45730" starttimestamp="2010-02-18T04:48:31Z" 
+      edittoken="c0c1b99ffe0112eb9579f8d54d9ba9e8+\" />
+    </pages>
+  </query>
+</api> 
+
+
+########### LOGIN REQUEST ############
+
+  POST: http://en.wikipedia.org/w/api.php?action=login&
+  lgname=user&lgpassword=password&format=xml
+
+<?xml version="1.0"?>
+<api>
+  <login result="Success" lguserid="7032414" 
+  lgusername="West.andrew.g" lgtoken="6e890566551984d4c297539446a118c8" 
+  cookieprefix="enwiki" sessionid="515274a211d1b935860178abac35419a" />
+</api>
+
+
+############# EDIT POST ##############
+
+  After POSTing to make an edit, below is a successful response:
+
+<?xml version="1.0"?>
+<api>
+  <edit result="Success" pageid="199453" title="Islets of Langerhans" oldrevid=
+  "351187692" newrevid="351191453" newtimestamp="2010-03-21T17:31:59Z" />
+</api>
+
+
+########### PAGE-FLAGGED? ############
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=flagged&pageids=533265
+  
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="533265" ns="0" title="Wanker">
+        <flagged stable_revid="369706333" level="0" level_text="stable" />
+      </page>
+    </pages>
+  </query>
+</api>
+
+
+########## PAGE-PROTECTED ############
+
+  http://en.wikipedia.org/w/api.php?action=query&prop=info&
+  inprop=protection&pageids=534366
+
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="534366" ns="0" title="Barack Obama" 
+      touched="2010-06-24T17:42:27Z" lastrevid="369946840" 
+      counter="0" length="177944">
+        <protection>
+          <pr type="edit" level="autoconfirmed" expiry="infinity" />
+          <pr type="move" level="sysop" expiry="infinity" />
+        </protection>
+      </page>
+    </pages>
+  </query>
+</api>
+
+
+######## AUTO-CONFIRMED USER #########
+
+  http://en.wikipedia.org/w/api.php?action=query&list=allusers&auprop=
+  editcount|registration&aufrom=West.andrew.g&aulimit=1
+
+<?xml version="1.0"?>
+<api>
+  <query>
+    <allusers>
+      <u name="West.andrew.g" editcount="3261" 
+      registration="2008-05-04T06:52:17Z" />
+    </allusers>
+  </query>
+  <query-continue>
+    <allusers aufrom="West.christopher" />
+  </query-continue>
+</api>
+
+
+#################################### END ####################################

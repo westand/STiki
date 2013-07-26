@@ -1,0 +1,39 @@
+
+#############################################################################
+#
+# Andrew G. West - .gitignore - Files which should not be transferred from 
+# the local copy to the Git repository.
+#
+# This includes local settings files and those with sensitive data
+#
+#############################################################################
+
+  # These classes have the credentials for the database connection. An
+  # examplewith redacted data is stored in the [deploy_source/] directory
+/db_client/stiki_con_client.java
+/db_server/stiki_con_server.java
+
+  # This class has credentials for the IRC server so the program always has 
+  # moderator access over the needed channels. An example with dedacted data 
+  # is stored in the [deploy_source/] directory
+/irc_work/irc_output.java
+
+  # Credentials encoded into shell scripts
+/api/stiki_api.php
+/backup/backup.sh
+
+  # We don't need to include the Java build
+*.class
+
+  # Settings files specific to local machine
+.classpath
+.project
+.metadata
+*.tmp
+*.bak
+*.swp
+local.properties
+.settings/
+
+
+##### END ###################################################################

@@ -1,0 +1,150 @@
+package irc_work;
+
+import java.io.IOException;
+
+import org.schwering.irc.lib.*;
+
+/**
+ * Andrew G. West - irc_output.java - This class streamlines output to
+ * the various IRC channels hosted at "armstrong.cis.upenn.edu". It
+ * maintains a centralized IRC connection for that purpose.
+ * 
+ * Note that if you come to acquire this file as part of the STIki source
+ * distribution, then the sensitive [init_commands()] method will be redacted.
+ */
+public class irc_output{
+  
+  // **************************** PUBLIC FIELDS ****************************
+  
+  /**
+   * The different channels to which STiki publishes.
+   */
+  public enum CHANNELS{STIKI_LINKS, STIKI_SCORES};
+  
+  /**
+   * Here we set the timeout. Our connection seems to fail at this interval,
+   * so we set it to the maximum (roughly 25 days). This seems fair enough,
+   * usually something else is needed within that timeframe.
+   */
+  public static final int IRC_TIMEOUT = Integer.MAX_VALUE;
+  
+  
+  // **************************** PRIVATE FIELDS ***************************
+  
+  /**
+   * Kill switch for IRC functionality. This initial state determines
+   * how things will handled from the outset. However, if an intially
+   * enabled IRC connection fails, this can be changed to "FALSE", in
+   * order to save network traffic and rendundant error messages.
+   */
+  private boolean IRC_ENABLED = true;
+  
+  /**
+   * Connection to the IRC Server
+   */
+  private IRCConnection con_irc;
+  
+  /**
+   * IRC listener, to wait for server responses to initialization commands.
+   */
+  private irc_out_listener out_listener;
+  
+  
+  // ***************************** CONSTRUCTORS ****************************
+
+  /**
+   * Construct an [irc_output] object -- which establishes a connection
+   * to the server-- and then forks the thread.
+   */
+  public irc_output() throws Exception{
+    
+    if(!IRC_ENABLED) // If we aren't doing IRC, don't construct
+      return;
+    
+      // Static IRC settings
+      // Note that "158.130.51.53" is armstrong.cis.upenn.edu
+      // However, loopback on that machine not friendly at :6667
+      // So we make an explicit IP declaration here.
+    String host = "158.130.51.53";
+    int port = 6667;
+    String user = "armstrong";
+    String pass = null;
+
+      // Prepare connection, event-handler, and basic-settings
+    con_irc = new IRCConnection(host, port, port, pass, user, user, user);
+    con_irc.setDaemon(true);
+    con_irc.setColors(false);
+    con_irc.setPong(true);
+    con_irc.setTimeout(IRC_TIMEOUT);
+    out_listener = new irc_out_listener();
+    con_irc.addIRCEventListener(out_listener);
+
+    try{con_irc.connect(); 
+      this.init_commands(); // Init channels/topic/sign-in/etc.
+      con_irc.removeIRCEventListener(out_listener); // done with this
+    } catch(IOException ioexc){
+      System.out.println("Error establishing IRC connection:");
+      ioexc.printStackTrace(); 
+    } // Establish connection to IRC server
+  }
+  
+  
+  // **************************** PUBLIC METHODS ***************************
+  
+  /**
+   * Publish a message to an IRC channel (on armstrong.cis).
+   * @param chan Channel to which the message should be written
+   * @param msg Message to write to that channel
+   */
+  public synchronized void msg(CHANNELS chan, String msg) throws Exception{
+    
+    if(!IRC_ENABLED)
+      return; // If not doing IRC, ignore all message requests
+    
+    if(!con_irc.isConnected()){
+      IRC_ENABLED = false;
+      System.out.println("IRC output message failed");
+    } else con_irc.doPrivmsg(this.channel(chan), msg);
+  }
+  
+  /**
+   * Close the connection to the IRC-server
+   */
+  public void shutdown(){
+    if(IRC_ENABLED)
+      con_irc.close();
+  }
+  
+
+   // *************************** PRIVATE METHODS ***************************
+
+   /**
+    * Convert a user-friendly IRC-channel ID into channel string
+    * @param enum_channel IRC-channel ID, per an enumeration in this class
+    * @return Actual name of the IRC channel that should be joined
+    */
+   private String channel(CHANNELS enum_channel){
+     if(enum_channel.equals(CHANNELS.STIKI_LINKS))
+       return("#arm-stiki-links");
+     else if(enum_channel.equals(CHANNELS.STIKI_SCORES))
+       return("#arm-stiki-scores");
+     else return "";
+   }
+   
+   /**
+    * Assuming the connection is active, this script takes care of 
+    * the necessary initialization work, including: signing into
+    * privileged account, joining channels, setting topic, and putting
+    * those channels into moderation (+m) mode.
+    * 
+    * Note that if you come to acquire this file as part of the STiki
+    * source distribution, this method will be redacted for security reasons.
+    */
+   private synchronized void init_commands() throws Exception{
+     
+      // Class [irc_echo_listener] can be attached here as needed
+      // for debugging of the initialization calls
+     
+   }
+   
+}

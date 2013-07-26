@@ -1,0 +1,622 @@
+#############################################################################
+#
+# Andrew G. West - CHANGELOG.txt - This document tracks tasks changes made
+# to STIki code/functionality by release-version (build-date).
+#
+#############################################################################
+
+########## RECENT CHANGE-LOG #########
+
+  Note that we version STiki by the date (UTC locale) of the build-date. This
+  is also the file-name under which the executable/source is released. The 
+  formal version number (e.x., 2.1) is in too many places to be 
+  conveniently altered for small changes:
+  
+  * 2013-XX-XX
+      # Default revert comments were changed to note the quantity of edits
+        reverted, with always correct plurality. This is done via the "#q#" 
+        (quantity) and "#s#" placeholders (plurality switch) now interpreted
+        by the "edit comment" panel.
+  
+  * 2013-05-23
+      # Fixes to the AGF message dialogue (T#025). One can now abandon the
+        revert action after the dialogue has been displayed, and checks
+        ensure that the customized message will not be placed if the
+        revert fails. Both edits (the revert and the message) commit 
+        after the message has been authored. 
+      # The AGF message dialogue has been updated with the modifications
+        made by users at [[WP:STiki/Good-faith-revert_messages]]. Similarly,
+        the number of user customizable messages has increased from 2 to 4.
+      # The space bar is now disabled when the "classification panel" has 
+        focus (most of the time). Previously, pressing spacebar would repeat 
+        the previous classification action taken. However, this seemed to 
+        cause far more accidents than intent-driven uses (T#026).
+      # The "user talk" links in the interface (in the "metadata" and "last 
+        revert" panels) now append the affected page title in a special format
+        that makes welcoming/warning messages easier for Twinkle users.
+        [[WT:STiki/Archive_11#Feature_Request:_Article_Reference_on_Talk_Pages]]
+      # Minor changes to backend queuing, attempting to stop the CBNG
+        queue from displaying edits made by STiki users.
+      
+  * 2013-01-26
+      # When making an "AGF revert" classification, a dialog will now appear
+        that allows users to post custom notifications/explanations to
+        the offending user's talk page. This dialog can be disabled via
+        the "options" menu.The dialog contains a text field in which any
+        message can be authored, but more likely, user's will take advantage
+        of the pre-written/template-esque options provided in a drop-down
+        menu. There is also the capability to store custom messages 
+        if an editor is so inclined. Overall, it is hoped this will result 
+        in less [[WP:BITE]] behavior towards those being reverted (T#019).
+      # The "edit properties" panel now displays the relevant "permissions"
+        or "groups" which the editor under inspection has obtained. These
+        are placed parenthetically next to the user name, and include:
+        
+          * "autoconf" -> autoconfirmed
+          * "conf" -> confirmed
+          * "review" -> reviewer
+          * "rb" -> rollbacker
+          * "admin" -> sysop
+        
+        If a registered user has none of these, then "no permissions" will
+        be displayed. No information is displayed about IP editors (as they
+        can have no such permissions) (T#022).
+      # Minor organizational changes to the "edit properties" window to 
+        bring greater prominence to the "summary" and "editor" fields, 
+        since these are often vandalism indicators (T#024).
+      # Users can now generate a "live" leaderboard for their own viewing
+        purposes inside the tool, via "Rev. Queue" -> "Generate leaderboard".
+        It is a slightly simplified version of the one at 
+        [[WP:STiki/Leaderboard]], but should serve the edit-count-itis folks
+        quite nicely until the nightly updates are made on the wiki (T#023).
+      # A previous change prevented "null diffs" from being pointlessly 
+        displayed to end users. That change essentially caused such RIDs
+        to be ignored. This caused them to stay in the queue, often 
+        accumulating and forcing the program to process (but re-skip them)
+        at start-up. A fix now dequeues null diffs upon their discovery.
+      # The "WikiTrust" and "Link Spam" queues have been disabled. The 
+        former is dependent on third-party computation which has been broken
+        for some time (and no one ever used the queue, anyways). The link
+        spam queue isn't really used either, but that queue is computed on a 
+        local machine. The primary reasoning for disabling it is cost. The
+        classification model is dependent on queries to the Alexa API,
+        which are not free, and we make many thousand monthly ($65+) (T#021). 
+  
+  * 2012-12-04
+      # Zero difference edits (i.e., null diffs) where no changes are made
+        will no longer be presented to users. These appeared in the transition
+        to the diff browser displaying "rollback"-derived differences (whereas 
+        server-side enqueuing works on the edit level) (T#016).
+      # The location of the STiki server is no longer hard-coded. Instead,
+        it is now represented at an HTTP location. This web server and its
+        DNS routing are independently controlled; making this is a useful
+        tool in migrating STiki to a new location (likely to happen with 
+        my PhD completion and the job search). 
+      # Because AGF edits cannot use native rollback (as they must not be 
+        marked "minor), software rollback uses the "edit full text" 
+        API call when 2+ edits must be reverted in this fashion. Unlike every 
+        other edit path, this operation does not have an integrity checks
+        that would cause the edit to fail if intermediate/conflicting edits
+        had occured. This lack of check gave rise to a bug noticed by
+        [[User:Yaris678]]; and now an explicit check has been added.
+      # Minor update to a "revert panel" message: The "beaten to revert" case 
+        only displays when an identity revert has taken place as a
+        conflicting edit. Thus, if a non-identity change/conflict took 
+        place while an edit was in the diff browser, the "last revert panel" 
+        would say  "Undid 0 edits / unknown error / check page hist". This 
+        message has now been corrected to say "conflict or error". 
+      # Backend: IRC reporting of STiki scores now outputs a URL by
+        which the diff for an RID can simply be opened in browser. 
+      # Backend: Functionality added for "unification" of accounts. Imagine
+        someone has a "public terminal" account and a primary account. It is
+        now possible for all actions of either account to map to the primary
+        one (primarily for leaderboard purposes). An edit "pass/ignored" in
+        one account is similarly reflected in the other. This is achieved via
+        [client_func_usermap.sql] in the [db_client] package and minor
+        modifications to server-side stored procedures
+  
+  * 2012-07-18
+      # A "recent usage statistics" option has been added to the "Queue" menu.
+        This reports basic numbers about STiki/queue use over the last 1/6
+        hours. As high rates of use can cause queue exhaustion and lower 
+        hit-rates, users can interpret these statistics to determine how best 
+        to allocate their STiki usage time and queue choice (T#014).
+      # Minor changes to the "excessive pass use" and "don't template the
+        regulars" message dialogues per discussion at [[Wikipedia_talk:STiki]].
+      # The message displayed in the diff browser that indicates rollback
+        situations (i.e., 2+ edits are encapsulated by the diff and would
+        be reverted) has been revised per [[Wikipedia_talk:STiki]]
+      # The default comment left with AGF reverts has been changed per
+        a talk page request from "good faith revert..." to "reverting good 
+        faith edit(s)..." Custom AGF messages will need to be re-authored.
+    
+  * 2012-06-03
+      # Users must now meet qualification conditions in order to use STiki.
+        A user must meet one of the following: (1) Have the rollback
+        permission. (2) Have > 1000 article namespace edits. (3) Receive
+        special permission from STiki administration (by asking on the
+        talk page). Prior users will be grandfathered in and not subject
+        to these criteria. While possibly turning away new users, this is
+        a necessary step to prevent abuse and ensure classification accuracy.    
+      # Given that "templating the regulars" [[WP:DTTR]] seems to be a
+        primary source of reputation loss for STiki, it has now been addressed
+        programatically. Per the "options" menu, a dialogue can be popped
+        with an informative message, and an opportunity for re-inspection
+        can occur when one is about to revert a "regular." Currently "regular"
+        is defined as a registered editor with > 50 NS0 edits. (T#015).
+      # Previously, the "overuse of the pass button" warning was popped to 
+        users whenever they had 10 passes in a session. This is excessive
+        for consistent users. Now, use of the pass button will be persistently
+        tracked with long-term users seeing fewer/no warnings. This is 
+        stored in the settings file and therefore will not be persistent 
+        across different machines.
+      # Thanks to hard work by [[User:Allens]], the external link processing
+        capabilities have been vastly improved. For GUI users, this will
+        manifest itself when the "Options"->"Activate Ext. Links" option
+        is enabled. The quite tricky case where just *part* of a URL 
+        changes is now handled correctly (T#009).
+      # The {{Shared IP advice}} template is now appended to all IP user-page
+        warnings; a message about creating an account to avoid DHCP issues.
+      # MINOR: The persistent settings file now has refined permissions.
+        Whereas the prior version just applied standard Java file permissions
+        (and was world read-able). The file is now only read-writeable by
+        the OS user that operates the STiki tool. No effect to end-user.
+        
+  * 2012-05-22
+      # The "wiki-diff" link in the metadata panel wsa repaired so that it now 
+        displays the same diff as in the diff-browser. This was an omission 
+        in the GUI's switch to exclusively rollback functionality. (T#008)
+      # Some (but not all) users reported that the different elements in 
+        the "help menu" failed to jump to the appropriate section/anchors 
+        in the help-doc. This has been fixed. Also, a related bug was 
+        discovered/fixed where external links in the help document were 
+        not being handled correctly (T#011).
+      # The diff-browser now has copy-paste functionality. Text can be
+        highlighted in the diff-browser and transferred to the clipboard
+        either via CTRL+C or a right-click context menu (T#012).
+      # It is now possible to enable HTTPS support via the "Options" menu.
+        If checked, HTTPS will be used for all communication with the 
+        MediaWiki API and any links that open in browser and point to 
+        "wikipedia.org". A restart is required. (T#013).
+          - Following from the above, the "Appearance" menu has been renamed 
+            to "Options". This could soon become a larger bin for settings.
+            Documentation changed accordingly.
+          - Minor (invisible) changes were also made to the way that
+            persistent settings are stored, so that the XML output remains
+            clean and human-editable as STiki evolves.
+      # Code has been put in place such that, if consensus is reached, that
+        STiki can only be used by editors with the rollback permission. 
+        This functionality is encoded but currently not in use (T#005).
+      # If STiki is going to post a user-warning to a "User Talk" page 
+        which is in fact a redirect, it now resolves that redirect (T#002).
+      # Most are familiar with warning templates {uw-vandalism#} or {uw-spam#}.
+        Less common are those like {uw-test#}, {uw-joke#}, or {uw-advert#}
+        that also identify problematic users. The identification and
+        escalation from these templates (into spam/vandalism ones) is now
+        part of warning logic. Notably, STiki will not jump from a non-spam
+        or non-vandalism level 4 warning to an AIV post (it will post a level 4 
+        spam/vandalism instead), though it will do this for "4im" cases. 
+        (this request was not bug-tracked; it was posted by [[User:Allens]]).
+  
+  * 2012-04-12
+      Modifications in this version are primarily minor bug-fixes and
+      feature requests following from the substantial release of 2012-4-11.
+      This changelog will also contain ticket-numbers from requests, which
+      are lodged at [[Wikipedia_talk:STiki]]:
+      # The "activate hyperlinks" setting is now correctly read and 
+        applied from the user configuration XML. (T#007)
+      # Functionality has been added so the diff-browser can be scrolled using
+        the keyboard. The keys are PG_UP and PG_DOWN (slight scrolling) or 
+        UP_ARROW and DOWN_ARROW (more dramatic). The "classification" 
+        panel must have focus for this functionality to work (i.e., in a
+        state where pressing "v" would fire a "vandalism" revert). (T#001)
+      # Good-faith reverts will no longer be marked as "minor" (as vandalism/
+        spam edits are), per the policy of [[WP:Minor]]. Because native 
+        RB cannot be marked "minor", good-faith reverts must use "standard" 
+        editing calls to simulate rollback functionality (such "software 
+        rollback" is more processor/bandwidth intensive than the "native" form).
+  
+  * 2012-04-11
+      # Good-faith revert has been implemented and included as a fourth
+        classification option. Good-faith reverts do not leave a warning
+        or any message to the user talk page. The comment left with
+        good-faith reverts is visible -- and can be adjusted -- via the
+        (newly!) tabbed comment panel. 
+      # The notion of "rollback" is now fully integrated. Simple reverts are
+        no longer supported. All presses of "vandalism", "spam", or
+        "good faith revert" will initiate a rollback action (we implement this
+        in software for those that don't have the native permission). 
+        To this end, the diff browser now displays all edits that will be 
+        undone (in a single diff). If more than one edit could be rolled-back, 
+        this is noted beneath the article title in the diff browser, in purple.
+      # Settings are now *persistent* between STiki sessions. This includes
+        all user-modifiable elements (e.g., checkboxes, form fields, window
+        size/position) in the program. Queue selection is not persistent; this 
+        remains server-set so users can be steered away from queues that are 
+        offline or experiencing difficulty. Configuration is stored in XML
+        format in the user's home directory. Special thanks to 
+        [[User:Meiskam]] of en.wp for help with this.
+      # Logic added so that CBNG queue does not enqeue edits made by bots,
+        per a request and some issues raised at [[WP:STiki]]. Note that
+        the "metadata" and "anti-spam" queues already do this.
+      # Documentation changed to reflect above modifications
+  
+  * 2012-03-12
+      # Minor bug-fix. The [java.awt.desktop] package is used to open Java
+        hyperlinks in a user's default web browser. The package is not 
+        universally supported, and in particular a Java 1.5 user on OS X
+        reported that STiki would not start as a result of this dependency.
+        To this end, a new "link opener" class has been installed that 
+        hacks around this functionality.
+      # Additional tweaking for Java 1.5 compliance, since it seems the
+        compiler [target] option is insufficient in this sense. This
+        included re-pathing some JDBC CommunicationException and shifting from
+        unsupported [setIconImages()] to [setIconImage()].
+  
+  * 2012-01-17
+      # To STiki itself, some debugging output was added to help track the
+        "badtoken" error thhat [User:Peter_Chastain] keeps receiving when
+        his rollbacks ocassionally fail. Normal users shouldn't care.
+      # The WikiAudit tool [WP:WikiAudit] is included starting with this 
+        release. It is a program orthogonal to STiki, but convenient to
+        include here because of the shared code-base:
+        # WikiAudit takes as input a set of IP addresses.
+        # It ouputs a report detailing the contributions from those
+          IP addresses. Low-cost heuristics are used to identify malicous
+          behaviors at the per-user and per-revision levels. 
+        # We envision this being useful for institutional/organizational
+          network administrators who want to monitor constituent behavior.
+  
+  * 2012-12-29
+      # Some changes were made to the "last revert panel":
+        # The panel now contains a link to the "article", so one can now
+          easily visit the page which was just affected by an undo/RB.        
+        # Previously, the "0 edits undone... beaten to revert? ... check
+          page hist" message was displayed anytime an edit attempt did not
+          succeed. Now, there are separate messages for the "beaten to revert" 
+          (which is known to be the outcome) and "error" cases. They display 
+          in bold-red for prominence.
+          # If an "error" edit outcome occurs, and the user has started STiki
+            from the command-prompt/terminal, there should be output about
+            the error. Please post this to the talk-page, so we can
+            discover which error conditions are occuring in practice.
+          # A small GUI error was fixed where the panel would report that an 
+            edit was successfully made, when in fact, the STiki user had 
+            been beaten to the revert. This was a result of the MW-API
+            returning a "success" code, but unknowingly also noting "nochange".
+            This only affected a minority of users without native rollback.
+      # Backend: Even when CBNG scores itself poorly; these edits will never be
+        enqueued. i.e., a CBNG revert will never be popped from the CBNG queue. 
+      # Backend: A script has been included in the [/utilities] directory such
+        that one can de-queue any edit that has 'x+' pass actions, in order
+        to increase the efficiency of other editors and aim for broader
+        coverage. Debating whether to use on the main en-wiki project itself.
+   
+  * 2011-12-02
+      # Users may have noticed that in-line diff changes were no longer
+        being highlighted red. This seemed to be an unannounced change when
+        WP migrated to 1.17 or 1.18. Bring these things to my attention!
+      # Bot edits no longer enqueued by backend
+      # Bug found in diff-parsing: A change in "<span class="name">"
+        styling in DIFFs returned by the API caused our parsing attempts
+        to ocassionally (once per hour, maybe) enter an infinite loop.
+        This was the source of many thread-life/utilization issues. 
+  
+  * 2011-08-01:
+      # Changed user warning revision summary to be less agressive.
+      # Minor efficiency improvements. Primarily, lengthy string
+        concatenations now make use of the StringBuilder class.
+  
+  * 2011-06-21:
+      # STiki now contains an "anti-link-spam" queue. Every link addition
+        to en.wiki is cored for its "spam likelihood" using: (1) Wikipedia
+        metadata, (2) Destination processing (fetching the HTML landing site),
+        and (3) Third-party data (Alexa, Google Safe Browsing project).
+        This caused considerable additions throughout the project:
+          # When the spam queue is selected: (1) external links will become
+            click-able in the diff-browser, (2) the GUI classification buttons
+            and revision comment will adjust accordingly, and (3) "spam"
+            warnings will be issued to UserTalk pages when requested. 
+          # Source code can be obtained at [WP:STiki]. Although the projects
+            share a code-base, it is being separated from the STiki core
+            until stability is verified and for load distribution purposes.
+          # Formal version number of STiki increased to 2.0.
+          # See the documentation or [WP:STiki] for additional details.
+      # Better handling of *deleted* revisions/pages on the client-side. 
+        Previously, these were getting stuck in the queues, as an error 
+        prevented their popping/deletion. Now fixed; STiki startup times should 
+        improve since clients do not have to (re)-cycle over these revisions.
+      # The default queue can now be set dynamically. This way, if a system 
+        goes offline, the transition to another queue can be made seamlessly,
+        and without requiring end-user intervention.
+      # Server-side: Better parsing of external links, including handling 
+        plain-text and <ref> tag embedded ones.
+      # Server-side: Logic added so CBNG queue does not enqueue CBNG reverts
+      # Minor: The StringBuilder() class is now used instead of "+=" over
+        immutable Strings. This should bring minor efficiency improvements.
+ 
+  * 2011-03-01:
+      # Added the "no watchlist" checkbox to the login panel. In this way,
+        settings in account preferences can be overridden, such that
+        STiki will never add a page to a user's watchlist.
+  
+  * 2011-02-24:
+      # Transitioned items in the "metadata panel" from JLabels to JTextFields.
+        This way, titles/usernames can now be highlighted and copy-pasted.
+        Main window cut-copy-paste is problematic due to ZWS insertion, and
+        thus it has been disabled (text selection also disabled, for clarity). 
+      # rude blocking functionality added to stored procedures. Blocked
+        users will only be popped a "special" diff from the server -- which
+        tells them are blocked and to discuss at [[Wikipedia_Talk:STiki]].
+        Will need dedicated table if blocking ever becomes common.
+  
+  * 2011-01-31:
+      # Better handling of "ignore" functionality: Now, an ignored edit 
+        becomes immediately available to others, rather than having a several
+        minute "expiration delay" (silly that this wasn't fixed earlier). 
+        Also, an issue was fixed where editors would occassionally be 
+        re-issued "ignored" edits early in a STiki session. 
+      # Additional checks added to ensure that users are only shown edits that
+        are "most recent on their article". Now, edits popped are at most
+        10-seconds old, with no impact to GUI speed. This should be a 
+        substantial improvement for users who classify at slower rates.
+      # Added public IRC feeds, hosted at "armstrong.cis.upenn.edu".
+        Two channels currently exist: (1) "#arm-stiki-scores", which reports 
+        vandalism probabilities, and (2) "#arm-stiki-links", which reports
+        link additions (both only to en.wiki and NS0). Formats are self-
+        explanatory, and additional feeds can be added if users request them.
+      # Better error dialogs when a client cannot connect to backend due to
+        (1) no Internet, (2) ports blocked, (3) STiki down, (4) update reqd.
+      # Fixed minor typo which broke "contributions" wikilink in edit 
+        summaries when making reports to AIV.
+  
+  * 2010-12-26:
+      # QUEUES. Prior to this version, the STiki GUI had only one queue --
+        an internal one based on edit metadata. (Note: A queue determines 
+        which edits are displayed to a user, based on vandalism probabilities.
+        Techniques vary on how one can arrive at a probability). Now, the 
+        "Queue" menu offers an explicit choice among several queues. In
+        addition to previous "metadata" queue, there are two other options:
+        (1) "Cluebot-NG" -- those edits whose score was below the threshold
+        required for automatic bot revert (or couldn't be reverted due to 
+        1RR or other rules). (2) "WikiTrust" -- based on the reputation 
+        system of Adler et al.. This is a significant change, and more 
+        information is available in the STiki documentation.
+      # Minor changes to AIV reporting. Both reports and comments now have 
+        some additional detail to help the admins at AIV.
+      # If the 'diff browser' window has focus, the spacebar key will now
+        fire the 'scroll down' action, per a feature request @ WP:STiki.
+      # Significant changes to communication primitives. All client calls to
+        the STiki database are now handled by stored procedures, as a matter
+        of security. Frontend GUI users should notice no change as a result.
+        All stored procedure calls are logged and can be audited. This
+        change will break previous versions of the client.
+      # For the backend reputation component (for users and articles), the
+        reversions of the recently approved "Cluebot NG" bot are now included.
+      # Back-end STiki scores, rather than being on [-inf,inf], now harness
+        the logistic nature of ADTree scoring to normalize scores onto [0,1] 
+        (making them probability-esque). This transformation maintains relative 
+        ordering so frontend users should notice no change. This transform
+        was also applied to all historical scorings (API accessible).
+        
+  * 2010-11-27:
+      # Rollback implemented. Rollback [WP:Rollback] is now an option when 
+        reverting edits (as opposed to simple "undo"). For users who have
+        the "rollback" permission, this is straightforward. For those who
+        do not, a more expensive "software rollback" is implemented.
+        To this end, a more informative revert-feedback panel now notes both
+        the technique used, and the number of edits undone/RB'ed.
+      # Per [WP:MINOR], all STiki reverts are now marked as `minor'
+      # The "current page" and "page history" links (in the "edit properties"
+        panel), now handle special characters in article titles appropriately.
+        In particular, this fixes a reported issue with ampersands.
+      # User's whose last warning was a "4im" of *any* kind (not just 
+        vandalism), will now be reported to AIV if reverted by STiki. The 
+        post to AIV will reflect the unique nature of this request.      
+      # Minor changes to warning system. IP users will be warned if the
+        offending edit occured in the last 24 hours (up from 8 hours, per 
+        discussions at [WP:STiki]). Also, reg'd users will now ALWAYS be 
+        warned, regardless of detection interval.
+      # Offending editors will *not* be reported to AIV if STiki locates
+        vandalism that occured *prior* to a user receiving their last warning.
+      # Documentation was updated to reflect above changes
+  
+  * 2010-08-26:
+      # Significant changes in the way machine-learning is handled in the
+        back-end. An interface now exists to "learning modules" -- allowing
+        easy switching between classification strategies. 
+      # Leveraging this, a new ML-module was authored, and Alternating-
+        Decision Trees (ADTrees) are now the classifier of choice. Off-line
+        analysis has shown a huge performance benefit over the previous
+        attempts using Support Vector Machines (SVM). (Both modules exist,
+        but ADTrees are in active use on the STiki server).
+      # ADTrees excel in handling "missing" features. For this reason, we
+        now begin processing the edits of *registered* users for vandalism.
+        The switch to ADTrees and reg-user-processing began at RID=379406568.
+      # One feature was added to the database, "IS_IP", which flags if an edit
+        was made anonymously, or not. The "REP_CAT" field was also formally
+        dropped from the feature set, it had been in deprecated status.
+      # Both the API and documentation were updated as required.
+      # Formal version number increased to [1.1].
+  
+  * 2010-07-17:
+      # This version introduces an API (documentation and code in the "/api" 
+        directory), which allows developers easy access to STiki vandalism 
+        scores and feature sets via a web-interface (HTTP/PHP).
+      
+  * 2010-06-28:
+      #This version introduces the STiki Offline Review Tool (ORT). ORT
+        is launched from the "File -> Launch ORT" menu. ORT is a stripped
+        down version of STiki that operates over a user-provided list of
+        revision IDs. Wikipedia is used only to fetch the associated diffs,
+        no editing/reversion options are available. Instead, binary
+        classifications are output to a text file. This tool is anticipated
+        for use by corpus building researchers. More details are
+        available in the STiki documentation. 
+  
+  * 2010-06-21:
+      # Overuse of the "pass" button when the "innocent" button should be 
+        used (as recently observed) muddles the edit queue. This is 
+        problematic, because a second user (or worse...) now has to waste
+        their time sifting through inspected edits, finding no vandalism
+        (and for new users, this may affect the adoption rate). Now after
+        10 uses of "pass", an informational warning is displayed to the user.
+  
+  * 2010-06-19:
+      # To train the machine-learning classifier (back-end), edits must be 
+        labeled as "good" or "vandalism". This can be done by STiki client 
+        classifications, but to increase the number of "vandalism" labels -- 
+        we also look at rollbacks initiated conventionally, via Huggle, and via
+        Twinkle (as these all leave consistent and parse-able edit summaries 
+        that identify the vandal and his/her edit). We now add ClueBot to that 
+        list. Initially, ClueBot was not included for academic purposes so a 
+        "human-verified" set could be claimed. In practice, ClueBot produces
+        very few false-positives and should be a helpful addition, especially
+        as far as NLP-based features are concerned.
+  
+  * 2010-06-17:
+      # Changes to the scoring of "dirty word" REGEXes on the back-end.
+        Previously any occurence of a "dirty word" inside the added-text 
+        would be scored as a "hit". Now "hits" which fall along word 
+        boundaries are scored at a higher rate than those occuring internal
+        to word boundaries. For example, "foo sucks" will receive more
+        scoring than "foosucks". We can't expect vandals to have good grammar,
+        but this should reduce the penalty of intra-word false-positives. 
+  
+  * 2010-06-08:
+      # Added the "back" button (found in the classification panel), which 
+        allows users to revisit the previous edit, under certain criteria: 
+        (1) "Back" cannot be used after a reversion, and (2) A user may only go
+        "back" a single edit. After the "back" edit is re-classified, the 
+        diff-browser will return to the edit being displayed when "back" was 
+        pressed. These limitations are generally inconsequential: the feature 
+        should prove most helpful when a user has prematurely classified an 
+        edit as "innocent" but noticed evidence of "vandalism" after-the-fact.
+        Help documentation was also altered to relect this addition.
+  
+  * 2010-06-05:
+      # Added the option to "activate external hyperlinks." The toggle is
+        found under the "appearance" menu. When turned on, any external
+        link (i.e., text beginning "http://..." will become click-able,
+        opening in the user's web browser rather than appearing as plain-text. 
+        Some degree of well-formedness is required. Documentation was
+        added to the help-doc in accordance with this change.
+      # Slight tweaking of warn-criteria (8 hours is now "too old").
+      # Several additions to the "dirty regular expressions" list
+      # Increased the number of edits used in training (to 25k) and decreased
+        training frequency (now every 200k edits), to alleviate "hot-spot"
+        issues with poor classifiers over-populating the top of the edit queue.
+  
+  * 2010-04-08:
+      # Added hotkey classification, such that when the classification-button
+        panel has focus, simple presses of the 'i', 'p', and 'v' keys are
+        sufficient to classify (no ALT+[key] mnemonic required). This enables
+        quick classification without mouse usage. Also added documentation
+        to the help file making note of this change.
+        
+  * 2010-04-07:
+      # Emergency update: Bringing STiki into compliance with MediaWiki's
+        new handling of API login (a poorly coordinated change). Login is
+        now a two-phase process, where a token must first be obtained, and
+        then accompany a second sending of credentials. Wikimedia states
+        this process prevents "CSRF". This version is a required upgrade as
+        the change broke all previous STiki versions.    
+  
+  * 2010-04-02:
+      # In response to continued connection timeouts, the [gui_ping_server]
+        class was written and now runs in its own thread with the GUI. Most
+        connection timeouts had occured after there were 20+ seconds of no 
+        interaction; the new class pings the server once every 5 seconds with
+        a trivial query in hopes of maintaining the the connection.
+      # Nearly every non-visual task the GUI performs is now-THREADED so as
+        not to delay the user experience. A pool of threads is created to
+        enable this. Every button press (feedback write to the database) is
+        assigned to a non-main thread. Most critically, edit metadata/content
+        can be pre-fetched and cached in the background via these threads. This
+        has its downsides (someone else could make an edit in the meantime,
+        invalidating our attempted reversion) -- but the cache size is kept
+        relatively small (12 edits) and STiki finds lots of older vandalism, 
+        anyways. The [gui_edit_queue] package was created to enable this.
+        Should be especially beneficial to those with latent connections.
+  
+  * 2010-04-01:
+      # Some users were reporting problems with broken sockets/dead connections
+        leading to hard failures of the GUI. Now, all GUI calls to the DB
+        are try-catch wrapped -- and any failure will automatically reset the
+        connection -- and then use the new connection to re-attempt the action. 
+        Doesn't solve root of problem, but a rather satisfactory outcome
+        given the unknown network conditions STiki may operate under.
+      
+  * 2010-03-31:
+      # Changed both the way front-end and back-end applications manage DB
+        connections. Each now only uses a single-connection, aside from
+        long-running tasks such as training and migration. Little effect in
+        the general case; except if under multiple client use -- but on
+        the whole a much cleaner coding paradigm.
+      # On both the client and the DB server the MySQL-J/Connector
+        library was updated from version 3.1.14 to version 5.1.12. It makes
+        the client file-size a bit larger, but hopefully this will fix a
+        DB/RID-acquisition error some users were experiencing. (there has been
+        no recent discussion of the error on MySQL forums).
+  
+  * 2010-03-30:
+      # Added the "last revert panel" to the GUI. This panel reports on the
+        success of reversion and describes any warnings issued as a result.
+        Intuitive; though it is worth noting that it may take some time for 
+        this panel to update (reversion is laggy) -- while the GUI proceeds
+        onto the next edit as a result of revert-threading. The HELP files
+        were also updated in accordance with this change.
+      # Considerable changes to the way several features (byte change, and
+        some NLP) are normalized. There will be a temporary performance hit
+        as a result, but normalization is now far less static. In the byte
+        change case (which has positive and negative values), we normalize
+        around 0.5 rather than using absolute value. In the NLP cases, we
+        now apply a "integer cap" strategy rather than manually-written ones.
+      # New feature added: [NLP_ALPHA], the percentage of text-added in an
+        edit which is alpha-characters (not symbols or numbers). Intuitively,
+        numeric vandalism seems rare, but edits of this form are common
+        (sports), so hopefully this will lead to fewer numeric edits seen.
+      # Began data collection of external-link insertions in table
+        [hyperlinks]. Perhaps this data can be analyzed over, and certain
+        URLs will reveal themselves to be prevalent in vandalism. This
+        collection is handled by the new classes [db_hyperlinks.java],
+        and [feature_hyperlink.java] (which build on the NLP class).
+      # Changed the way "offending regexes" are matched. Should lead to more
+        accurate counts, and more efficient searching.
+    
+  * 2010-03-28:
+      # Per the requests of the Wikipedia administration, anonymous/IP
+        editing has been disabled (although it can be trivially be compiled
+        back in). The help-pages were changed, and a special dialog installed,
+        in order to describe this change to end-users.
+  
+  * 2010-03-26:
+      # Further generalization of warning system -- Some "date/year" section
+        headings were not being properly recognized, causing STiki to 
+        reprint and restart at warning level 1 when unneccessary. Further,
+        users will only be reported to AIV if they are not already blocked
+        (a check now explicitly made).
+      # Added "timestamp" field to the metadata panel on the GUI. This
+        describes, in relative terms, how long ago the edit took place
+  
+  * 2010-03-25: 
+      # Repaired NullException in back-end main() loop caused by
+        puzzling queue behavior (still not really understood). 
+      # Massive overhaul of "warning" of offending editors:
+        UserTalk page is parsed to determine existing warnings and determine
+        severity of warning issued by STiki. If warnings are exhausted, user
+        will be posted to AIV for administrative intervention. Warnings 
+        will not be left for edits that occured long ago.
+      # Several 'dirty' regexes were added to [feature_language.java].
+  
+  * 2010-03-22: 
+      # Support was added so that offending-users can be 'warned' about their 
+        actions. Front-end support was put in place and a checkbox added to
+        the GUI. Changes reflected in help documentation. 'Warning' is
+        static template usage -- and will need to be made more dynamic. 
+      # Several 'dirty' regexes were added to [feature_language.java].
+
+  * 2010-03-21: Initial version of STiki becomes available to the public.
+  
+
+#################################### END ####################################

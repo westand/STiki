@@ -1,0 +1,30 @@
+#############################################################################
+#
+# Andrew G. West - practicalities.txt - From an academic perspective, it is
+# desireable to keep the reputation model focused on spatio-temporal 
+# properties and have few exceptions to the the general rules set forth.
+#
+# In reality, this makes a tool with a low hit-rate, does not optimize its
+# vandalism seeking opportunities, and is unlikely to be adopted by
+# general-purpose (Wikipedia) users. This document outlines the model 'quirks'
+# used to optimize performance -- sometimes at the expense of robust-ness.
+#
+#############################################################################
+
+  [1]:  Some properties of METADATA are highly indicative of the fact an edit
+        is NOT vandalism, yet are too lightweight or rare to be included as
+        features. For example, edits reverting vandalism with comments of the
+        form "undid edit x by y" are sometimes highly-scored (erroneously) on
+        the basis of their article reptuation. The [should_queue()] method of 
+        [edit_process_thread.java] handles these technicalities.
+        
+  [2]:  As much as our research hypes spatio-temporal properties. language-
+        based ones can be pretty darn effective. Thus, to improve our hit-rate,
+        we've decided to include a small number of trivial NLP features.
+        These features are built in [feature_language.java] -- and if one
+        wanted to compile a "pure" version of STiki without such features,
+        a switch is available in [feature_builder.java]. Further, the
+        normalization of such features is handled quite informally.
+
+
+#################################### END ####################################

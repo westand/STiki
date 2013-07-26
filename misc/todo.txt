@@ -1,0 +1,21 @@
+#############################################################################
+#
+# Andrew G. West - todo.txt - This document tracks active bugs that need 
+# fixed, unfulfilled feature requests, etc. -- things that need to get done.
+#
+#############################################################################
+
+################ TODO ###############
+
+  * Basic TODO tasks are now managed on STiki's talk page:
+    http://en.wikipedia.org/wiki/Wikipedia_talk:STiki
+
+
+#### TOO SMALL/DISTANT TO MENTION ####
+
+  * A feature dealing with number of contributor edits
+  * Actually implement edit filters
+  * Implement decision tree atop PAN2011 data
+  
+
+#################################### END ####################################

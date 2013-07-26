@@ -1,0 +1,41 @@
+#############################################################################
+#
+# Andrew G. West - adding_features.txt - This document describes the steps
+# necessary in order to add a feature to the back-end processing engine.
+# (That is, the internal queue engine known as "STiki").
+#
+#############################################################################
+
+  [1]: Add the feature field to the [feature_set] object of the [core_objects] 
+       class, and modify the constructor to populate the field.
+  
+  [2]: In [feature_builder.java] of the [learn_frontend] package, use the
+       edit metadata to calculate the feature-value, and then add this
+       feature to the associated feature set (via the constructor of [1]).
+ 
+  [3]: In [db_features.java] of the [db_server] package, the DB-insertion
+       statement AND method must be changed to reflect the new feature.
+       Also, the [convert_db_row_to_fs()] method should be changed.
+       
+  [4]: The database itself needs changed. In particular, the [features] table
+       needs a column to support the changes made in step [3].
+       
+  [5]: Normalization methods for each classification-strategy need modified.
+       For example, [svm_normalizer.java] of the [learn_svm] package, and
+       [adtree_frontend.java] of the [learn_adtree] package. These classes
+       convert raw-features to ones that are classifier friendly.
+       
+  [6]: You're done! However, depending on the learning strategy, it could
+       take some time before you notice a difference (time is needed for 
+       the "newly scored" edits to populate training sets). For others, new
+       models may need to be installed after offline learning takes place.
+       
+  ................
+  
+  [7]: (optional) If you are permitting API access to your database, you
+       should modify your PHP to output the new feature (unless you
+       are already doing a "SELECT *" to handle this). Similarly, the
+       associated documentation may need updated.
+       
+
+#################################### END ####################################
