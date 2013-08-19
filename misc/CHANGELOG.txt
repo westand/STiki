@@ -12,7 +12,14 @@
   formal version number (e.x., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2013-XX-XX
+  * 2013-08-19
+      # EMERGENCY RELEASE: The following security change by WMF developers:
+        [http://lists.wikimedia.org/pipermail/wikitech-l/2013-August/071266.html]
+        completely broke how login cookies are parsed in STiki (and most
+        other applications, I have to imagine). This caused the edit/rollback
+        tokens requested to be invalid under server checks, causing all
+        edits to fail with a "badtoken" response. Every user will need
+        to upgrade their STiki distribution.
       # Default revert comments were changed to note the quantity of edits
         reverted, with always correct plurality. This is done via the "#q#" 
         (quantity) and "#s#" placeholders (plurality switch) now interpreted

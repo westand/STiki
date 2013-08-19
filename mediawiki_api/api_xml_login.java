@@ -52,7 +52,7 @@ public class api_xml_login extends DefaultHandler{
 			this.string_result += attributes.getValue("lguserid") + "; ";
 			this.string_result += pfx + "Token=";
 			this.string_result += attributes.getValue("lgtoken") + "; ";
-			this.string_result += pfx + "_session=";
+			this.string_result += pfx + "Session=";
 			this.string_result += attributes.getValue("sessionid");
 		} // Login second phase: build cookie from response
 	}
