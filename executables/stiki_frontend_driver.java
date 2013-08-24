@@ -57,6 +57,16 @@ public class stiki_frontend_driver extends JFrame{
 	
 	
 	// ******* VISUAL ELEMENTS ********
+	
+	/**
+	 * Version ID of the STiki program. A date concatenated in Integer format.
+	 * While this should be updated at every distribution, it is only checked
+	 * against to see if a forced update is required.
+	 */
+	public static final int CUR_VERSION = 20130819;
+	
+	
+	// ******* VISUAL ELEMENTS ********
 	//
 	// Visual components made public, so sub-classes are able to alter
 	// the visual GUI appearence without extensive passing
@@ -168,7 +178,9 @@ public class stiki_frontend_driver extends JFrame{
 		
 		client_interface ci = new client_interface();
 		if(ci.con_client.con != null){ 
-			new stiki_frontend_driver(ci);
+			if(req_version(ci))
+				new stiki_frontend_driver(ci);
+			else System.exit(1);
 		} else{ // If connectivity, launch the GUI 
 			JFrame frame = new JFrame();
 			frame.setIconImage(gui_filesys_images.ICON_64);
@@ -427,6 +439,36 @@ public class stiki_frontend_driver extends JFrame{
 	
 	// *************************** PRIVATE METHODS ***************************
 
+	/**
+	 * Determine if the current version of STiki meets minimum version reqs. 
+	 * @param ci Client connection to the central STiki database, where
+	 * the minimum required version is notated.
+	 * @return TRUE if the current version meets minimum requirements. 
+	 * Otherwise return FALSE.
+	 */
+	private static boolean req_version(client_interface ci) throws Exception{
+		
+		int min_version = ci.req_version();
+		if(min_version <= CUR_VERSION)
+			return(true);
+		else{
+			JFrame frame = new JFrame();
+			frame.setIconImage(gui_filesys_images.ICON_64);
+			JOptionPane.showMessageDialog(frame,
+					"An updated version of STiki is required!\n\n" +
+					"Your current version is insufficient. Most likely\n" +
+					"this is because the WMF has made changes that\n" +
+					"fundamentally broke your current version. A new  \n" +
+					"version is available at [[WP:STiki]], and more\n" +
+					"information should be on the talk page.\n\n" +
+					"The software will now exit.\n\n",
+	       		    "Error: Software update required",
+	       		    JOptionPane.ERROR_MESSAGE);
+			return(false);
+		} // error message if version is insufficient
+	
+	}
+	
 	/**
 	 * Move visual components forward to the next revision.
 	 * @param previous If TRUE, instruct the queue to re-show the previous

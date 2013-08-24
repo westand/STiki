@@ -59,6 +59,11 @@ public class client_interface{
 	private CallableStatement cstmt_default_queue;
 	
 	/**
+	 * SQL call to determine minimum functional version number of STiki.
+	 */
+	private CallableStatement cstmt_req_version;
+	
+	/**
 	 * SQL call to determine if a user has *explicit" permission to use tool.
 	 */
 	private CallableStatement cstmt_users_explicit;
@@ -77,8 +82,8 @@ public class client_interface{
 	 * SQL call which pings STiki server (a meaningless stored procedure call).
 	 */
 	private CallableStatement cstmt_ping;
+		
 	
-
 	// ***************************** CONSTRUCTORS ****************************
 	
 	/**
@@ -160,6 +165,16 @@ public class client_interface{
 	}
 	
 	/**
+	 * Query for the minimum required version of the STiki software
+	 * @return Minimum required version representation. This should simply
+	 * be a date concatenated into integer format, i.e., "20130921".
+	 */
+	public synchronized int req_version() throws Exception{
+		cstmt_req_version.execute();
+		return(cstmt_req_version.getInt(1));
+	}
+	
+	/**
 	 * Determine if some Wikipedia/STiki user has explicit tool rights
 	 * (as opposed to the implicit ones per qualification conditions)
 	 * @param uname Username of some individual
@@ -220,6 +235,7 @@ public class client_interface{
 		cstmt_geo_country.close();
 		cstmt_oe_insert.close();
 		cstmt_default_queue.close();
+		cstmt_req_version.close();
 		cstmt_recent_use.close();
 		cstmt_ping.close();
 		con_client.con.close();
@@ -246,6 +262,10 @@ public class client_interface{
 		cstmt_default_queue = con_client.con.prepareCall(
 			"{CALL client_default_queue(?)}"); // 1 OUT param
 		cstmt_default_queue.registerOutParameter(1, java.sql.Types.INTEGER);
+		
+		cstmt_req_version = con_client.con.prepareCall(
+			"{CALL client_req_version(?)}"); // 1 OUT param
+		cstmt_req_version.registerOutParameter(1, java.sql.Types.INTEGER);
 		
 		cstmt_users_explicit = con_client.con.prepareCall(
 			"{CALL client_users_explicit(?,?)}"); // 1 IN, 1 OUT params

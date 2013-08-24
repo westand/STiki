@@ -9,8 +9,15 @@
 
   Note that we version STiki by the date (UTC locale) of the build-date. This
   is also the file-name under which the executable/source is released. The 
-  formal version number (e.x., 2.1) is in too many places to be 
+  formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
+  
+  * 2013-XX-XX
+      # In lieu of the latest emergency release and the manual notification
+        of the required upgrade, code has now been implemented to automate
+        this in the future. Clients now make an explicit version check against
+        the server, which will pop and informational dialogue and forced
+        exit if the user's version is insufficient.
   
   * 2013-08-19
       # EMERGENCY RELEASE: The following security change by WMF developers:
