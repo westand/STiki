@@ -66,7 +66,8 @@ public class gui_settings extends Properties{
 		options_hyperlinks,		// Whether URLs are hyperlinked in diffs
 		options_https,			// Whether the HTTPS protocol should be used
 		options_dttr,			// Whether to warn if "templating a regular"
-		options_agf_comment};	// Whether to message AGF-reverted users
+		options_agf_comment,    // Whether to message AGF-reverted users
+		filter_privileged};     // Show edits by privileged editors?
 		
 	
 	// **************************** PRIVATE FIELDS ***************************
@@ -247,7 +248,12 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_BOOL.login_watch.toString(), String.valueOf(
 				parent.login_panel.watchlist_checkbox_selected()));
 		
-			// Menu properties; all are actually in "options"
+			// Queue options and filters over those queues
+		props.setProperty(SETTINGS_BOOL.filter_privileged.toString(),
+				String.valueOf(parent.menu_bar.get_filter_menu().
+				get_privileged_status()));
+		
+			// Menu properties found in "options"
 		props.setProperty(SETTINGS_INT.options_fontsize.toString(), 
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_browser_fontsize()));

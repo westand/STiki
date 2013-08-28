@@ -89,6 +89,20 @@ public class edit_queue_fetcher implements Runnable{
 					parent, rid, pid, session_cookie, 
 					using_native_rb, source_queue);
 			
+				// Having obtained all data, we can also check the edit
+				// against user-set filters from the STiki menu. This could
+				// cause some edits to already been enqueued under old
+				// settings, but we pop a dialogue explaining this fact.
+			
+			if((!parent.menu_bar.get_filter_menu().get_privileged_status()) &&
+					(cur_edit.user_perms.contains("reviewer")  || 
+					cur_edit.user_perms.contains("rollbacker")  || 
+					cur_edit.user_perms.contains("administrator") ||
+					cur_edit.user_perms.contains("sysop"))){
+				cur_edit = null;
+				parent.client_interface.queues.queue_delete(rid);	
+			} 
+			
 				// Make sure we have not obtained a zero-diff (no change, 
 				// a consequence of the diff browser showing rollback results)
 				// If we have, don't make anyone else deal with it.

@@ -133,6 +133,12 @@ public class gui_globals{
 	 */
 	public static final Font DEFAULT_BROWSER_FONT = PLAIN_NORMAL_FONT;
 	
+	/**
+	 * Horizontal rule/separator for use in menus.
+	 */
+	public static final Component HORIZ_MENU_SEP = 
+			Box.createHorizontalStrut(gui_globals.MENUBAR_HORIZ_SPACING);
+	
 
 	// ************ REGEX *************
 	

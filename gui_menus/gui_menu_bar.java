@@ -1,8 +1,5 @@
 package gui_menus;
 
-import java.awt.Component;
-import java.awt.event.KeyEvent;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JMenu;
@@ -39,7 +36,7 @@ public class gui_menu_bar extends JMenuBar{
 	 * Top-level menu where filters can be selected which affect which 
 	 * edits are shown in the main window (i.e., filter the RID queue).
 	 */
-	private JMenu filter_menu;
+	private gui_menu_filter filter_menu;
 	
 	/**
 	 * Top-level menu allowing users to alter small-level options.
@@ -69,44 +66,40 @@ public class gui_menu_bar extends JMenuBar{
 	 * @param default_queue Queue selected by default at program start
 	 */
 	public gui_menu_bar(stiki_frontend_driver frame, SCORE_SYS default_queue){
-
-			// Initialize the revision-filter menu. Given that all options
-			// are disabled currently, this is handled in-class
-		filter_menu = create_top_menu("Revision Filters", KeyEvent.VK_R);
-		build_filter_menu();
 		
 			// More interesting menus are handled by separate classes
 		file_menu = new gui_menu_file(frame);
 		queue_menu = new gui_menu_queue(frame, default_queue);
+		filter_menu = new gui_menu_filter(frame);
 		options_menu = new gui_menu_options(frame);
 		help_menu = new gui_menu_help();
 		about_menu = new gui_menu_about();
 		
 			// Add the individual components to the MenuBar
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(file_menu);
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.create_vert_separator());
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(queue_menu);
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.create_vert_separator());
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(filter_menu);
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.create_vert_separator());
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(options_menu);
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.create_vert_separator());
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(help_menu);
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.create_vert_separator());
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(about_menu);
-		this.add(horiz_menubar_spacer());
+		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.create_vert_separator());
 		this.add(Box.createHorizontalGlue());
 	}
@@ -156,6 +149,14 @@ public class gui_menu_bar extends JMenuBar{
 	}
 	
 	/**
+	 * Return the "filter menu", wherein some queue settings lie.
+	 * @return the "filter menu" of this menu bar
+	 */
+	public gui_menu_filter get_filter_menu(){
+		return(filter_menu);
+	}
+	
+	/**
 	 * Return the "options menu", wherein many option settings are
 	 * presented to the end-user (i.e., checkboxes, etc.). An accessor.
 	 * @return the "options menu" of this menu bar
@@ -166,26 +167,5 @@ public class gui_menu_bar extends JMenuBar{
 	
 	
 	// *************************** PRIVATE METHODS ***************************
-		
-	/**
-	 * Assemble the menu beneath the "revision filter" top-level heading.
-	 */
-	private void build_filter_menu(){
-		filter_menu.add(gui_globals.checkbox_item("Namespace-Zero (NS0)", 
-				KeyEvent.VK_Z, false, true));
-		filter_menu.add(gui_globals.checkbox_item("Anonymous User Edits", 
-				KeyEvent.VK_A, false, true));
-		filter_menu.add(gui_globals.checkbox_item("Registered User Edits", 
-				KeyEvent.VK_R, false, true));
-		filter_menu.add(gui_globals.checkbox_item("Only Most Recent on Page",
-				KeyEvent.VK_M, false, true));	
-	}
-	
-	/**
-	 * Shorthand for a horizontal-spacing of a pre-defined distance.
-	 */
-	private Component horiz_menubar_spacer(){
-		return(Box.createHorizontalStrut(gui_globals.MENUBAR_HORIZ_SPACING));
-	}
 	
 }

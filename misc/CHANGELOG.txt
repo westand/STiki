@@ -18,6 +18,10 @@
         this in the future. Clients now make an explicit version check against
         the server, which will pop and informational dialogue and forced
         exit if the user's version is insufficient.
+      # The first user-faching "revision filter" has been installed in the
+        "filter" menu. There, users can choose whether edits comittted by
+        privileged users (i.e., sysops, reviewers, and rollbackers) should
+        be displayed in the GUI.
   
   * 2013-08-19
       # EMERGENCY RELEASE: The following security change by WMF developers:

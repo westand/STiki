@@ -36,6 +36,8 @@ public class gui_menu_queue extends JMenu implements ActionListener{
 	
 	// **************************** PRIVATE FIELDS ***************************
 
+	// ***** QUEUE RADIOS
+	
 	/**
 	 * Radio button for the "Cluebot-NG" queue.
 	 */
@@ -52,7 +54,7 @@ public class gui_menu_queue extends JMenu implements ActionListener{
 	private JRadioButtonMenuItem item_wikitrust;
 	
 	/**
-	 * Radio button for the "WikiTrust" queue.
+	 * Radio button for the "Spam" queue.
 	 */
 	private JRadioButtonMenuItem item_spam;
 	
@@ -60,6 +62,9 @@ public class gui_menu_queue extends JMenu implements ActionListener{
 	 * Radio button for the "Meta (combination)" queue.
 	 */
 	private JRadioButtonMenuItem item_meta;
+	
+	
+	// ***** STATISTICAL MATTERS
 	
 	/**
 	 * Menu item popping a dialogue describing recent usage rates.
