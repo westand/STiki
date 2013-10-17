@@ -224,6 +224,10 @@ public class gui_button_panel extends JPanel implements
 	 */
 	public void keyPressed(KeyEvent ke){
 		try{	
+			
+			if(ke.isAltDown())
+				return; // Prevent double-actions for mnemonics
+			
 				// Map keys to events; get focus for visual intuitiveness.
 				// Extra check needed on "guilty" based on mode
 			if((ke.getKeyChar() == 'v' || ke.getKeyChar() == 'V') && 
