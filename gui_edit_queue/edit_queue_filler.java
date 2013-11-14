@@ -95,7 +95,7 @@ public class edit_queue_filler implements Runnable{
 	/**
 	 * Data structure tracking work-in-progress by threads.
 	 */
-	private List<Future<?>> futures;
+	private List<pair<Future<?>,Long>> futures;
 	
 	/**
 	 * Reservations are made distinct through the use of a random key, which
@@ -121,7 +121,7 @@ public class edit_queue_filler implements Runnable{
 		this.parent = parent;
 		this.rid_queue_cache = rid_queue_cache;
 		this.threads = threads;
-		this.futures = new LinkedList<Future<?>>(); // Tasks in progress list
+		this.futures = new LinkedList<pair<Future<?>,Long>>();
 		this.resid_history = new LinkedList<Long>();
 		
 			// Initialize all queue-determinant fields to default criteria
@@ -155,10 +155,11 @@ public class edit_queue_filler implements Runnable{
 						// and caching it (in threaded fashion).
 					
 					rid_pid_pair = this.server_q.poll();
-					futures.add(threads.submit(new edit_queue_fetcher(
+					futures.add(new pair<Future<?>,Long>(
+							threads.submit(new edit_queue_fetcher(
 							parent, rid_pid_pair.fst, rid_pid_pair.snd, 
 							session_cookie, using_native_rb, queue_in_use, 
-							rid_queue_cache)));						
+							rid_queue_cache)), rid_pid_pair.fst));				
 				} else
 					Thread.sleep(10); // Prevent over-spinning if full queue
 
@@ -250,13 +251,15 @@ public class edit_queue_filler implements Runnable{
 	 * @param futures_in List of future objects
 	 * @return List 'futures_in', without all entries mapping to 'done' tasks
 	 */
-	private synchronized static List<Future<?>> remove_done(
-			List<Future<?>> futures_in){
+	private synchronized static List<pair<Future<?>,Long>> remove_done(
+			List<pair<Future<?>,Long>> futures_in){
 		
-		List<Future<?>> futures_live = new LinkedList<Future<?>>();
-		for(int i=0; i < futures_in.size(); i++){
-			if(!futures_in.get(i).isDone())
+		List<pair<Future<?>,Long>> futures_live = 
+				new LinkedList<pair<Future<?>,Long>>();
+		for(int i=0; i < futures_in.size(); i++){	
+			if(!futures_in.get(i).fst.isDone())
 				futures_live.add(futures_in.get(i));
+			// else System.out.println(futures_in.get(i).snd + " not done");
 		} // Iterate over all tasks, checking "done" status
 		return(futures_live);
 	}
@@ -266,9 +269,10 @@ public class edit_queue_filler implements Runnable{
 	 * all those tasks which have no yet completed.
 	 * @param futures List of Future objects
 	 */
-	private synchronized static void cancel_all(List<Future<?>> futures){
+	private synchronized static void cancel_all(
+			List<pair<Future<?>,Long>> futures){
 		for(int i=0; i < futures.size(); i++)
-			futures.get(i).cancel(true); // Cancel via interrupt if needed
+			futures.get(i).fst.cancel(true); // Cancel via interrupt if needed
 	}
 	
 }

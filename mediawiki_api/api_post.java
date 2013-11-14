@@ -34,15 +34,16 @@ import core_objects.pair;
  * 		[6]:  "prepend text" -- Edit a Wikipedia page, by pre-pending text
  * 		[7]:  "edit full text" -- Edit a Wikipedia page, by providing the
  * 			  complete replacement text for the page.
+ *      [8]:  "review rid" -- per the PendingChanges/FlaggedRevs programs
  * 
  * 	POST-ing is a two-way street. In addition to sending the data, the server
  * 	also has an (XML) response. We build handlers to parse these responses:
  * 
- * 		[8]:  "login" -- For cookie building pertaining to login.
- * 		[9]:  "edit was made" -- Given the InputStream resulting from an
+ * 		[9]:  "login" -- For cookie building pertaining to login.
+ * 		[10]  "edit was made" -- Given the InputStream resulting from an
  * 		      edit post. Was the edit actually made? (editing conflicts,
  * 			  for instance, could cause such an action to fail).
- * 		[10]: "rollback was made" -- Given the InputStream resulting from
+ * 		[11]: "rollback was made" -- Given the InputStream resulting from
  * 			  an edit post -- Did the rollback succeed?
  */
 public class api_post{
@@ -289,6 +290,27 @@ public class api_post{
 			post_data += "&watchlist=nochange";
 		post_data += "&format=xml";
 		return(api_post.post(post_data, cookie).getInputStream()); // Do it!	
+	}
+	
+	/**
+	 * 
+	 * @param rid Revision ID for which to approve an edit
+	 * @param edit_token An edit token retrieved for the page(?)
+	 * @param comment Optional comment to post with review
+	 * @param cookie Cookie so action will be mapped to logged-in user
+	 * @return InputStream over server-response to the edit POST
+	 */
+	public static InputStream review_rid(long rid, 
+			pair<String,String> edit_token, String comment, String cookie) 
+					throws Exception{
+		
+		String post_data = "action=review";
+		post_data += "&revid=" + rid;
+		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
+		if(comment != null && comment.length() > 0)
+			post_data += "&comment=" + URLEncoder.encode(comment, "UTF-8");
+		post_data += "&format=xml";
+		return(api_post.post(post_data, cookie).getInputStream());
 	}
 	
 	
