@@ -16,10 +16,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-import core_objects.metadata;
 import core_objects.stiki_utils;
 import core_objects.stiki_utils.QUEUE_TYPE;
 
+import gui_edit_queue.gui_display_pkg;
 import gui_support.gui_globals;
 import gui_support.gui_settings;
 
@@ -140,34 +140,52 @@ public class gui_comment_panel extends JTabbedPane implements ActionListener{
 	}
 
 	/**
+	 * Given a String, replace placeholders (i.e, #u#, #a# et al.) with
+	 * the respective fields from a provided edit chain.
+	 * @param text Text in which the subsitution should be peformed
+	 * @param edit_pkg Wrapper for the edit chain being operated over. 
+	 * @return 'text' with substitutions
+	 */
+	public static String substitute_placeholders(String text, 
+			gui_display_pkg edit_pkg){
+		
+		// Currently supported placeholders:
+		// #u# - User (guilty) who made the edit being reverted.
+		// #p# - User whose previous version is being reverted back to 
+		// #a# - Article on which the offending edit was placed.
+		// #q# - Quantity of edits that will be reverted/RB'ed
+		// #s# - Plurality switch. Returns "s" if #q# > 1; "" otherwise.
+		// #t# - Time (in seconds) which offending edit survived. 
+		
+		text = text.replaceAll("#u#", edit_pkg.metadata.user);
+		text = text.replaceAll("#a#", edit_pkg.metadata.title);
+		text = text.replaceAll("#q#", edit_pkg.rb_depth + "");
+		text = text.replaceAll("#t#", 
+				"" + (stiki_utils.cur_unix_time()-edit_pkg.metadata.timestamp));
+		
+		if(edit_pkg.rb_depth > 1)
+			text = text.replaceAll("#s#", "s");
+		else text = text.replaceAll("#s#", "");
+		
+		if(edit_pkg.page_hist.size() > edit_pkg.rb_depth){
+			String user = edit_pkg.page_hist.get(edit_pkg.rb_depth).user;
+			text = text.replaceAll("#p#", user);
+		} // Realize that we want the edit AFTER the one being reverted,
+		  // so we don't subtract one from the depth to get the index
+		else text = text.replaceAll("#p#", "an unknown user");
+		return(text);	
+	}
+	
+	/**
 	 * Return the content of the comment field, replacing any of the
 	 * assigned placeholders with the appropriate content.
-	 * @param metadata Metadata object wrapping edit being reverted
-	 * @param rb_depth Number of edits about to be reverted
+	 * @param edit_pkg Wrapper for the edit chain being operated over.
 	 * @param ct Tab of the comment pane whose comment is desired
 	 * @return Current (edit-specific) content of the comment field.
 	 */
-	public String get_comment(metadata meta, int rb_depth, COMMENT_TAB ct){
-		
-			// Currently supported placeholders:
-			// #u# - User (guilty) who made the edit being reverted.
-			// #a# - Article on which the offending edit was placed.
-			// #q# - Quantity of edits that will be reverted/RB'ed
-			// #s# - Plurality switch. Returns "s" if #q# > 1; "" otherwise.
-			// #t# - Time (in seconds) which offending edit survived. 
-			
+	public String get_comment(gui_display_pkg edit_pkg, COMMENT_TAB ct){
 		String comment = get_comment(ct);
-		comment = comment.replaceAll("#u#", meta.user);
-		comment = comment.replaceAll("#a#", meta.title);
-		comment = comment.replaceAll("#q#", rb_depth + "");
-		comment = comment.replaceAll("#t#", 
-				"" + (stiki_utils.cur_unix_time()-meta.timestamp));
-		
-		if(rb_depth > 1)
-			comment = comment.replaceAll("#s#", "s");
-		else comment = comment.replaceAll("#s#", "");
-		
-		return(comment);
+		return(substitute_placeholders(comment, edit_pkg));
 	}	
 	
 	/**

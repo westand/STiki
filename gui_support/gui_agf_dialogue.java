@@ -1,5 +1,7 @@
 package gui_support;
 
+import gui_edit_queue.gui_display_pkg;
+import gui_panels.gui_comment_panel;
 import gui_support.gui_settings.SETTINGS_STR;
 
 import java.awt.Color;
@@ -126,12 +128,12 @@ public class gui_agf_dialogue extends JDialog implements
 	 * @param args No arguments are taken by this method
 	 */
 	public static void main(String[] args){
-		JFrame frame = new JFrame();
+		/*JFrame frame = new JFrame();
         frame.setVisible(true);
 		System.out.println(new gui_agf_dialogue(frame).get_result(
 				"SomeUser", "Main_page"));
 		frame.dispose();
-		frame.setVisible(false);
+		frame.setVisible(false);*/
 	}
 	
 	
@@ -257,14 +259,13 @@ public class gui_agf_dialogue extends JDialog implements
 	/**
 	 * Assuming this class has been constructed, and that constructor has
 	 * completely exited (the dialog has been closed), get the result.
-	 * @param user User whose edit is about to be reverted
-	 * @param article Article where revert will occur
+	 * @param edit_pkg Wrapper for the edit chain being operated over. 
 	 * @return The result here is the content of the text-area at the
 	 * point when the dialog was closed, after substituting any edit
 	 * dependent place-holder values. The return value may be NULL
 	 * if the dialog was closed via the "cancel" button
 	 */
-	public String get_result(String user, String article){
+	public String get_result(gui_display_pkg edit_pkg){
 		if(talk_output == null)
 			return("");
 		else if(talk_output.equals(INTRO_MSG))
@@ -273,8 +274,8 @@ public class gui_agf_dialogue extends JDialog implements
 			return("");
 		else if(talk_output.equals(ABANDON_MSG))
 			return(ABANDON_MSG);
-		else return("\n\n" + talk_output.replace("#u#", user).replace(
-				"#a#", "[[" + article + "]]"));
+		else return("\n\n" + gui_comment_panel.substitute_placeholders(
+				talk_output, edit_pkg));	
 	}
 	
 	/**

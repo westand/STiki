@@ -13,15 +13,18 @@
   conveniently altered for small changes:
   
   * 2013-XX-XX
+      # A new substitution, "#p#", is available for use when authoring 
+        revert comments and AGF messages. This makes it possible to provide
+        the "user whose version is being reverted to". (T#032) 
       # In lieu of the latest emergency release and the manual notification
         of the required upgrade, code has now been implemented to automate
         this in the future. Clients now make an explicit version check against
         the server, which will pop an informational dialogue and forced
-        exit if the user's version is insufficient.
-      # The first user-faching "revision filter" has been installed in the
+        exit if the user's version is insufficient. (T#033)
+      # The first user-facing "revision filter" has been installed in the
         "filter" menu. There, users can choose whether edits comittted by
         privileged users (i.e., sysops, reviewers, and rollbackers) should
-        be displayed in the GUI.
+        be displayed in the GUI. (T#029)
       # A bug whereby mnemonic usage could result in duplicate 
         classifications has been fixed. (T#030)
   

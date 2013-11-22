@@ -389,15 +389,14 @@ public class stiki_frontend_driver extends JFrame{
 		else if(fb_type.equals(FB_TYPE.AGF)){
 			ct = COMMENT_TAB.AGF;
 			if(menu_bar.get_options_menu().get_agf_comment_policy()){
-				usr_talk_msg = new gui_agf_dialogue(this).get_result(
-						edit_pkg.metadata.user, edit_pkg.metadata.title);
+				usr_talk_msg = new gui_agf_dialogue(this).get_result(edit_pkg);
 				if(usr_talk_msg.equals(gui_agf_dialogue.ABANDON_MSG))
 					return; // If user abandons the revert in-dialogue
 			} // Users can choose whether or not to customize AGF messages
 		} else ct = COMMENT_TAB.VOID;		
 		fb_task = new gui_fb_handler(this, fb_type, edit_pkg,
 				login_panel.get_editing_user(),
-				comment_panel.get_comment(md, edit_pkg.rb_depth, ct), 
+				comment_panel.get_comment(edit_pkg, ct), 
 				login_panel.get_session_cookie(),
 				login_panel.editor_has_native_rb(),
 				login_panel.rb_checkbox_selected(),
