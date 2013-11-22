@@ -389,7 +389,7 @@ public class gui_login_panel extends JPanel implements ActionListener{
 		anon_checkbox.setMnemonic(KeyEvent.VK_A);
 		anon_checkbox.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		anon_checkbox.addActionListener(this);		
-		anon_link = gui_globals.create_link("[?]", this);
+		anon_link = gui_globals.create_link("[?]", false, this);
 
 			// Simple horizontal arrangement of CB and link
 		JPanel subpanel = new JPanel();
@@ -476,7 +476,7 @@ public class gui_login_panel extends JPanel implements ActionListener{
 		watchlist_checkbox.setMnemonic(KeyEvent.VK_N);
 		watchlist_checkbox.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		watchlist_checkbox.addActionListener(this);		
-		watchlist_link = gui_globals.create_link("[?]", this);
+		watchlist_link = gui_globals.create_link("[?]", false, this);
 
 			// Simple horizontal arrangement of CB and link
 		JPanel subpanel = new JPanel();

@@ -262,7 +262,7 @@ public class gui_revert_and_warn implements Runnable{
 			  // this if revert actually succeeds. 
 		
 				// Use the OUTCOME data to update user-facing GUI
-			gui_revert_panel.update_display(metadata.user, metadata.title,
+			gui_revert_panel.update_display(this.edit_pkg,
 					revert_type, revert_warn_outcome);
 		} 
 		catch (Exception e){
@@ -297,18 +297,21 @@ public class gui_revert_and_warn implements Runnable{
 				metadata.user, metadata.user_is_ip))
 			return(WARNING.NO_USER_BLOCK);
 		
-			// Go to offending-user's Talk page, get month's content
-		String talk_page = "User talk:" + metadata.user;
-		String talk_content = api_retrieve.process_page_content(talk_page);
-		if(talk_content.startsWith("#REDIRECT ")){
-			talk_page = stiki_utils.first_match_within("\\[\\[.*?\\]\\]", 
-					talk_content).replace("[[", "").replace("]]", "");
-			talk_content = api_retrieve.process_page_content(talk_page);
-		} // Accomodate possibility of user-page redirect
-		  // No plans to accomodae redirects of nested depth.
-		
+		String sec_content = "";
+		String talk_content = "";
 		String date_header = cur_utc_month_year();
-		String sec_content = get_section_content(talk_content, date_header);
+		String talk_page = "User talk:" + metadata.user;
+		if(edit_pkg.user_has_talkpage){ 
+			talk_content = api_retrieve.process_page_content(talk_page);
+			if(talk_content.startsWith("#REDIRECT ")){
+				talk_page = stiki_utils.first_match_within("\\[\\[.*?\\]\\]", 
+						talk_content).replace("[[", "").replace("]]", "");
+				talk_content = api_retrieve.process_page_content(talk_page);
+			} // Accomodate possibility of user-page redirect
+			  // No plans to accomodate redirects of nested depth.
+			sec_content = get_section_content(talk_content, date_header);
+		} // Go to offending-user's Talk page, get month's content
+		  // We know from package building whether usertalk exists
 
 			// We now know a warning will likely be placed; need edit token
 			// Can re-use one from the main article if we have it(?)

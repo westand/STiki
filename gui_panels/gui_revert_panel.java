@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import gui_edit_queue.gui_display_pkg;
 import gui_support.gui_globals;
 import gui_support.gui_revert_and_warn;
 import gui_support.gui_revert_and_warn.RV_STYLE;
@@ -57,9 +58,9 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 	public gui_revert_panel(){
 				
 			// Create panel that displays offending-user links
-		link_contribs = gui_globals.create_small_link("(edits)", this);
-		link_talk = gui_globals.create_small_link("(talk)", this);
-		link_page = gui_globals.create_small_link("(article)", this);
+		link_contribs = gui_globals.create_small_link("(edits)", false, this);
+		link_talk = gui_globals.create_small_link("(talk)", false, this);
+		link_page = gui_globals.create_small_link("(article)", false, this);
 		JPanel link_panel = new JPanel();
 		link_panel.setLayout(new BoxLayout(link_panel, BoxLayout.X_AXIS));
 		link_panel.add(link_contribs);
@@ -109,19 +110,32 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 	 * @param rv_style Description of the revert/rollback technique used
 	 * @param outcome Description of the warning outcome
 	 */
-	public void update_display(String user_reverted, String page_reverted,
+	public void update_display(gui_display_pkg edit_pkg,
 			gui_revert_and_warn.RV_STYLE rv_style, 
 			gui_revert_and_warn.WARNING outcome){
 		
 			// Set guilty-user; which also sets up links
-		this.guilty_user = user_reverted;
-		this.last_page = page_reverted;
-		this.label_user.setText(trim_editor(user_reverted));
+		this.guilty_user = edit_pkg.metadata.user;
+		this.last_page = edit_pkg.metadata.title;
+		this.label_user.setText(trim_editor(edit_pkg.metadata.user));
 		this.user_panel.setVisible(true); // Make everything visible
 		this.link_contribs.setVisible(true);
 		this.link_talk.setVisible(true);
 		this.link_page.setVisible(true);
 		
+			// May need to swap out link color on the user-talk
+			// Remember the "user_has_talkpage" query is done prior to our
+			// intervention; so if we posted to talkpage, it now exists
+		if((!edit_pkg.user_has_talkpage) &&
+				(outcome.equals(WARNING.NO_EDIT_TOO_OLD) || 
+				outcome.equals(WARNING.NO_USER_BLOCK) || 
+				outcome.equals(WARNING.NO_BEATEN) || 
+				outcome.equals(WARNING.NO_ERROR) || 
+				outcome.equals(WARNING.NO_OPT_OUT) || 
+				outcome.equals(WARNING.NO_AIV_TIMING)))
+			link_talk = gui_globals.create_small_link("(talk)", true, this);
+		else link_talk = gui_globals.create_small_link("(talk)", false, this);
+
 			// Set information about any warning that took place. 
 			// First line of component will always be the guilty-user
 			// This leaves two-terse lines, dependent on warning outcome

@@ -65,10 +65,19 @@ public class gui_display_pkg{
 	public final int rb_depth;
 	
 	/**
-	 * A set describing the permissions held by the author of page_hist[0]
+	 * A set describing the permissions held by the author of page_hist[0].
 	 */
-	public Set<String> user_perms;
+	public final Set<String> user_perms;
 	
+	/**
+	 * Whether the author of page_hist[0] has a "user_talk" page.
+	 */
+	public final boolean user_has_talkpage;
+	
+	/**
+	 * Whether the author of page_hist[0] has a "user" page.
+	 */
+	public final boolean user_has_userpage;
 	
 	/**
 	 * Queue from which the RID wrapped by this object was obtained.
@@ -110,7 +119,9 @@ public class gui_display_pkg{
 	public gui_display_pkg(List<metadata> page_hist, 
 			pair<String,String> edit_token, String content, 
 			String content_linked, SCORE_SYS source_queue, 
-			int rb_depth, Set<String> user_perms, Integer user_edit_count){
+			int rb_depth, Set<String> user_perms, boolean user_has_talkpage,
+			boolean user_has_userpage, Integer user_edit_count){
+		
 		this.page_hist = page_hist;
 		this.metadata = page_hist.get(0);
 		this.edit_token = edit_token;
@@ -119,6 +130,8 @@ public class gui_display_pkg{
 		this.rb_depth = rb_depth;
 		this.source_queue = source_queue;
 		this.user_perms = user_perms;
+		this.user_has_talkpage = user_has_talkpage;
+		this.user_has_userpage = user_has_userpage;
 		this.user_edit_count = user_edit_count;
 	}
 	
@@ -144,6 +157,13 @@ public class gui_display_pkg{
 				perms = api_retrieve.process_user_perm(md.user);
 			else perms = new HashSet<String>(0);
 			
+			Set<String> titles_missing = new HashSet<String>();
+			titles_missing.add("User_talk:" + md.user);
+			titles_missing.add("User:" + md.user);
+			titles_missing = api_retrieve.process_pages_missing(titles_missing);
+			boolean user_has_talkpage = !titles_missing.contains("User_talk:" + md.user);
+			boolean user_has_userpage = !titles_missing.contains("User:" + md.user);
+			
 				// And manipulate the diff-content as needed
 			String diff = api_retrieve.process_diff_prev(rid);
 			String content = diff_markup.beautify_markup(
@@ -156,7 +176,8 @@ public class gui_display_pkg{
 			List<metadata> meta_list = new ArrayList<metadata>(1);
 			meta_list.add(md); // Just create a one element list
 			return(new gui_display_pkg(meta_list, null, content, 
-					con_link, null, 0, perms, null));
+					con_link, null, 0, perms, user_has_talkpage, 
+					user_has_userpage, null));
 			
 		} catch(Exception e){
 			return null;
@@ -204,7 +225,7 @@ public class gui_display_pkg{
 						
 			int edits_to_rb = 0;
 			long rid_to_diff = 0;
-			metadata meta = page_hist.get(0);
+			metadata meta = page_hist.get(0); // convenience
 			for(int i=0; i < page_hist.size(); i++){
 				if(page_hist.get(i).user.equals(meta.user))
 					edits_to_rb++;
@@ -248,6 +269,14 @@ public class gui_display_pkg{
 				perms = api_retrieve.process_user_perm(meta.user);
 			else perms = new HashSet<String>(0);
 			
+				// Determine existence of user/talk pages
+			Set<String> titles_missing = new HashSet<String>();
+			titles_missing.add("User_talk:" + meta.user);
+			titles_missing.add("User:" + meta.user);
+			titles_missing = api_retrieve.process_pages_missing(titles_missing);
+			boolean user_has_talkpage = !titles_missing.contains("User_talk:" + meta.user);
+			boolean user_has_userpage = !titles_missing.contains("User:" + meta.user);
+			
 			Integer edit_count = null;
 			if(meta.user_is_ip)
 				edit_count = -1;
@@ -258,7 +287,8 @@ public class gui_display_pkg{
 			  // penalty if we expected this to be used in DTTR warning
 
 			return(new gui_display_pkg(page_hist, edit_token, content, 
-					con_link, source_queue, edits_to_rb, perms, edit_count));
+					con_link, source_queue, edits_to_rb, perms, 
+					user_has_talkpage, user_has_userpage, edit_count));
 			
 		} catch(CommunicationsException e){
 			parent.reset_connection(false);
@@ -308,7 +338,7 @@ public class gui_display_pkg{
 		List<metadata> meta_list = new ArrayList<metadata>(1);
 		meta_list.add(new metadata()); // Just create a one element list
 		return(new gui_display_pkg(meta_list, null, end_con, 
-				end_con, null, 0, new HashSet<String>(0), null));
+				end_con, null, 0, new HashSet<String>(0), false, false, null));
 	}
 	
 	

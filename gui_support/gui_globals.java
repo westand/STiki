@@ -420,11 +420,16 @@ public class gui_globals{
     /**
      * Create a JButton with text that appears as a hyperlink.
      * @param text Hyperlink-text. That to be displayed on the button
+     * @param red_color If "true" then the returned link will be red,
+	 * consistent with non-existing links. If "false", then the link will
+	 * be a blue color consistent with existing links.
      * @param listener ActionListener handling button events
      */
-    public static JButton create_link(String text, ActionListener listener){
+    public static JButton create_link(String text, boolean red_color, 
+    		ActionListener listener){
+    	
     	JButton button = new JButton(text);
-    	button.setFont(gui_globals.get_link_font(false));
+    	button.setFont(gui_globals.get_link_font(false, red_color));
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setAlignmentX(JButton.LEFT_ALIGNMENT);
         button.setBorderPainted(false);
@@ -439,10 +444,11 @@ public class gui_globals{
      * Identical to "create_link()" except that this version creates
      * a hyperlink of smaller font size.
      */
-    public static JButton create_small_link(String text, 
+    public static JButton create_small_link(String text, boolean red_color,
     		ActionListener listener){
+    	
     	JButton button = new JButton(text);
-    	button.setFont(gui_globals.get_link_font(true));
+    	button.setFont(gui_globals.get_link_font(true, red_color));
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setAlignmentX(JButton.LEFT_ALIGNMENT);
         button.setBorderPainted(false);
@@ -493,16 +499,23 @@ public class gui_globals{
 	 * Return a font characteristic of the link style (blue, underlined).
 	 * @param small If "true" return a small sized font, else make the 
 	 * link font a more "normal" sized one.
+	 * @param red_color If "true" then the returned link will be red,
+	 * consistent with non-existing links. If "false", then the link will
+	 * be a blue color consistent with existing links.
 	 * @return A font suitable for creating text that appears as a hyperlink
 	 */
-	public static Font get_link_font(boolean small){
+	public static Font get_link_font(boolean small, boolean red_color){
 		Font font;
 		if(!small)
 			font = gui_globals.PLAIN_NORMAL_FONT;
 		else font = gui_globals.SMALL_NORMAL_FONT;
 		Map<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();
 		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		map.put(TextAttribute.FOREGROUND, new Color(0, 0, 153));
+		
+		if(red_color)
+			map.put(TextAttribute.FOREGROUND, new Color(153, 0, 0));
+		else map.put(TextAttribute.FOREGROUND, new Color(0, 0, 153));
+	
 		font = font.deriveFont(map);
 		return(font);
 	}

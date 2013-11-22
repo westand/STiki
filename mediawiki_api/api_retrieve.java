@@ -66,7 +66,7 @@ import db_server.db_geolocation;
  *      [xx]: "prev [n] on page" -- get data for [n] previous page edits
  *      [xx]: "next [n] on page" -- get data for [n] next page edits
  *      [xx]: "is badrevid" -- whether a RID is "bad" or not    
- *      [xx]: "page is missing" -- where a PID is "missing" or not
+ *      [xx]: "page is missing" -- whether a PID is "missing" or not
  *      [xx]: "xlinks on page" -- external links; valid for CURRENT version.
  *      [xx]: "block history" -- archived blocks for a user
  *      [xx]: "pages last touched" -- last edit date for a group of pages

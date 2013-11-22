@@ -94,11 +94,11 @@ public class gui_metadata_panel extends JPanel implements
 		data_panel.add(this.data_timestamp = gui_globals.create_data_field(""));
 		
 			// Intialize the Wikipedia-links for more information
-		this.link_rid = gui_globals.create_link("(Wiki-DIFF)", this);
-		this.link_title = gui_globals.create_link("(Current-Page)", this);
-		this.link_title_hist = gui_globals.create_link("(Page-Hist)", this);
-		this.link_user_cont = gui_globals.create_link("(User-Contribs)", this);
-		this.link_user_talk = gui_globals.create_link("(User-Talk)", this);
+		this.link_rid = gui_globals.create_link("(Wiki-DIFF)", false, this);
+		this.link_title = gui_globals.create_link("(Current-Page)", false, this);
+		this.link_title_hist = gui_globals.create_link("(Page-Hist)", false, this);
+		this.link_user_cont = gui_globals.create_link("(User-Contribs)", false, this);
+		this.link_user_talk = gui_globals.create_link("(User-Talk)", false, this);
 		
 			// Arrange links in a simple horizontal fashion
 		JPanel panel_rev = new JPanel();
@@ -200,12 +200,20 @@ public class gui_metadata_panel extends JPanel implements
 	 */
 	public void set_displayed_rid(gui_display_pkg gui_pkg){
 		this.cur_pkg = gui_pkg;
+		
+			// Data fields are generally straightforward
 		data_rid.setText(this.cur_pkg.metadata.rid + "");
 		data_title.setText(this.cur_pkg.metadata.title);
 		data_user.setText(this.cur_pkg.metadata.user + 
 				summarize_perms(this.cur_pkg.user_perms));
 		data_timestamp.setText(time_ago_str(this.cur_pkg.metadata.timestamp));
 		data_comment.setText(this.cur_pkg.metadata.comment);
+		
+			// Link colors may need adjusted
+		if(gui_pkg.user_has_talkpage)
+			this.link_user_talk = gui_globals.create_link("(User-Talk)", false, this);
+		else this.link_user_talk = gui_globals.create_link("(User-Talk)", true, this);
+		
 		resize(); // Adjust space given to panel containing MD-items
 	}
 	

@@ -13,6 +13,9 @@
   conveniently altered for small changes:
   
   * 2013-XX-XX
+      # The "user talk" link which appears in the "metadata" and "last 
+        revert" panels has been modified so it is appropriately blue/red 
+        based on the existence of that page. (T#034)
       # A new substitution, "#p#", is available for use when authoring 
         revert comments and AGF messages. This makes it possible to provide
         the "user whose version is being reverted to". (T#032) 
