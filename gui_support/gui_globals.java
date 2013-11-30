@@ -460,6 +460,31 @@ public class gui_globals{
     }
     
 	/**
+	 * Return a font characteristic of the link style (blue, underlined).
+	 * @param small If "true" return a small sized font, else make the 
+	 * link font a more "normal" sized one.
+	 * @param red_color If "true" then the returned link will be red,
+	 * consistent with non-existing links. If "false", then the link will
+	 * be a blue color consistent with existing links.
+	 * @return A font suitable for creating text that appears as a hyperlink
+	 */
+	public static Font get_link_font(boolean small, boolean red_color){
+		Font font;
+		if(!small)
+			font = gui_globals.PLAIN_NORMAL_FONT;
+		else font = gui_globals.SMALL_NORMAL_FONT;
+		Map<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();
+		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		
+		if(red_color)
+			map.put(TextAttribute.FOREGROUND, new Color(153, 0, 0));
+		else map.put(TextAttribute.FOREGROUND, new Color(0, 0, 153));
+	
+		font = font.deriveFont(map);
+		return(font);
+	}
+    
+	/**
 	 * Create a JCheckBoxMenuItem per STiki's style.
 	 * @param text Text to label the JCheckboxMenuItem (CBMI) being created
 	 * @param keyevent Mnemonic KeyEvent character to associate with the CBMI
@@ -493,31 +518,6 @@ public class gui_globals{
 		jrb.setEnabled(enabled);
 		jrb.setSelected(selected);
 		return(jrb);
-	}
-	
-	/**
-	 * Return a font characteristic of the link style (blue, underlined).
-	 * @param small If "true" return a small sized font, else make the 
-	 * link font a more "normal" sized one.
-	 * @param red_color If "true" then the returned link will be red,
-	 * consistent with non-existing links. If "false", then the link will
-	 * be a blue color consistent with existing links.
-	 * @return A font suitable for creating text that appears as a hyperlink
-	 */
-	public static Font get_link_font(boolean small, boolean red_color){
-		Font font;
-		if(!small)
-			font = gui_globals.PLAIN_NORMAL_FONT;
-		else font = gui_globals.SMALL_NORMAL_FONT;
-		Map<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();
-		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		
-		if(red_color)
-			map.put(TextAttribute.FOREGROUND, new Color(153, 0, 0));
-		else map.put(TextAttribute.FOREGROUND, new Color(0, 0, 153));
-	
-		font = font.deriveFont(map);
-		return(font);
 	}
 
 	/**

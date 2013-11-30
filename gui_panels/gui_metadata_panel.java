@@ -211,9 +211,9 @@ public class gui_metadata_panel extends JPanel implements
 		
 			// Link colors may need adjusted
 		if(gui_pkg.user_has_talkpage)
-			this.link_user_talk = gui_globals.create_link("(User-Talk)", false, this);
-		else this.link_user_talk = gui_globals.create_link("(User-Talk)", true, this);
-		
+			link_user_talk.setFont(gui_globals.get_link_font(false, false));
+		else link_user_talk.setFont(gui_globals.get_link_font(false, true));
+
 		resize(); // Adjust space given to panel containing MD-items
 	}
 	

@@ -492,7 +492,7 @@ public class gui_revert_and_warn implements Runnable{
 		String sec_start_form1 = "== " + section_title + " ==";
 		String sec_start_form2 = "==" + section_title + "==";
 		String sec_start_form3 = "=== " + section_title + " ===";
-		String sec_start_form4 = "===" + section_title + "===";
+		String sec_start_form4 = "====" + section_title + "====";
 		
 			// Find last matching form on the page (likely the ONLY)
 		int start_ind = Math.max(Math.max(Math.max(

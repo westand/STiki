@@ -125,7 +125,10 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 		
 			// May need to swap out link color on the user-talk
 			// Remember the "user_has_talkpage" query is done prior to our
-			// intervention; so if we posted to talkpage, it now exists
+			// intervention; so if we warned to talkpage, it now exists
+			//
+			// The 'else' case here captures all warning cases, as well
+			// as NO_CUSTOM_MSG which implies a post to user talk page
 		if((!edit_pkg.user_has_talkpage) &&
 				(outcome.equals(WARNING.NO_EDIT_TOO_OLD) || 
 				outcome.equals(WARNING.NO_USER_BLOCK) || 
@@ -133,9 +136,9 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 				outcome.equals(WARNING.NO_ERROR) || 
 				outcome.equals(WARNING.NO_OPT_OUT) || 
 				outcome.equals(WARNING.NO_AIV_TIMING)))
-			link_talk = gui_globals.create_small_link("(talk)", true, this);
-		else link_talk = gui_globals.create_small_link("(talk)", false, this);
-
+			link_talk.setFont(gui_globals.get_link_font(true, true));
+		else link_talk.setFont(gui_globals.get_link_font(true, false));
+			
 			// Set information about any warning that took place. 
 			// First line of component will always be the guilty-user
 			// This leaves two-terse lines, dependent on warning outcome
