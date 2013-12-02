@@ -372,9 +372,9 @@ public class gui_agf_dialogue extends JDialog implements
 				"");
 		
 		map.put("Non-notable list entry", 
-				"==Recent edits to #a#==\n" + 
+				"==Recent edit#s# to #a#==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and welcome to " + 
-				"Wikipedia. Your recent edit to #a# appears to have " + 
+				"Wikipedia. Your recent edit#s# to #a# appears to have " + 
 				"added the name of a non-notable entity. In general, " +  
 				"a person or organization added to a list " +  
 				"[[Wikipedia:NLIST|should have]] a pre-existing article " + 
@@ -385,9 +385,9 @@ public class gui_agf_dialogue extends JDialog implements
 				"Thank you! ~~~~");
 		
 		map.put("Talk in article", 
-				"==Recent edits to #a#==\n" + 
+				"==Recent edit#s# to #a#==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and thank you " +  
-				"for your contributions to Wikipedia. I noticed that " +  
+				"for your contribution#s# to Wikipedia. I noticed that " +  
 				"you recently added commentary to the #a# article. While " +  
 				"Wikipedia welcomes editors' opinions on an article and " +  
 				"how it could be changed, these comments are more " +  
@@ -398,27 +398,27 @@ public class gui_agf_dialogue extends JDialog implements
 				"and your comments will not disrupt the flow of the " +  
 				"article. Thank you! ~~~~");
 		
-		map.put("Non-English contribution", 
-				"==Recent edits to #a#==\n " +  
+		map.put("Non-English contributions", 
+				"==Recent edit#s# to #a#==\n " +  
 				"[[Image:Information.svg|25px]] Thank you for your " +  
-				"contributions to Wikipedia. I noticed that you have " +  
+				"contribution#s# to Wikipedia. I noticed that you have " +  
 				"posted content to the #a# article in a language other " +  
 				"than English. When on the English-language Wikipedia, " +  
 				"please always use English. Thank you! ~~~~");
 
 		
 		map.put("General revert notify ", 
-				"==Recent edits to #a#==\n" + 
+				"==Recent edit#s# to #a#==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and thank you " +  
-				"for your recent contributions. I appreciate the effort " + 
+				"for your recent contribution#s#. I appreciate the effort " + 
 				"you made for our project, but unfortunately I had to " +  
-				"undo your edit(s) because I believe the article was " +  
+				"undo your edit#s# because I believe the article was " +  
 				"better before you made that change. Feel free to " +  
 				"contact me directly if you have any questions. " +  
 				"Thank you! ~~~~");
 		
 		map.put("Joke edit",
-				"==Recent edits to #a#==\n" + 
+				"==Recent edit#s# to #a#==\n" + 
 				"[[Image:Information.svg|25px]] " +   
 				"[[Wikipedia:Introduction|Welcome]], and thank you for " + 
 				"your attempt to lighten up Wikipedia. However, this is " +  
@@ -431,9 +431,9 @@ public class gui_agf_dialogue extends JDialog implements
 				"you write. Thank you! ~~~~");
 		
 		map.put("Un-encyclopedic details", 
-				"==Recent edits to #a#==\n" +  
+				"==Recent edit#s# to #a#==\n" +  
 				"[[Image:Information.svg|25px]] Hello, and thank you for " + 
-				"your recent contributions. While the content of your edit " +   
+				"your recent contribution#s#. While the content of your edit#s# " +   
 				"may be true, I have removed it because its depth or " +  
 				"nature of detail are not consistent with our objectives " +  
 				"as an encyclopedia. I recognize that your edit was made " +  
@@ -442,7 +442,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"collaborate in the future. Thank you! ~~~~");
 				
 		map.put("Blank",
-				"==Recent edits to #a#==\n" + 
+				"==Recent edit#s# to #a#==\n" + 
 				"[[Image:Information.svg|25px]]\n" + 
 				"<!--insert custom message here-->\n" + 
 				"Thank you! ~~~~");
