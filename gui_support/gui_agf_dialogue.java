@@ -374,8 +374,8 @@ public class gui_agf_dialogue extends JDialog implements
 		map.put("Non-notable list entry", 
 				"==Recent edit#s# to #a#==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and welcome to " + 
-				"Wikipedia. Your recent edit#s# to #a# appears to have " + 
-				"added the name of a non-notable entity. In general, " +  
+				"Wikipedia. Your recent edit#s# to #a# added the name " +
+				"of an apparently non-notable entity. In general, " +
 				"a person or organization added to a list " +  
 				"[[Wikipedia:NLIST|should have]] a pre-existing article " + 
 				"to establish notability. If you wish to create such " + 
