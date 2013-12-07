@@ -13,8 +13,10 @@
   conveniently altered for small changes:
   
   * 2013-XX-XX
-      # Plurality switches ("#s#") were added to make default AGF messages
-        more customized to specific revert cirumstances. 
+      # As per user request, larger font size options were made available
+      # Plurality switches ("#s#") ware now utilized in the default AGF 
+        messages more customized to specific revert cirumstances. Article
+        titles are also now linked.
   
   * 2013-11-30
       # The "user talk" link which appears in the "metadata" and "last 
