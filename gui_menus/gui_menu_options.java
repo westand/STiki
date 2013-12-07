@@ -32,12 +32,13 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		// A hierarchical view of the component layout of this menu
 	private JMenu submenu_browser_font;
 		private JRadioButtonMenuItem browser_font_10;
-		private JRadioButtonMenuItem browser_font_11;
 		private JRadioButtonMenuItem browser_font_12;
-		private JRadioButtonMenuItem browser_font_13;
 		private JRadioButtonMenuItem browser_font_14;
-		private JRadioButtonMenuItem browser_font_15;
 		private JRadioButtonMenuItem browser_font_16;
+		private JRadioButtonMenuItem browser_font_18;
+		private JRadioButtonMenuItem browser_font_20;
+		private JRadioButtonMenuItem browser_font_22;
+		private JRadioButtonMenuItem browser_font_24;
 	private JCheckBoxMenuItem xlink_cb;
 	private JCheckBoxMenuItem https_cb;
 	private JCheckBoxMenuItem dttr_cb;
@@ -116,18 +117,20 @@ public class gui_menu_options extends JMenu implements ActionListener{
 			int browser_font_size = -1;
 			if(event.getSource().equals(browser_font_10)) 
 				browser_font_size = 10;
-			else if(event.getSource().equals(browser_font_11))
-				browser_font_size = 11;
 			else if(event.getSource().equals(browser_font_12))
 				browser_font_size = 12;
-			else if(event.getSource().equals(browser_font_13))
-				browser_font_size = 13;
 			else if(event.getSource().equals(browser_font_14))
 				browser_font_size = 14;
-			else if(event.getSource().equals(browser_font_15))
-				browser_font_size = 15;
 			else if(event.getSource().equals(browser_font_16))
 				browser_font_size = 16;
+			else if(event.getSource().equals(browser_font_18))
+				browser_font_size = 18;
+			else if(event.getSource().equals(browser_font_20))
+				browser_font_size = 20;
+			else if(event.getSource().equals(browser_font_22))
+				browser_font_size = 22;
+			else if(event.getSource().equals(browser_font_24))
+				browser_font_size = 24;
 			
 				// Pass off size-change to handler
 			this.selected_browser_font(browser_font_size);
@@ -143,12 +146,13 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	 */
 	public int get_browser_fontsize(){
 		if(browser_font_10.isSelected()) return 10;
-		else if(browser_font_11.isSelected()) return 11;
 		else if(browser_font_12.isSelected()) return 12;
-		else if(browser_font_13.isSelected()) return 13;
 		else if(browser_font_14.isSelected()) return 14;
-		else if(browser_font_15.isSelected()) return 15;
 		else if(browser_font_16.isSelected()) return 16;
+		else if(browser_font_18.isSelected()) return 18;
+		else if(browser_font_20.isSelected()) return 20;
+		else if(browser_font_22.isSelected()) return 22;
+		else if(browser_font_24.isSelected()) return 24;
 		else return(gui_globals.DEFAULT_BROWSER_FONT.getSize()); // unneeded 
 	}
 	
@@ -237,18 +241,20 @@ public class gui_menu_options extends JMenu implements ActionListener{
 			// Then add items to the "browser font size" sub-menu
 		submenu_browser_font.add(browser_font_10 = create_rb_item(
 				"10 point", KeyEvent.VK_1));
-		submenu_browser_font.add(browser_font_11 = create_rb_item(
-				"11 point", KeyEvent.VK_1));
 		submenu_browser_font.add(browser_font_12 = create_rb_item(
 				"12 point", KeyEvent.VK_2));
-		submenu_browser_font.add(browser_font_13 = create_rb_item(
-				"13 point", KeyEvent.VK_3));
 		submenu_browser_font.add(browser_font_14 = create_rb_item(
 				"14 point", KeyEvent.VK_4));
-		submenu_browser_font.add(browser_font_15 = create_rb_item(
-				"15 point", KeyEvent.VK_5));
 		submenu_browser_font.add(browser_font_16 = create_rb_item(
 				"16 point", KeyEvent.VK_6));
+		submenu_browser_font.add(browser_font_18 = create_rb_item(
+				"18 point", KeyEvent.VK_8));
+		submenu_browser_font.add(browser_font_20 = create_rb_item(
+				"20 point", KeyEvent.VK_0));
+		submenu_browser_font.add(browser_font_22 = create_rb_item(
+				"22 point", KeyEvent.VK_P));
+		submenu_browser_font.add(browser_font_24 = create_rb_item(
+				"24 point", KeyEvent.VK_O));
 		
 		xlink_cb = create_cb_item("Activate Ext-Links", KeyEvent.VK_X);
 		https_cb = create_cb_item("Use HTTPS (restart reqd.)", KeyEvent.VK_H);
@@ -264,21 +270,23 @@ public class gui_menu_options extends JMenu implements ActionListener{
 
 			// Begin by un-setting all radio buttons
 		browser_font_10.setSelected(false);
-		browser_font_11.setSelected(false);
 		browser_font_12.setSelected(false);
-		browser_font_13.setSelected(false);
 		browser_font_14.setSelected(false);
-		browser_font_15.setSelected(false);
 		browser_font_16.setSelected(false);
+		browser_font_18.setSelected(false);
+		browser_font_20.setSelected(false);
+		browser_font_22.setSelected(false);
+		browser_font_24.setSelected(false);
 		
 		switch(font_size){
 	        case 10: browser_font_10.setSelected(true); break;
-	        case 11: browser_font_11.setSelected(true); break;
 	        case 12: browser_font_12.setSelected(true); break;
-	        case 13: browser_font_13.setSelected(true); break;
 	        case 14: browser_font_14.setSelected(true); break;
-	        case 15: browser_font_15.setSelected(true); break;
 	        case 16: browser_font_16.setSelected(true); break;
+	        case 18: browser_font_18.setSelected(true); break;
+	        case 20: browser_font_20.setSelected(true); break;
+	        case 22: browser_font_22.setSelected(true); break;
+	        case 24: browser_font_24.setSelected(true); break;
 		} // Then "select" the appropriate one		
 		
 			// Pass the actual change off to the browser
