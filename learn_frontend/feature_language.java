@@ -99,6 +99,7 @@ public class feature_language{
 	public feature_language(long rid) throws Exception{
 		
 		this.raw_diff_text = api_retrieve.process_diff_prev(rid);
+		
 		pair<List<String>,List<String>> additions = 
 				only_added_text(this.raw_diff_text);
 		this.added_tokens = additions.fst;
@@ -299,8 +300,8 @@ public class feature_language{
 
 			// Extract table cells relevant to addition/deletion of content
 		String regex = "<td class=\"diff-(addedline|deletedline)\">([^<]*" +
-				"<span class=\"(diffchange|diffchange diffchange-inline)\">" +
-				"[^<]*</span>[^<]*|[^<]*)*</td>";
+				"<(span|del|ins) class=\"(diffchange|diffchange diffchange-inline)\">" +
+				"[^<]*</(span|del|ins)>[^<]*|[^<]*)*</td>";
 		List<String> changes = stiki_utils.
 				all_pattern_matches_within(regex, working_text);
 		
@@ -308,8 +309,8 @@ public class feature_language{
 		String content_cell, temp;
 		boolean has_deleted = false;
 		Iterator<String> iter = changes.iterator();
-		String span_regex = "<span class=\"(diffchange|" +
-				"diffchange diffchange-inline)\">[^<]*</span>";
+		String span_regex = "<(span|del|ins) class=\"(diffchange|" +
+				"diffchange diffchange-inline)\">[^<]*</(span|del|ins)>";
 		
 		while(iter.hasNext()){
 			content_cell = iter.next();	
@@ -325,8 +326,8 @@ public class feature_language{
 							span_regex, content_cell).iterator();
 					while(spans.hasNext())
 						added_tokens.add(spans.next().replaceAll(
-								"<span class=\"(diffchange|" +
-								"diffchange diffchange-inline)\">|</span>", ""));
+								"<(span|del|ins) class=\"(diffchange|" +
+								"diffchange diffchange-inline)\">|</(span|del|ins)>", ""));
 				} else // If addition stands-alone
 					added_tokens.add(temp);
 
@@ -359,8 +360,8 @@ public class feature_language{
 
 			// Extract table cells relevant to addition/deletion of content
 		String regex = "<td class=\"diff-(addedline|deletedline)\">([^<]*" +
-				"<span class=\"(diffchange|diffchange diffchange-inline)\">" +
-				"[^<]*</span>[^<]*|[^<]*)*</td>";
+				"<(span|del|ins) class=\"(diffchange|diffchange diffchange-inline)\">" +
+				"[^<]*</(span|del|ins)>[^<]*|[^<]*)*</td>";
 		List<String> changes = stiki_utils.
 				all_pattern_matches_within(regex, working_text);
 		
@@ -368,8 +369,8 @@ public class feature_language{
 		String content_cell, deleted_cell="", temp;
 		boolean has_deleted = false;
 		Iterator<String> iter = changes.iterator();
-		String span_regex = "<span class=\"(diffchange|" +
-				"diffchange diffchange-inline)\">[^<]*</span>";
+		String span_regex = "<(span|del|ins) class=\"(diffchange|" +
+				"diffchange diffchange-inline)\">[^<]*</(span|del|ins)>";
 		
 		while(iter.hasNext()){
 			content_cell = iter.next();		
@@ -383,8 +384,8 @@ public class feature_language{
 							span_regex, deleted_cell).iterator();
 					while(spans.hasNext())
 						removed_tokens.add(spans.next().replaceAll(
-								"<span class=\"(diffchange|" +
-								"diffchange diffchange-inline)\">|</span>", ""));
+								"<(span|del|ins) class=\"(diffchange|" +
+								"diffchange diffchange-inline)\">|</(span|del|ins)>", ""));
 				} else 	// ^ If addition line, just parse out red text
 						// \/ If not, all cell text was removed
 					removed_tokens.add(temp);					
