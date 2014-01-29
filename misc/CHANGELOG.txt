@@ -12,11 +12,15 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2013-XX-XX
+  * 2014-XX-XX
       # As per user request, larger font size options were made available
-      # Plurality switches ("#s#") ware now utilized in the default AGF 
-        messages more customized to specific revert cirumstances. Article
-        titles are also now linked.
+      # Plurality switches ("#s#") are now utilized in the default AGF 
+        messages, making them more customized to specific revert 
+        cirumstances. Articles are also now linked in default AGF messages.
+      # The WMF changed diff representation format, sending our
+        parser into infinite loops on the back-end; eventually exhausting
+        threads and halting edit ingestion. On the front-end, this
+        caused some diffs to be mis-colored. The parser was fixed.
   
   * 2013-11-30
       # The "user talk" link which appears in the "metadata" and "last 

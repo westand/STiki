@@ -91,8 +91,14 @@ public class diff_markup{
 		
 			// Word-level changes should be bolded-red
 		html = html.replace("<span class=\"diffchange diffchange-inline\">", 
-				            "<font color=#ff0000><b>");
+				"<font color=#ff0000><b>");
+		html = html.replace("<del class=\"diffchange diffchange-inline\">", 
+	            "<font color=#ff0000><b>");
+		html = html.replace("<ins class=\"diffchange diffchange-inline\">", 
+	            "<font color=#ff0000><b>");
 		html = html.replace("</span>", "</b></font>");
+		html = html.replace("</del>", "</b></font>");
+		html = html.replace("</ins>", "</b></font>");
 			
 			// No style associated with the printing of context-line
 		html = html.replace("class=\"diff-lineno\"", "");
