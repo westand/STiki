@@ -783,7 +783,7 @@ public class api_retrieve{
 	private static String url_basic_rid(long rid){ 
 		String url = base_url() + "&prop=revisions&revids=" + rid; 
 		url += "&rvtoken=rollback"; 
-		url += "&rvprop=ids|timestamp|user|comment&format=xml";
+		url += "&rvprop=ids|timestamp|user|comment|tags&format=xml";
 		return (url);
 	}
 	
@@ -800,7 +800,7 @@ public class api_retrieve{
 			url += iter.next() + "|";
 		url = url.substring(0, url.length()-1); // Trim off trailing bar
 		url += "&rvtoken=rollback";
-		url += "&rvprop=ids|timestamp|user|comment&format=xml";
+		url += "&rvprop=ids|timestamp|user|comment|tags&format=xml";
 		return (url);
 	}
 	
@@ -1031,7 +1031,7 @@ public class api_retrieve{
 		String url = base_url() + "&prop=revisions&pageids=" + pid; 
 		url += "&rvlimit=" + n;
 		url += "&rvtoken=rollback"; 
-		url += "&rvprop=ids|timestamp|user|comment&rvdir=older&format=xml";
+		url += "&rvprop=ids|timestamp|user|comment|tags&rvdir=older&format=xml";
 		return(url);
 	}
 	
@@ -1048,7 +1048,7 @@ public class api_retrieve{
 		url += "&rvlimit=" + n;
 		url += "&rvstartid=" + rid;
 		url += "&rvtoken=rollback"; // Not pertinent, but allows parser re-use 
-		url += "&rvprop=ids|timestamp|user|comment&rvdir=newer&format=xml";
+		url += "&rvprop=ids|timestamp|user|comment|tags&rvdir=newer&format=xml";
 		return(url);		
 	}
 	

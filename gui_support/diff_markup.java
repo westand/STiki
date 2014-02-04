@@ -25,6 +25,34 @@ import core_objects.xlink_parser;
  */
 public class diff_markup{
 	
+	// ***************************** PUBLIC FIELDS ***************************
+	
+		// The default color scheme employed by WMF for diffs
+	public static String DEF_COL_DIFF_BG = "#ffffff";
+	public static String DEF_COL_DIFF_WORDS = "#ff0000";
+	public static String DEF_COL_DIFF_CONT = "#eeeeee";
+	public static String DEF_COL_DIFF_DEL = "#ffffaa";
+	public static String DEF_COL_DIFF_ADD = "#ccffcc";
+	public static String DEF_COL_DIFF_NOTE = "#800080";
+	public static String DEF_COL_DIFF_TEXT = "#000000";
+	
+		// Some color constants w.r.t. diff rendering
+	public static String COLOR_DIFF_BG = gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_bg, DEF_COL_DIFF_BG);
+	public static String COLOR_DIFF_WORDS = gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_words, DEF_COL_DIFF_WORDS);
+	public static String COLOR_DIFF_CONT = gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_cont, DEF_COL_DIFF_CONT);
+	public static String COLOR_DIFF_DEL = gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_del, DEF_COL_DIFF_DEL);
+	public static String COLOR_DIFF_ADD = gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_add, DEF_COL_DIFF_ADD);
+	public static String COLOR_DIFF_NOTE =  gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_note, DEF_COL_DIFF_NOTE);
+	public static String COLOR_DIFF_TEXT =  gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_text, DEF_COL_DIFF_TEXT);
+	
+	
 	// ***************************** TEST HARNESS ****************************
 	
 	/**
@@ -62,13 +90,15 @@ public class diff_markup{
 			String note, boolean links){
 		
 			// Write header/title/footer around diff-table to complete HTML
-		String html = "<html><body>";
-		html += "<center><br><b><u>" + page_title + "</u></b>";
+		String html = "<html><body bgcolor=" + COLOR_DIFF_BG + ">";
+		html += "<font color=" + COLOR_DIFF_TEXT + ">";
+		html += "<center><br><b><u><font color=" + COLOR_DIFF_TEXT + ">";
+		html += page_title + "</font></u></b>";
 		if(note.length() > 0)
-			html += "<br><font color=\"purple\">" + note + "</font>";
+			html += "<br><font color=" + COLOR_DIFF_NOTE + ">" + note + "</font>";
 		html += "<br><br>";
 		html += "<table border=\"0\" cellspacing=\"5\">";
-		html += raw_html + "</center></table></body></html>";
+		html += raw_html + "</center></table></font></body></html>";
 	
 			// Beautify and clean-up the Wiki-provided HTML
 		html = markup_table_style(html);
@@ -78,6 +108,19 @@ public class diff_markup{
 		if(links) // If requested, activate any hyerlinks
 			html = add_hyperlinks(html);
 		return (html);
+	}
+	
+	/**
+	 * Reset the diff coloring to the default used by the WMF
+	 */
+	public static void reset_default_colors(){
+		COLOR_DIFF_BG = DEF_COL_DIFF_BG;
+		COLOR_DIFF_WORDS = DEF_COL_DIFF_WORDS;
+		COLOR_DIFF_CONT =DEF_COL_DIFF_CONT;
+		COLOR_DIFF_DEL = DEF_COL_DIFF_DEL;
+		COLOR_DIFF_ADD  = DEF_COL_DIFF_ADD;
+		COLOR_DIFF_NOTE = DEF_COL_DIFF_NOTE;
+		COLOR_DIFF_TEXT = DEF_COL_DIFF_TEXT;
 	}
 	
 	
@@ -91,11 +134,11 @@ public class diff_markup{
 		
 			// Word-level changes should be bolded-red
 		html = html.replace("<span class=\"diffchange diffchange-inline\">", 
-				"<font color=#ff0000><b>");
+				"<font color=" + COLOR_DIFF_WORDS + "><b>");
 		html = html.replace("<del class=\"diffchange diffchange-inline\">", 
-	            "<font color=#ff0000><b>");
+				"<font color=" + COLOR_DIFF_WORDS + "><b>");
 		html = html.replace("<ins class=\"diffchange diffchange-inline\">", 
-	            "<font color=#ff0000><b>");
+				"<font color=" + COLOR_DIFF_WORDS + "><b>");
 		html = html.replace("</span>", "</b></font>");
 		html = html.replace("</del>", "</b></font>");
 		html = html.replace("</ins>", "</b></font>");
@@ -104,9 +147,12 @@ public class diff_markup{
 		html = html.replace("class=\"diff-lineno\"", "");
 		
 			// Shading (grey, green, yellow, respectively) of diff-table
-		html = html.replace("class=\"diff-context\"", "bgcolor=#eeeeee");
-		html = html.replace("class=\"diff-deletedline\"", "bgcolor=#ffffaa");
-		html = html.replace("class=\"diff-addedline\"", "bgcolor=#ccffcc");
+		html = html.replace("class=\"diff-context\"", 
+				"bgcolor=" + COLOR_DIFF_CONT);
+		html = html.replace("class=\"diff-deletedline\"", 
+				"bgcolor=" + COLOR_DIFF_DEL);
+		html = html.replace("class=\"diff-addedline\"", 
+				"bgcolor=" + COLOR_DIFF_ADD);
 		return (html);
 	}
 	
@@ -157,7 +203,7 @@ public class diff_markup{
 			// really screw up link parsing. Thus our exhaustive searches
 			// for their splitting of links is made a little more efficient
 			// by tightening their pattern.
-		html = html.replace("<font color=#ff0000><b>", "<@>");
+		html = html.replace("<font color=" + COLOR_DIFF_WORDS + "><b>", "<@>");
 		html = html.replace("</b></font>", "</@>");
 
 		List<String> sorted_urls = 
@@ -199,7 +245,7 @@ public class diff_markup{
 		
 			// Undo our concise notation for internal spans
 			// Clear all other notation
-		html = html.replace("<@>", "<font color=#ff0000><b>");
+		html = html.replace("<@>", "<font color=" + COLOR_DIFF_WORDS + "><b>");
 		html = html.replace("</@>", "</b></font>");
 		html = html.replaceAll(RX_PROC, ""); // Cl
 		html = html.substring(1);

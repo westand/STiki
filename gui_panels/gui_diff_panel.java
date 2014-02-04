@@ -24,6 +24,14 @@ import gui_support.gui_globals;
 public class gui_diff_panel extends JPanel implements HyperlinkListener, 
 		KeyListener{
 
+	// ***************************** PUBLIC FIELDS ***************************
+	
+	/**
+	 * Font applied to the browser object. 
+	 */
+	public static Font browser_font = gui_globals.DEFAULT_BROWSER_FONT;
+	
+	
 	// **************************** PRIVATE FIELDS ***************************
 	
 	/**
@@ -98,6 +106,7 @@ public class gui_diff_panel extends JPanel implements HyperlinkListener,
 	 * @param font Font which should be the new default
 	 */
 	public void change_browser_font(Font font){
+		browser_font = font;
 		gui_globals.change_html_pane_font(this.browser, font);
 	}
 	

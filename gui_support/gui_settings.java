@@ -41,7 +41,15 @@ public class gui_settings extends Properties{
 		agf_custom1,			// Custom AGF notification #1
 		agf_custom2,			// Custom AGF notification #2
 		agf_custom3,			// Custom AGF notification #3
-		agf_custom4};			// Custom AGF notification #4
+		agf_custom4,			// Custom AGF notification #4
+		options_fontfam,		// Font used in the diff-browser
+		color_diff_bg, 			// Color of diff's "background"
+		color_diff_words,		// Color of diff's "changed words"
+		color_diff_cont,		// Color of diff's "context blocks"
+		color_diff_add,			// Color of diff's "added blocks"
+		color_diff_del,			// Color of diff's "deleted blocks"
+		color_diff_note,		// Color of diff's "note to users" (RB)
+		color_diff_text};		// Color of diff's base text
 		
 	/**
 	 * Those persistent user settings which are INTEGER based.
@@ -257,6 +265,9 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_INT.options_fontsize.toString(), 
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_browser_fontsize()));
+		props.setProperty(SETTINGS_STR.options_fontfam.toString(), 
+				parent.menu_bar.get_options_menu().get_browser_fontfam());
+				
 		props.setProperty(SETTINGS_BOOL.options_hyperlinks.toString(), 
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_hyperlink_policy()));
@@ -279,6 +290,22 @@ public class gui_settings extends Properties{
 				gui_agf_dialogue.get_custom_agf(3));
 		props.setProperty(SETTINGS_STR.agf_custom4.toString(), 
 				gui_agf_dialogue.get_custom_agf(4));
+		
+			// Coloring inside the diff window
+		props.setProperty(SETTINGS_STR.color_diff_bg.toString(), 
+				diff_markup.COLOR_DIFF_BG);
+		props.setProperty(SETTINGS_STR.color_diff_words.toString(), 
+				diff_markup.COLOR_DIFF_WORDS);
+		props.setProperty(SETTINGS_STR.color_diff_cont.toString(), 
+				diff_markup.COLOR_DIFF_CONT);
+		props.setProperty(SETTINGS_STR.color_diff_add.toString(), 
+				diff_markup.COLOR_DIFF_ADD);
+		props.setProperty(SETTINGS_STR.color_diff_del.toString(), 
+				diff_markup.COLOR_DIFF_DEL);
+		props.setProperty(SETTINGS_STR.color_diff_note.toString(), 
+				diff_markup.COLOR_DIFF_NOTE);
+		props.setProperty(SETTINGS_STR.color_diff_text.toString(), 
+				diff_markup.COLOR_DIFF_TEXT);
 		
 			// Miscellania, statistics, etc.
 		props.setProperty(SETTINGS_INT.passes_used.toString(), 

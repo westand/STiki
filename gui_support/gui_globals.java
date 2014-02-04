@@ -131,7 +131,10 @@ public class gui_globals{
 	/**
 	 * Default font to use in browsers (JEditorPanes displaying HTML).
 	 */
-	public static final Font DEFAULT_BROWSER_FONT = PLAIN_NORMAL_FONT;
+	public static final Font DEFAULT_BROWSER_FONT = new Font(
+			gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.options_fontfam, Font.SANS_SERIF), 
+			Font.PLAIN, 12);
 	
 	/**
 	 * Horizontal rule/separator for use in menus.
@@ -536,6 +539,45 @@ public class gui_globals{
 		warn_points.add(500);
 		warn_points.add(1000);
 		return(warn_points);
+	}
+	
+	 /**
+	  * Given a Java color object, return its hex representation
+	  * @param c Java color object
+	  * @return Hex representation of 'c', preceeded by "#"
+	  */
+	 public static String color_to_hex(Color c){
+		 StringBuilder sb = new StringBuilder("#");
+
+		 if(c.getRed() < 16) 
+			 sb.append('0');
+		 sb.append(Integer.toHexString(c.getRed()));
+
+		 if(c.getGreen() < 16) 
+			 sb.append('0');
+		 sb.append(Integer.toHexString(c.getGreen()));
+
+		 if(c.getBlue() < 16) 
+			 sb.append('0');
+		 sb.append(Integer.toHexString(c.getBlue()));
+
+		 return sb.toString();
+	}
+	
+	/**
+	 * Convert a hex representation of a color to a Java color
+	 * @param colorStr Color described in hex representation. May or may
+	 * not include the preceeding '#' character.
+	 * @return Java color representation of 'colorStr'
+	 */
+	public static Color hex_to_rgb(String colorStr){
+		
+		if(colorStr.charAt(0) == '#')
+			colorStr = colorStr.substring(1);
+		return new Color(
+			Integer.valueOf(colorStr.substring(0,2), 16),
+			Integer.valueOf(colorStr.substring(2,4), 16),
+			Integer.valueOf(colorStr.substring(4,6), 16));
 	}
 	
 	/**

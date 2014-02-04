@@ -1,6 +1,9 @@
 package gui_menus;
 
 import executables.stiki_frontend_driver;
+import gui_panels.gui_diff_panel;
+import gui_support.diff_markup;
+import gui_support.gui_colorpicker;
 import gui_support.gui_globals;
 import gui_support.gui_settings;
 
@@ -9,8 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
 /**
@@ -30,7 +35,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	private stiki_frontend_driver parent;
 	
 		// A hierarchical view of the component layout of this menu
-	private JMenu submenu_browser_font;
+	private JMenu submenu_browser_font_size;
 		private JRadioButtonMenuItem browser_font_10;
 		private JRadioButtonMenuItem browser_font_12;
 		private JRadioButtonMenuItem browser_font_14;
@@ -39,6 +44,19 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		private JRadioButtonMenuItem browser_font_20;
 		private JRadioButtonMenuItem browser_font_22;
 		private JRadioButtonMenuItem browser_font_24;
+	private JMenu submenu_browser_font_family;
+		private JRadioButtonMenuItem browser_font_serif;
+		private JRadioButtonMenuItem browser_font_sans;
+		private JRadioButtonMenuItem browser_font_mono;
+	private JMenu submenu_browser_colors;
+		private JMenuItem browser_color_bg;
+		private JMenuItem browser_color_text;
+		private JMenuItem browser_color_words;
+		private JMenuItem browser_color_cont;
+		private JMenuItem browser_color_add;
+		private JMenuItem browser_color_del;
+		private JMenuItem browser_color_note;
+		private JMenuItem browser_color_reset;
 	private JCheckBoxMenuItem xlink_cb;
 	private JCheckBoxMenuItem https_cb;
 	private JCheckBoxMenuItem dttr_cb;
@@ -64,16 +82,21 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		
 			// Intialize sub-menus and items, add them to top-level
 		initialize_subitems();
-		this.add(submenu_browser_font);
+		this.add(submenu_browser_font_size);
+		this.add(submenu_browser_font_family);
+		this.add(submenu_browser_colors);
 		this.add(xlink_cb);
 		this.add(https_cb);
 		this.add(dttr_cb);
 		this.add(agf_comment_cb);
 		
 			// Set default menu selections (per persistent settings)
-		this.selected_browser_font(gui_settings.get_int_def(
+		this.selected_browser_font_size(gui_settings.get_int_def(
 				gui_settings.SETTINGS_INT.options_fontsize, 
 				gui_globals.DEFAULT_BROWSER_FONT.getSize()));
+		this.selected_browser_font_fam(gui_settings.get_str_def(
+				gui_settings.SETTINGS_STR.options_fontfam, 
+				gui_globals.DEFAULT_BROWSER_FONT.getFamily()));
 		this.set_hyperlink_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_hyperlinks, 
 				parent.diff_browser.get_hyperlink_policy()));
@@ -110,10 +133,15 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		
 			// Do nothing
 			
-		} else{
-			
-				// If ActionEvent was not sourced per above, we assume it
-				// came from one of the many font-size submenu items
+		} else if(event.getSource().equals(browser_font_10) || 
+				event.getSource().equals(browser_font_12) || 
+				event.getSource().equals(browser_font_14) || 
+				event.getSource().equals(browser_font_16) ||
+				event.getSource().equals(browser_font_18) ||
+				event.getSource().equals(browser_font_20) ||
+				event.getSource().equals(browser_font_22) ||
+				event.getSource().equals(browser_font_24)){
+				
 			int browser_font_size = -1;
 			if(event.getSource().equals(browser_font_10)) 
 				browser_font_size = 10;
@@ -132,8 +160,89 @@ public class gui_menu_options extends JMenu implements ActionListener{
 			else if(event.getSource().equals(browser_font_24))
 				browser_font_size = 24;
 			
-				// Pass off size-change to handler
-			this.selected_browser_font(browser_font_size);
+				// Pass off size change to handler
+			this.selected_browser_font_size(browser_font_size);
+		
+		} else if(event.getSource().equals(browser_font_serif) || 
+				event.getSource().equals(browser_font_sans) ||
+				event.getSource().equals(browser_font_mono)){
+			
+			String browser_font_fam = "";
+			if(event.getSource().equals(browser_font_serif))
+				browser_font_fam = Font.SERIF;
+			else if(event.getSource().equals(browser_font_sans))
+				browser_font_fam = Font.SANS_SERIF;
+			else if(event.getSource().equals(browser_font_mono))
+				browser_font_fam = Font.MONOSPACED;
+			
+				// Pass off family change to handler
+			this.selected_browser_font_fam(browser_font_fam);
+			
+		} else {
+			
+			try{if(event.getSource().equals(browser_color_bg)){
+					diff_markup.COLOR_DIFF_BG = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_BG);
+					browser_color_bg.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_BG)));
+					
+				} else if(event.getSource().equals(browser_color_text)){
+					diff_markup.COLOR_DIFF_TEXT = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_TEXT);
+					browser_color_text.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_TEXT)));
+					
+				} else if(event.getSource().equals(browser_color_words)){
+					diff_markup.COLOR_DIFF_WORDS = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_WORDS);
+					browser_color_words.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_WORDS)));
+					
+				} else if(event.getSource().equals(browser_color_cont)){
+					diff_markup.COLOR_DIFF_CONT = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_CONT);
+					browser_color_cont.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_CONT)));
+					
+				} else if(event.getSource().equals(browser_color_add)){
+					diff_markup.COLOR_DIFF_ADD = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_ADD);
+					browser_color_add.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_ADD)));
+					
+				} else if(event.getSource().equals(browser_color_del)){
+					diff_markup.COLOR_DIFF_DEL = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_DEL);
+					browser_color_del.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_DEL)));
+			
+				} else if(event.getSource().equals(browser_color_note)){
+					diff_markup.COLOR_DIFF_NOTE = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_NOTE);
+					browser_color_note.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE)));
+					
+				} else if(event.getSource().equals(browser_color_reset)){
+					
+						// Reset colors, then repaint icons accordingly
+					diff_markup.reset_default_colors();
+					browser_color_bg.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_BG)));
+					browser_color_text.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_TEXT)));
+					browser_color_words.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_WORDS)));
+					browser_color_cont.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_CONT)));
+					browser_color_add.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_ADD)));
+					browser_color_del.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_DEL)));
+					browser_color_note.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE)));
+				}
+			
+			} catch(Exception e){};
 		}
 	}
 
@@ -154,6 +263,17 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		else if(browser_font_22.isSelected()) return 22;
 		else if(browser_font_24.isSelected()) return 24;
 		else return(gui_globals.DEFAULT_BROWSER_FONT.getSize()); // unneeded 
+	}
+	
+	/**
+	 * Return the font family of the currently selected browser font.
+	 * @return the font family of the currently selected browser font
+	 */
+	public String get_browser_fontfam(){
+		if(browser_font_serif.isSelected()) return Font.SERIF;
+		else if(browser_font_sans.isSelected()) return Font.SANS_SERIF;
+		else if(browser_font_mono.isSelected()) return Font.MONOSPACED;
+		else return(gui_globals.DEFAULT_BROWSER_FONT.getFamily()); // unneeded
 	}
 	
 	/**
@@ -234,27 +354,68 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	private void initialize_subitems(){
 	
 			// Intialize the sub-menu header for "browser font size"
-		submenu_browser_font = new JMenu("Browser Font Size");
-		submenu_browser_font.setFont(gui_globals.PLAIN_NORMAL_FONT);
-		submenu_browser_font.setMnemonic(KeyEvent.VK_F);
+		submenu_browser_font_size = new JMenu("Browser Font Size");
+		submenu_browser_font_size.setFont(gui_globals.PLAIN_NORMAL_FONT);
+		submenu_browser_font_size.setMnemonic(KeyEvent.VK_S);
 	
 			// Then add items to the "browser font size" sub-menu
-		submenu_browser_font.add(browser_font_10 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_10 = create_rb_item(
 				"10 point", KeyEvent.VK_1));
-		submenu_browser_font.add(browser_font_12 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_12 = create_rb_item(
 				"12 point", KeyEvent.VK_2));
-		submenu_browser_font.add(browser_font_14 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_14 = create_rb_item(
 				"14 point", KeyEvent.VK_4));
-		submenu_browser_font.add(browser_font_16 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_16 = create_rb_item(
 				"16 point", KeyEvent.VK_6));
-		submenu_browser_font.add(browser_font_18 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_18 = create_rb_item(
 				"18 point", KeyEvent.VK_8));
-		submenu_browser_font.add(browser_font_20 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_20 = create_rb_item(
 				"20 point", KeyEvent.VK_0));
-		submenu_browser_font.add(browser_font_22 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_22 = create_rb_item(
 				"22 point", KeyEvent.VK_P));
-		submenu_browser_font.add(browser_font_24 = create_rb_item(
+		submenu_browser_font_size.add(browser_font_24 = create_rb_item(
 				"24 point", KeyEvent.VK_O));
+		
+			// Intialize the sub-menu for "font family" and its sub-tems
+		submenu_browser_font_family = new JMenu("Browser Font Family");
+		submenu_browser_font_family.setFont(gui_globals.PLAIN_NORMAL_FONT);
+		submenu_browser_font_family.setMnemonic(KeyEvent.VK_F);		
+		submenu_browser_font_family.add(browser_font_serif = create_rb_item(
+				"Serif", KeyEvent.VK_E));
+		submenu_browser_font_family.add(browser_font_sans = create_rb_item(
+				"Sans Serif", KeyEvent.VK_I));
+		submenu_browser_font_family.add(browser_font_mono = create_rb_item(
+				"Monospace", KeyEvent.VK_M));
+
+			// Initialize the sub-menu header for "browser colors"
+		submenu_browser_colors = new JMenu("Browser Colors (restart)");
+		submenu_browser_colors.setFont(gui_globals.PLAIN_NORMAL_FONT);
+		submenu_browser_colors.setMnemonic(KeyEvent.VK_C);
+		
+			// Add the individual color fields
+		submenu_browser_colors.add(browser_color_bg = create_icon_item(
+				"Background", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_BG)), KeyEvent.VK_B));
+		submenu_browser_colors.add(browser_color_text = create_icon_item(
+				"Plain text", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_TEXT)),KeyEvent.VK_L));
+		submenu_browser_colors.add(browser_color_words = create_icon_item(
+				"Changed text", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_WORDS)),KeyEvent.VK_C));
+		submenu_browser_colors.add(browser_color_note = create_icon_item(
+				"Note text", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_NOTE)),KeyEvent.VK_N));
+		submenu_browser_colors.add(browser_color_cont = create_icon_item(
+				"Context block BG", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_CONT)),KeyEvent.VK_N));
+		submenu_browser_colors.add(browser_color_add = create_icon_item(
+				"Added block BG", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_ADD)),KeyEvent.VK_D));
+		submenu_browser_colors.add(browser_color_del = create_icon_item(
+				"Removed block BG", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_DEL)),KeyEvent.VK_R));
+		submenu_browser_colors.add(browser_color_reset = create_icon_item(
+				"Reset defaults", null, KeyEvent.VK_T));
 		
 		xlink_cb = create_cb_item("Activate Ext-Links", KeyEvent.VK_X);
 		https_cb = create_cb_item("Use HTTPS (restart reqd.)", KeyEvent.VK_H);
@@ -266,7 +427,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	 * Alter which of the 'browser-font' radio buttons is currently selected.
 	 * @param font_size Integer point size of the button to be selected
 	 */
-	private void selected_browser_font(int font_size){
+	private void selected_browser_font_size(int font_size){
 
 			// Begin by un-setting all radio buttons
 		browser_font_10.setSelected(false);
@@ -289,10 +450,34 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	        case 24: browser_font_24.setSelected(true); break;
 		} // Then "select" the appropriate one		
 		
-			// Pass the actual change off to the browser
-		Font new_font = new Font(gui_globals.DEFAULT_BROWSER_FONT.getName(), 
-				gui_globals.DEFAULT_BROWSER_FONT.getStyle(), font_size);
+			// Pass the actual change off to the browser	
+		Font new_font = new Font(gui_diff_panel.browser_font.getFamily(), 
+				gui_diff_panel.browser_font.getStyle(), font_size);
 		parent.diff_browser.change_browser_font(new_font);	
+	}
+	
+	/**
+	 * Alter which of the 'font family' radio buttons is selected
+	 * @param font_fam String label of family to be selected.
+	 */
+	private void selected_browser_font_fam(String font_fam){
+		
+			// Unset everything
+		browser_font_serif.setSelected(false);
+		browser_font_sans.setSelected(false);
+		browser_font_mono.setSelected(false);
+		
+		if(font_fam.equals(Font.SERIF)) 
+			browser_font_serif.setSelected(true);
+		else if(font_fam.equals(Font.SANS_SERIF)) 
+			browser_font_sans.setSelected(true);
+		else if(font_fam.equals(Font.MONOSPACED)) 
+			browser_font_mono.setSelected(true);
+		
+		Font new_font = new Font(font_fam, 
+				gui_diff_panel.browser_font.getStyle(), 
+				gui_diff_panel.browser_font.getSize());
+		parent.diff_browser.change_browser_font(new_font);
 	}
 	
 	
@@ -309,7 +494,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		rb_item.setMnemonic(keyevent);
 		rb_item.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		rb_item.addActionListener(this);
-		return (rb_item);
+		return(rb_item);
 	}
 	
 	/**
@@ -323,8 +508,22 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		cb_item.setMnemonic(keyevent);
 		cb_item.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		cb_item.addActionListener(this);
-		return (cb_item);
+		return(cb_item);
 	}
 	
-	
+	/**
+	 * Create a plain menu-item of the style used by STiki
+	 * @param text Text which should be displayed on the menu-item
+	 * @param icon Icon to be displayed adjacent to text
+	 * @param keyevent Key mnemonic to fire this item
+	 * @return A plain menu-item, labeled as 'text', fired by 'keyevent'
+	 */
+	private JMenuItem create_icon_item(String text, Icon icon, int keyevent){
+		JMenuItem item = new JMenuItem(text, icon);
+		item.setMnemonic(keyevent);
+		item.setFont(gui_globals.PLAIN_NORMAL_FONT);
+		item.addActionListener(this);
+		return(item);
+	}
+		
 }

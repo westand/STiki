@@ -1,6 +1,8 @@
 package mediawiki_api;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.xml.sax.Attributes;
@@ -31,6 +33,16 @@ public class api_xml_page_hist_meta extends DefaultHandler{
 	private Set<metadata> result_md_set;
 	
 	/**
+	 * Tracking whether or not the parser is an internal to a <tag>
+	 */
+	private boolean tag_open = false;
+	
+	/**
+	 * StringBuilder accumulating content inside of <tag> tags
+	 */
+	private StringBuilder tag_sb = new StringBuilder();
+	
+	/**
 	 * Queries sometimes return "bad"-RIDs, those about which no metadata
 	 * is available. These RIDs are given their own XML section, and the
 	 * boolean 'ignore_mode' tracks if our parse is internal to that section.
@@ -46,6 +58,7 @@ public class api_xml_page_hist_meta extends DefaultHandler{
 	private String user;		// IP/User-name of editor
 	private String comment;		// Comment associated with an edit
 	private String rb_token;	// Rollback token for this edit
+	private List<String> tags = new ArrayList<String>(0);
 	
 	
 	// ***************************** CONSTRUCTORS ****************************
@@ -86,7 +99,9 @@ public class api_xml_page_hist_meta extends DefaultHandler{
 			user = attributes.getValue("user");
 			if(user == null) // Some edits show 'userhidden' instead of 'user'
 				user = attributes.getValue("userhidden");
-		}
+		} else if(qName.equals("tag")){
+			tag_open = true;
+		} 
 	}
 
 	/**
@@ -100,12 +115,17 @@ public class api_xml_page_hist_meta extends DefaultHandler{
 		if(ignore_mode)
 			return; // Exit if internal to 'bad-rid' section.
 			
-		if(qName.equals("page"))
+		if(qName.equals("tag")){
+			tags.add(tag_sb.toString());
+			tag_open = false;
+			tag_sb = new StringBuilder();		
+		} else if(qName.equals("page")){
 			this.reset_page_level();
-		else if(qName.equals("rev")){
+		} else if(qName.equals("rev")){
 			
-			try{ result_md_set.add(new metadata(id_rev, timestamp, title, 
-					id_page, namespace, user, comment, rb_token, db_geo));
+			try{ result_md_set.add(new metadata(id_rev, timestamp, 
+					title, id_page, namespace, user, comment, tags, 
+					rb_token, db_geo));
 			} catch(Exception e){
 				System.out.println("Failed to populate metadata object");
 				System.out.println("RID in question is: " + id_rev);
@@ -115,6 +135,17 @@ public class api_xml_page_hist_meta extends DefaultHandler{
 			this.reset_rev_level();
 			
 		} // End of revision tag; save revision metadata
+	}
+	
+	/***
+	 * Overriding: Returns text between opening and closing tags.
+	 * REMEMBER: May be called multiple times; must concatenate.
+	 */
+	public void characters(char[] ch, int start, int length) 
+			throws SAXException{
+	
+		if(tag_open) // Only interested in <tag> text
+			tag_sb.append(String.valueOf(ch, start, length));
 	}
 
 	/**
@@ -140,6 +171,7 @@ public class api_xml_page_hist_meta extends DefaultHandler{
 		timestamp = "";
 		user = "";
 		comment = "";
+		tags = new ArrayList<String>(0);
 	}
 	
 	/**

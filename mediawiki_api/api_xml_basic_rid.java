@@ -1,5 +1,8 @@
 package mediawiki_api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -33,6 +36,16 @@ public class api_xml_basic_rid extends DefaultHandler{
 	 */
 	private boolean error = false;
 	
+	/**
+	 * Tracking whether or not the parser is an internal to a <tag>
+	 */
+	private boolean tag_open = false;
+	
+	/**
+	 * StringBuilder accumulating content inside of <tag> tags
+	 */
+	private StringBuilder tag_sb = new StringBuilder();
+	
 		// Datafields of metadata object, found in XML
 	private String id_rev;		// ID# assigned to an individual revision
 	private String timestamp;	// Timestamp at which an edit was made
@@ -42,6 +55,7 @@ public class api_xml_basic_rid extends DefaultHandler{
 	private String user;		// IP/User-name of editor
 	private String comment;		// Comment associated with an edit
 	private String rb_token;	// Rollback token for this edit
+	private List<String> tags = new ArrayList<String>(0);
 	
 	
 	// ***************************** CONSTRUCTORS ****************************
@@ -70,19 +84,22 @@ public class api_xml_basic_rid extends DefaultHandler{
 			title = attributes.getValue("title");
 			id_page = attributes.getValue("pageid");
 			namespace = attributes.getValue("ns");
+			
 		} else if(qName.equals("rev")){
 			id_rev = attributes.getValue("revid");
 			timestamp = attributes.getValue("timestamp");
 			comment = attributes.getValue("comment");
 			rb_token = attributes.getValue("rollbacktoken");
-			
 			user = attributes.getValue("user");
 			if(user == null) // Some edits show 'userhidden' instead of 'user'
 				user = attributes.getValue("userhidden");
 			
+		} else if(qName.equals("tag")){
+			tag_open = true;
+			
 		} else if(qName.equals("badrevids")){
 			error = true;
-		} // Tags "page" and "rev" are of interest, "badrevids" are errors
+		} // Tags "page", "rev", "tag" are good; "badrevids" are errors
 	}
 	
 	/**
@@ -91,16 +108,32 @@ public class api_xml_basic_rid extends DefaultHandler{
 	public void endElement(String uri, String localName, String qName) 
 			throws SAXException{
 		
-		if(!error && qName.equals("rev")){
-			try{ 
-				result_metadata = new metadata(id_rev, timestamp, 
-					title, id_page, namespace, user, comment, rb_token, db_geo);
+		if(qName.equals("tag")){
+			tags.add(tag_sb.toString());
+			tag_open = false;
+			tag_sb = new StringBuilder();
+			
+		} else if(!error && qName.equals("rev")){
+			try{result_metadata = new metadata(id_rev, timestamp, 
+					title, id_page, namespace, user, comment, tags,
+					rb_token, db_geo);
 			} catch(Exception e){
 				System.out.println("Failed to populate metadata object:");
 				System.out.println("RID in question is: " + id_rev);
 				e.printStackTrace();
 			} // Catch possible errors from time-stamp conversion
 		} // End of revision tag; save revision metadata
+	}
+	
+	/***
+	 * Overriding: Returns text between opening and closing tags.
+	 * REMEMBER: May be called multiple times; must concatenate.
+	 */
+	public void characters(char[] ch, int start, int length) 
+			throws SAXException{
+	
+		if(tag_open) // Only interested in <tag> text
+			tag_sb.append(String.valueOf(ch, start, length));
 	}
 	
 	/**

@@ -121,7 +121,7 @@ public class api_xml_deleted_revs extends DefaultHandler{
 		else if(qName.equals("rev")){
 			try{deleted.add(new pair<metadata,String>(
 						new metadata(rid, timestamp, title, "-1", namespace, 
-						user, comment, "", (db_geolocation) null), 
+						user, comment, null, "", (db_geolocation) null), 
 						content.toString()));
 			} catch(Exception e){
 				System.out.println("Failed to parse deleted RID: " + rid);

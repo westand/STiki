@@ -1,5 +1,7 @@
 package core_objects;
 
+import java.util.List;
+
 import mediawiki_api.api_retrieve;
 import db_client.client_interface;
 import db_server.db_geolocation;
@@ -67,6 +69,11 @@ public class metadata{
 	public final String country;
 	
 	/**
+	 * List of tags associated with an edit (per [[WP:Tags]]).
+	 */
+	public final List<String> tags;
+	
+	/**
 	 * Rollback token (for properly permissioned users). Note that this is
 	 * NOT a final field, as it may be possible to refresh the edit token
 	 * if the session cookie changes (i.e., a new user logs on).
@@ -94,8 +101,8 @@ public class metadata{
 	 */
 	public metadata(String str_rid, String str_timestamp, 
 			String str_title, String str_pid, String str_namespace, 
-			String str_user, String str_comment, String rb_token, 
-			db_geolocation db_geo) throws Exception{
+			String str_user, String str_comment, List<String> tags, 
+			String rb_token, db_geolocation db_geo) throws Exception{
 		
 			// NOTE: For string fields, we have chosen not to escape
 			// special characters. Escaping IS done internal to DB handlers,
@@ -106,6 +113,7 @@ public class metadata{
 		this.rid = Long.parseLong(str_rid);
 		this.pid = Long.parseLong(str_pid);
 		this.title = str_title;
+		this.tags = tags;
 		this.rb_token = rb_token;
 		
 			// If no comment provided, no attribute is set in XML, leading
@@ -125,7 +133,7 @@ public class metadata{
 		else // Only do geolocation-calculation where user is IP address
 			this.country = db_geo.get_country_code(
 					stiki_utils.ip_to_long(this.user));
-		
+
 			// Only timestamp requires serious transformation
 		this.timestamp = stiki_utils.wiki_ts_to_unix(str_timestamp);
 	}
@@ -137,8 +145,8 @@ public class metadata{
 	 */
 	public metadata(String str_rid, String str_timestamp, 
 			String str_title, String str_pid, String str_namespace, 
-			String str_user, String str_comment, String rb_token, 
-			client_interface client) throws Exception{
+			String str_user, String str_comment, List<String> tags, 
+			String rb_token, client_interface client) throws Exception{
 		
 			// NOTE: For string fields, we have chosen not to escape
 			// special characters. Escaping IS done internal to DB handlers,
@@ -149,6 +157,7 @@ public class metadata{
 		this.rid = Long.parseLong(str_rid);
 		this.pid = Long.parseLong(str_pid);
 		this.title = str_title;
+		this.tags = tags;
 		this.rb_token = rb_token;
 		
 			// If no comment provided, no attribute is set in XML, leading
@@ -190,6 +199,7 @@ public class metadata{
 		this.rb_token = "";
 		this.country = "";
 		this.is_rb = false;
+		this.tags = null;
 	}
 	
 	
