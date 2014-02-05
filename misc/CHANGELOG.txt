@@ -12,7 +12,7 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2014-02-04
+  * 2014-02-05
       # The colors and font faces used in the diff presentation panel can
         now be changed via the "options" menu (T#037).
       # Per user request, larger font size options were made available (T#035).
