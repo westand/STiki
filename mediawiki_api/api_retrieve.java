@@ -81,6 +81,7 @@ import db_server.db_geolocation;
  *  	[xx]: "deleted revs" -- produce deleted (article) revisions by
  *  		  some user. Not this is not RevDelete.
  *  	[xx]: "page cats" -- produce the category memberships of a page.
+ *  	[xx]: "size at time" -- size of a page in bytes at some timestamp
  *  
  */
 public class api_retrieve{
@@ -710,6 +711,22 @@ public class api_retrieve{
 		return(handler.get_result()); // Return result from parser
 	}
 	
+	/**
+	 * Return the size of a page in bytes, per a particular timestamp
+	 * @param page Page title
+	 * @param time Timestamp of the form "2014-02-01T09:45:36Z"
+	 * @param title_encoded Whether or not 'title' is already encoded for API
+	 * @return The size in bytes of 'page' at time 'time'
+	 */
+	public static int page_size_at_time(String page, String time, 
+			boolean title_encoded) throws Exception{
+		
+		api_xml_size_time handler = new api_xml_size_time();
+		do_parse_work(new URL(url_size_time(
+				page, time, title_encoded)), null, handler);
+		return(handler.get_result()); // Return result from parser	
+	}
+	
 	// *************************** PRIVATE METHODS ***************************
 	
 	/**
@@ -1230,6 +1247,31 @@ public class api_retrieve{
 		url += "&cllimit=500";
 		url += "&format=xml";
 		return(url);
+	}
+	
+	/**
+	 * Produce the URL to obtain the size of a page at a given timestamp.
+	 * @param page Page title
+	 * @param time Timestamp of the form ""2014-02-01T09:45:36Z"
+	 * @param title_encoded Whether or not the title has already been encoded
+	 * @return URL to obtain, containing relevant data.
+	 */
+	private static String url_size_time(String page, String time, 
+			boolean title_encoded) throws Exception{
+		
+		String url = base_url();
+		url += "&prop=revisions";
+		
+		if(title_encoded)
+			url += "&titles=" + page;
+		else url += URLEncoder.encode(page,"UTF-8");
+		
+		url += "&rvstart=" + time;
+		url += "&rvdir=older";
+		url += "&rvlimit=1";
+		url += "&rvprop=size";
+		url += "&format=xml";
+		return(url);	
 	}
 		
 }
