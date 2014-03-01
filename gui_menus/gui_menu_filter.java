@@ -46,7 +46,7 @@ public class gui_menu_filter extends JMenu implements ActionListener{
 		this.parent = parent; // Argument assignment
 		
 			// First set properties of top-level menu item
-		this.setText("Revision Filters");
+		this.setText("Displayed Edits");
 		this.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		this.setMnemonic(KeyEvent.VK_R);
 		

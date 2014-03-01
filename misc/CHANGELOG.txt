@@ -12,6 +12,10 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2014-XX-XX
+      # Changed the "Revision Filter" menu title to "Displayed Edits"
+        in order to clear up some abiguity over sub-menu items.
+  
   * 2014-02-05
       # The colors and font faces used in the diff presentation panel can
         now be changed via the "options" menu (T#037).
