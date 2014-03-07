@@ -13,6 +13,7 @@
   conveniently altered for small changes:
   
   * 2014-XX-XX
+      = Need to update  the pre-formatted AGF messages
       # Changed the "Revision Filter" menu title to "Displayed Edits"
         in order to clear up some abiguity over sub-menu items.
   

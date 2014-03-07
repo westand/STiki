@@ -718,7 +718,7 @@ public class api_retrieve{
 	 * @param title_encoded Whether or not 'title' is already encoded for API
 	 * @return The size in bytes of 'page' at time 'time'
 	 */
-	public static int page_size_at_time(String page, String time, 
+	public static int process_size_at_time(String page, String time, 
 			boolean title_encoded) throws Exception{
 		
 		api_xml_size_time handler = new api_xml_size_time();
@@ -726,6 +726,7 @@ public class api_retrieve{
 				page, time, title_encoded)), null, handler);
 		return(handler.get_result()); // Return result from parser	
 	}
+	
 	
 	// *************************** PRIVATE METHODS ***************************
 	
