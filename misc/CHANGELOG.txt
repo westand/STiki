@@ -13,7 +13,14 @@
   conveniently altered for small changes:
   
   * 2014-XX-XX
-      = Need to update  the pre-formatted AGF messages
+      = Need to update the pre-formatted AGF messages
+      = Need to fix a problem pertaining to null diffs being displayed
+  
+  * 2014-03-25
+      # Emergency release in order to fix login code broken by a small
+        WMF change (most of the burden probably falls to STiki for getting
+        this incorrect). This update will be forced; that is, older versions
+        of the STiki software will show an "upgrade required" message.
       # Changed the "Revision Filter" menu title to "Displayed Edits"
         in order to clear up some abiguity over sub-menu items.
   
