@@ -10,7 +10,7 @@
 # are part of the project, with some notable exceptions (which may or may not
 # apply to a derivative user packaging their own source):
 #
-#       [1]: Class [stiki_con_client.java] of the [db_client] package
+#   [1]: Class [stiki_con_client.java] of the [db_client] package
 #		[2]: Class [stiki_con.server] of the [db_server] package
 #		[3]: Class [irc_output.java] of the [irc_work] package 
 #		[4]: All files in the [api] package
@@ -51,11 +51,13 @@ cp $SCRIPT_DIR''irc_output.null irc_work/irc_output.java
 
     # Add all files to the ZIP, then handle exlusions
 zip -r $ZIP_NAME *
-zip -d $ZIP_NAME api/*     # delete the api bits
-zip -d $ZIP_NAME api/      # (and the api folder itself)
-zip -d $ZIP_NAME backup/*  # delete the backup package content
-zip -d $ZIP_NAME backup/   # (and the backup folder itself)
-zip -d $ZIP_NAME *.hide    # remove hidden files
+zip -d $ZIP_NAME api/*      # delete the api bits
+zip -d $ZIP_NAME api/       # (and the api folder itself)
+zip -d $ZIP_NAME backup/*   # delete the backup package content
+zip -d $ZIP_NAME backup/    # (and the backup folder itself)
+zip -d $ZIP_NAME analysis/* # delete the analysis scripts
+zip -d $ZIP_NAME analysis/  # (and the analysis folder itself)
+zip -d $ZIP_NAME *.hide     # remove hidden files
 
     # Move the operational DB-connection-string back into place
 rm db_client/stiki_con_client.java

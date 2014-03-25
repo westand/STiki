@@ -21,6 +21,9 @@
 /api/stiki_api.php
 /backup/backup.sh
 
+  # Do not upload analysis scripts
+/analysis/*
+
   # We don't need to include the Java build
 *.class
 
