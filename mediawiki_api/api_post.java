@@ -109,7 +109,7 @@ public class api_post{
 		api_xml_login token_handler = new api_xml_login();
 		do_parse_work(con_token.getInputStream(), token_handler);
 		String lgtoken = token_handler.get_result();
-		String token_cookie = get_single_cookie_from_response(con_token);
+		String token_cookie = get_cookie_from_response(con_token);
 		
 			// We append this token to the previous request (second phase) --
 			// Response is sufficient to build Wikipedia session cookie
@@ -396,11 +396,11 @@ public class api_post{
 	 * should not be used in that case; only when 0 or 1 cookies are expected.
 	 * Empty string is returned if no cookies are present.
 	 */
-	private static String get_single_cookie_from_response(URLConnection uc){
+	private static String get_cookie_from_response(URLConnection uc){
 		String cookie = "", headerName = null;
 		for(int i=1; (headerName = uc.getHeaderFieldKey(i)) != null; i++){
 		    if(headerName.equalsIgnoreCase("Set-Cookie"))
-		    	cookie = uc.getHeaderField(i);
+		    	cookie += uc.getHeaderField(i); // Must APPEND
 		} // An HTTP response contains many headers; not all cookies
 		return(cookie);
 	}
