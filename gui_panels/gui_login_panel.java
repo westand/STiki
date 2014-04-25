@@ -598,8 +598,8 @@ public class gui_login_panel extends JPanel implements ActionListener{
 			// 3. Explicit permission per DB table (for grandfathering, also)
 			//
 			// Here we try to call those by order of expense
-		if(has_rb || (api_retrieve.process_user_edits(
-				uname, 0, stiki_utils.cur_unix_time(), 0, 1000, 500) >= 1000) 
+		if(has_rb || (api_retrieve.process_user_edits(uname, 0, 
+				stiki_utils.cur_unix_time(), 0, 1000, null, 500) >= 1000) 
 				||  parent.client_interface.user_explicit(uname)){
 			return true;
 		} else{

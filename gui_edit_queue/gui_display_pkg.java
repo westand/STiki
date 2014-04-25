@@ -359,7 +359,7 @@ public class gui_display_pkg{
 			else{
 				this.user_edit_count = (int) api_retrieve.process_user_edits(
 						this.metadata.user, 0, stiki_utils.cur_unix_time(), 
-						0, 50, 50);
+						0, 50, null, 50);
 				return(this.user_edit_count);
 			} // If we do have to compute, store persistently
 					

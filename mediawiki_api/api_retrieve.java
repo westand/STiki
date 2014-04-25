@@ -598,18 +598,21 @@ public class api_retrieve{
 	 * break the recursion without exhaustive counting. Note that
 	 * Integer.MAX_INT can be passed to disable this setting. Also, the
 	 * return value may be greater than 'break_num' (slightly)
+	 * @param continue_key Pagination key. Should be NULL at initial call
 	 * @param batch_size Number on [1,500] indicating how many edits to 
 	 * fetch at once. Useful when setting low 'break_num'
 	 * @return  The number of edits by 'user' at time 'ts_prev' or before,
 	 * perhaps as constrained by other provided optionss
 	 */
 	public static long process_user_edits(String user, int ns, long ts_prev, 
-			long start_num, long break_num, int batch_size) throws Exception{
+			long start_num, long break_num, String continue_key, 
+			int batch_size) throws Exception{
+		
 		api_xml_user_edits_date handler = 
 				new api_xml_user_edits_date(user, ns, 
 						start_num, break_num, batch_size);
 		do_parse_work(new URL(url_user_edits_date(
-				user, ns, ts_prev, batch_size)), null, handler);
+				user, ns, ts_prev, continue_key, batch_size)), null, handler);
 		return(handler.get_result()); // Return result from parser
 	} 
 	
@@ -1138,18 +1141,22 @@ public class api_retrieve{
 	 * @param ts_before The timestamp at which to count the total number
 	 * of contributions. To count *all* contributions in history, just
 	 * entire the UNIX timestamp of "now" or some future time.
+	 * @param continue_key Pagination key.  Should be NULL for initial call.
 	 * @param batch_size Integer on [1,500] to set batch size
 	 * @return URL to obtain, containing relevant data.
 	 */
 	private static String url_user_edits_date(String user, int ns, 
-			long ts_before, int batch_size) throws Exception{
+			long ts_before, String continue_key, int batch_size) 
+					throws Exception{
 		
 		String url = base_url() + "&list=usercontribs";
 		url += "&ucuser=" + URLEncoder.encode(user, "UTF-8");
 		url += "&ucprop=timestamp";
 		url += "&ucdir=older";
 		url += "&uclimit=" + batch_size;
-		url += "&ucstart=" + stiki_utils.unix_ts_to_wiki(ts_before);
+		if(continue_key == null)
+			url += "&ucstart=" + stiki_utils.unix_ts_to_wiki(ts_before);
+		else url += "&uccontinue=" + continue_key;
 		if(ns != Integer.MAX_VALUE)
 			url += "&ucnamespace=" + ns;
 		url += "&format=xml";

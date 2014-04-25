@@ -4,8 +4,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import core_objects.stiki_utils;
-
 /**
  * Andrew G. West - api_xml_user_edits_date.java - The SAX-XML parse handler, 
  * which for a user-name, and a provided timestamp, returns the total count 
@@ -83,17 +81,18 @@ public class api_xml_user_edits_date extends DefaultHandler{
 	public void startElement(String uri, String localName, String qName, 
 			Attributes attributes) throws SAXException{
 		
-		if(qName.equals("item") && attributes.getValue("timestamp") != null)
-			edits++; // each line "item" is indicative  of an edit
-		else if(qName.equals("usercontribs") && 
-			attributes.getValue("ucstart") != null){
+		if(qName.equals("usercontribs") && 
+			attributes.getValue("uccontinue") != null){
+			
+			this.edits += this.batch_size;
 			
 			if(this.edits >= this.break_num)
 				return; // breaking logic
-			long time = stiki_utils.wiki_ts_to_unix(
-					attributes.getValue("ucstart"));
+			String continue_key = attributes.getValue("uccontinue");
+			
 			try{edits = api_retrieve.process_user_edits(this.user, this.ns, 
-					time, this.edits, this.break_num, this.batch_size);
+					0, this.edits, this.break_num,
+					continue_key, this.batch_size);
 			} catch(Exception e){e.printStackTrace();} 
 		} // Here is the recursive case
 	}

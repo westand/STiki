@@ -574,12 +574,22 @@ public class stiki_utils{
 		int year=0, month=0, day=0, hour=0, min=0, sec=0;
 		
 			// Being a fixed format, we can parse the parts out easily
-		year = Integer.parseInt(wiki_ts.substring(0, 4));
-		month = Integer.parseInt(wiki_ts.substring(5,7));
-		day = Integer.parseInt(wiki_ts.substring(8, 10));
-		hour = Integer.parseInt(wiki_ts.substring(11, 13));
-		min = Integer.parseInt(wiki_ts.substring(14, 16));
-		sec = Integer.parseInt(wiki_ts.substring(17, 19));
+		if(wiki_ts.contains("Z") || wiki_ts.contains("-")){
+			year = Integer.parseInt(wiki_ts.substring(0, 4));
+			month = Integer.parseInt(wiki_ts.substring(5,7));
+			day = Integer.parseInt(wiki_ts.substring(8, 10));
+			hour = Integer.parseInt(wiki_ts.substring(11, 13));
+			min = Integer.parseInt(wiki_ts.substring(14, 16));
+			sec = Integer.parseInt(wiki_ts.substring(17, 19));
+		} else{
+			year = Integer.parseInt(wiki_ts.substring(0, 4));
+			month = Integer.parseInt(wiki_ts.substring(4,6));
+			day = Integer.parseInt(wiki_ts.substring(6, 8));
+			hour = Integer.parseInt(wiki_ts.substring(8, 10));
+			min = Integer.parseInt(wiki_ts.substring(10, 12));
+			sec = Integer.parseInt(wiki_ts.substring(12, 14));
+		}
+		
 		return (stiki_utils.arg_unix_time(year, month, day, hour, min, sec));
 	}
 	
@@ -589,6 +599,7 @@ public class stiki_utils{
 	 * @return Time 'unix_ts' in Wikipedia format (2001-01-21T02:12:21Z)
 	 */
 	public static String unix_ts_to_wiki(long unix_ts){
+		
 		String wiki_ts = "";
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+00"));
 		cal.setTimeInMillis(1000 * unix_ts);

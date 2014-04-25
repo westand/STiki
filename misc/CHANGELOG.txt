@@ -13,8 +13,14 @@
   conveniently altered for small changes:
   
   * 2014-XX-XX
+      # Due to an WMF API change, we were forced to change the way user
+        edit counts were performed. This code was used to determine
+        STiki permissions (>1000 edits) and in "don't template the 
+        regulars" logic.
+      
       = Need to update the pre-formatted AGF messages
       = Need to fix a problem pertaining to null diffs being displayed
+      = Investigate mouseover to show full edit comments when lengthy
   
   * 2014-03-25
       # Emergency release in order to fix login code broken by a small
