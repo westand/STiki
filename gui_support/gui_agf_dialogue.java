@@ -406,7 +406,15 @@ public class gui_agf_dialogue extends JDialog implements
 				"than English. When on the English-language Wikipedia, " +  
 				"please always use English. Thank you! ~~~~");
 
-		
+    map.put("Test edit", 
+              "==Recent edits to #a#==\n[[Image:Information.svg|25px]] Hello. I noticed that you recently made an edit that seemed to be a test. Your test worked! However, test edits on live articles disrupt Wikipedia and may confuse readers. If you want more practice editing, the [[Wikipedia:Sandbox|sandbox]] is the best place to do so. If you think I made a mistake, or if you have any questions, you can leave me a message on my talk page. Thanks, ~~~~");
+
+    map.put("Uncited BLP change", 
+                  "==Recent edits to #a#==\n[[Image:Information.svg|25px]] Hello. I noticed that you made an edit to a biography of a living person, but that you didn't support your changes with a citation to a [[WP:RS|reliable source]].  Wikipedia has a strict policy concerning [[WP:BLP|how we write about living people]], so please help us keep such articles accurate.  If you think I made a mistake, or if you have any questions, you can leave me a message on my talk page. Thanks, ~~~~");
+
+    map.put("Puffery / Promotion",
+        "==Recent edits to #a#==\n[[Image:Information.svg|25px]] Hello.  I noticed that you made an edit that introduces praise or promotional language to the [[#a#]] article.  On Wikipedia, we adhere to a [[WP:NPOV|neutral point of view (NPOV)]], and avoid promotional language or puffery.  Please read the NPOV policy page, as well as [[Wikipedia:Manual of Style/Words to watch|this page of language to avoid]] to better understand how to expand this article in a style suitable to an encyclopedia.  If you have questions, please see [[Wikipedia:Help desk|the Help Desk page]].  Thanks, ~~~~");
+
 		map.put("General revert notify ", 
 				"==Recent edit#s# to [[#a#]]==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and thank you " +  
