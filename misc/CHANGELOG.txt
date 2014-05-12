@@ -14,11 +14,16 @@
   
   * 2014-XX-XX
       # Due to an WMF API change, we were forced to change the way user
-        edit counts were performed. This code was used to determine
-        STiki permissions (>1000 edits) and in "don't template the 
-        regulars" logic.
+        edit counts were performed. The WMF changed the way pagination is done,
+        breaking our earlier parser in some cases. This code was used to 
+        determine STiki permissions (>1000 edits) and in "don't template 
+        the regulars" logic.
+      # More AGF messages were added, including some pulled in from a GitHub
+        merge (our first community code contribution!). Some category
+        labels were pre-pended to help better manage this growing list.
+        The code copy was also synced with community copy at:
+        http://en.wikipedia.org/wiki/WP:STiki/Good-faith-revert_messages
       
-      = Need to update the pre-formatted AGF messages
       = Need to fix a problem pertaining to null diffs being displayed
       = Investigate mouseover to show full edit comments when lengthy
   

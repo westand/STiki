@@ -371,7 +371,62 @@ public class gui_agf_dialogue extends JDialog implements
 		map.put("None", 
 				"");
 		
-		map.put("Non-notable list entry", 
+		///// COMMON
+		
+		map.put("COMMON: General revert notify", 
+				"==Recent edit#s# to [[#a#]]==\n" + 
+				"[[Image:Information.svg|25px]] Hello, and thank you " +  
+				"for your recent contribution#s#. I appreciate the effort " + 
+				"you made for our project, but unfortunately I had to " +  
+				"undo your edit#s# because I believe the article was " +  
+				"better before you made that change. Feel free to " +  
+				"contact me directly if you have any questions. " +  
+				"Thank you! ~~~~");
+		
+		map.put("COMMON: Unsourced content", 
+				"==Recent edit#s# to [[#a#]]==\n " +
+				"[[Image:Information.svg|25px|alt=Information icon]] Hello, " +
+				"and welcome to Wikipedia. I noticed that you made a " +
+				"change to an article, [[#a#]], but you didn't provide " +
+				"a [[Wikipedia:Identifying reliable sources|reliable source]]. " +
+				"It's been removed for now, but if you'd like to " +
+				"[[Wikipedia:Citing sources|include a citation]] and " +
+				"re-add it, please do so! If you need guidance on " +
+				"referencing, please see the " +
+				"[[Help:Referencing for beginners|referencing for beginners]] " +
+				"tutorial, or if you think I made a mistake, you can leave " +
+				"me a message on my talk page. Thank you! ~~~~");
+		
+		map.put("COMMON: Blanking/removal of content", 
+				"==Recent edit#s# to [[#a#]]==\n " +
+				"[[Image:Information.svg|25px]] Hello, and welcome to " +
+				"Wikipedia. I noticed that you removed some content " +
+				"from [[#a#]] without explaining why. In the future, it " +
+				"would be helpful to others if you described your changes " +
+				"to Wikipedia with an accurate [[Help:Edit summary|edit " +
+				"summary]]. If this was a mistake, don't worry; I restored " +
+				"the removed content. If you would like to experiment, " +
+				"please use the [[WP:Sandbox|sandbox]]. If you think I " +
+				"made a mistake, or if you have any questions, you can " +
+				"leave me a message on my talk page. Thank you! ~~~~");
+		
+		map.put("COMMON: Puffery or promotion",
+				"==Recent edit#s# to #a#==\n " +
+				"[[Image:Information.svg|25px]] Hello. I noticed that " +
+				"you made an edit that introduces praise or promotional " +
+				"language to the [[#a#]] article. On Wikipedia, we adhere " +
+				"to a [[WP:NPOV|neutral point of view (NPOV)]] and avoid " +
+				"promotional language or puffery. Please read the NPOV " +
+				"policy page, as well as [[Wikipedia:Manual of " +
+				"Style/Words to watch|this page of language to avoid]] to " +
+				"better understand how to expand this article in a style " +
+				"suitable to an encyclopedia.  If you have questions, " +
+				"please see [[Wikipedia:Help desk|the Help Desk page]]. " +
+				"Thank you! ~~~~");
+		
+		///// TOOMUCH
+		
+		map.put("TOOMUCH: Non-notable list entry", 
 				"==Recent edit#s# to [[#a#]]==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and welcome to " + 
 				"Wikipedia. Your recent edit#s# to [[#a#]] added the name " +
@@ -384,7 +439,19 @@ public class gui_agf_dialogue extends JDialog implements
 				"[[Wikipedia:Notability|notability]] guideline. " +   
 				"Thank you! ~~~~");
 		
-		map.put("Talk in article", 
+		map.put("TOOMUCH: Un-encyclopedic details", 
+				"==Recent edit#s# to [[#a#]]==\n" +  
+				"[[Image:Information.svg|25px]] Hello, and thank you for " + 
+				"your recent contribution#s#. While the content of your edit#s# " +   
+				"may be true, I have removed it because its depth or " +  
+				"nature of detail are not consistent with our objectives " +  
+				"as an encyclopedia. I recognize that your edit was made " +  
+				"in good faith and hope you will familiarize yourself " +  
+				"with [[WP:NOT|what Wikipedia is not]] so we may " +  
+				"collaborate in the future. Thank you! ~~~~");
+		
+		
+		map.put("TOOMUCH: Talk in article", 
 				"==Recent edit#s# to [[#a#]]==\n" + 
 				"[[Image:Information.svg|25px]] Hello, and thank you " +  
 				"for your contribution#s# to Wikipedia. I noticed that " +  
@@ -398,34 +465,33 @@ public class gui_agf_dialogue extends JDialog implements
 				"and your comments will not disrupt the flow of the " +  
 				"article. Thank you! ~~~~");
 		
-		map.put("Non-English contributions", 
-				"==Recent edit#s# to [[#a#]]==\n " +  
-				"[[Image:Information.svg|25px]] Thank you for your " +  
-				"contribution#s# to Wikipedia. I noticed that you have " +  
-				"posted content to the [[#a#]] article in a language other " +  
-				"than English. When on the English-language Wikipedia, " +  
-				"please always use English. Thank you! ~~~~");
-
-    map.put("Test edit", 
-              "==Recent edits to #a#==\n[[Image:Information.svg|25px]] Hello. I noticed that you recently made an edit that seemed to be a test. Your test worked! However, test edits on live articles disrupt Wikipedia and may confuse readers. If you want more practice editing, the [[Wikipedia:Sandbox|sandbox]] is the best place to do so. If you think I made a mistake, or if you have any questions, you can leave me a message on my talk page. Thanks, ~~~~");
-
-    map.put("Uncited BLP change", 
-                  "==Recent edits to #a#==\n[[Image:Information.svg|25px]] Hello. I noticed that you made an edit to a biography of a living person, but that you didn't support your changes with a citation to a [[WP:RS|reliable source]].  Wikipedia has a strict policy concerning [[WP:BLP|how we write about living people]], so please help us keep such articles accurate.  If you think I made a mistake, or if you have any questions, you can leave me a message on my talk page. Thanks, ~~~~");
-
-    map.put("Puffery / Promotion",
-        "==Recent edits to #a#==\n[[Image:Information.svg|25px]] Hello.  I noticed that you made an edit that introduces praise or promotional language to the [[#a#]] article.  On Wikipedia, we adhere to a [[WP:NPOV|neutral point of view (NPOV)]], and avoid promotional language or puffery.  Please read the NPOV policy page, as well as [[Wikipedia:Manual of Style/Words to watch|this page of language to avoid]] to better understand how to expand this article in a style suitable to an encyclopedia.  If you have questions, please see [[Wikipedia:Help desk|the Help Desk page]].  Thanks, ~~~~");
-
-		map.put("General revert notify ", 
-				"==Recent edit#s# to [[#a#]]==\n" + 
-				"[[Image:Information.svg|25px]] Hello, and thank you " +  
-				"for your recent contribution#s#. I appreciate the effort " + 
-				"you made for our project, but unfortunately I had to " +  
-				"undo your edit#s# because I believe the article was " +  
-				"better before you made that change. Feel free to " +  
-				"contact me directly if you have any questions. " +  
+		map.put("TOOMUCH: Inappropriate external links", 
+				"==Recent edit#s# to [[#a#]]==\n " +
+				"[[Image:Information.svg|25px]] Hello, and welcome to " +
+				"Wikipedia. I wanted to let you know that I removed one or " +
+				"more external links you added to the [[#a#]] article, " +
+				"because they seemed to be inappropriate for an encyclopedia. " +
+				"You may find our [[Wikipedia:External links|linking " +
+				"guidelines]] helpful in this regard. If you think I made " +
+				"a mistake, or if you have any questions, you can leave me " +
+				"a message on my talk page. Thank you! ~~~~");
+	
+		
+		///// NONSENSE
+		
+		map.put("NONSENSE: Test edit", 
+				"==Recent edit#s# to #a#==\n " +
+				"[[Image:Information.svg|25px]] Hello. I noticed that " +
+				"you recently made a contribution to the [[#a#]] article " +
+				"that seemed to be a test. Your test worked! However, test " +
+				"edits on live articles disrupt Wikipedia and may confuse " +
+				"readers. If you want more practice editing, the " +
+				"[[Wikipedia:Sandbox|sandbox]] is the best place to do so. " +
+				"If you think I made a mistake, or if you have any " +
+				"questions, you can leave me a message on my talk page. " +
 				"Thank you! ~~~~");
 		
-		map.put("Joke edit",
+		map.put("NONSENSE: Joke edit",
 				"==Recent edit#s# to [[#a#]]==\n" + 
 				"[[Image:Information.svg|25px]] " +   
 				"[[Wikipedia:Introduction|Welcome]], and thank you for " + 
@@ -438,27 +504,60 @@ public class gui_agf_dialogue extends JDialog implements
 				"where you are given a good deal of freedom in what " +  
 				"you write. Thank you! ~~~~");
 		
-		map.put("Un-encyclopedic details", 
-				"==Recent edit#s# to [[#a#]]==\n" +  
-				"[[Image:Information.svg|25px]] Hello, and thank you for " + 
-				"your recent contribution#s#. While the content of your edit#s# " +   
-				"may be true, I have removed it because its depth or " +  
-				"nature of detail are not consistent with our objectives " +  
-				"as an encyclopedia. I recognize that your edit was made " +  
-				"in good faith and hope you will familiarize yourself " +  
-				"with [[WP:NOT|what Wikipedia is not]] so we may " +  
-				"collaborate in the future. Thank you! ~~~~");
-				
-		map.put("Blank",
+		map.put("NONSENSE: Non-English contributions", 
+				"==Recent edit#s# to [[#a#]]==\n " +  
+				"[[Image:Information.svg|25px]] Thank you for your " +  
+				"contribution#s# to Wikipedia. I noticed that you have " +  
+				"posted content to the [[#a#]] article in a language other " +  
+				"than English. When on the English-language Wikipedia, " +  
+				"please always use English. Thank you! ~~~~");
+		
+		///// LEGAL
+		
+		map.put("LEGAL: Uncited BLP change", 
+				"==Recent edit#s# to #a#==\n " +
+				"[[Image:Information.svg|25px]] Hello. I noticed that you " +
+				"made an edit to a biography of a living person ([[#a#]]), " +
+				"but that you didn't support your changes with a citation " +
+				"to a [[WP:RS|reliable source]]. Wikipedia has a strict " +
+				"policy concerning [[WP:BLP|how we write about living " +
+				"people]], so please help us keep such articles accurate. " +
+				"If you think I made a mistake, or if you have any " +
+				"questions, you can leave me a message on my talk page. " +
+				"Thank you! ~~~~");
+		
+		map.put("LEGAL: Copyrighted material", 
+				"==Recent edit#s# to [[#a#]]==\n " +
+				"[[Image:Stop hand nuvola.svg|30px|alt=Stop icon]] Your " +
+				"addition to [[#a#]] has been removed, as it appears to " +
+				"have added [[Wikipedia:Copyrights|copyrighted]] material " +
+				"to Wikipedia without [[Wikipedia:Requesting copyright " +
+				"permission|permission]] from the copyright holder. If you " +
+				"are the copyright holder, please read " +
+				"[[Wikipedia:Donating copyrighted materials]] for more " +
+				"information on uploading your material to Wikipedia. " +
+				"For legal reasons, Wikipedia cannot accept copyrighted " +
+				"text, or images borrowed from other websites, or printed " +
+				"material without a verifiable license. You may " +
+				"use external websites or publications as a source of " +
+				"''information'', but not as a source of ''content''. " +
+				"Wikipedia takes copyright violations very seriously " +
+				"and persistent violators '''will be " +
+				"[[Wikipedia:Blocking policy|blocked from editing]]'''. " +
+				"Thank you! ~~~~");
+			
+		///// CUSTOM
+		
+		map.put("CUSTOM: Blank",
 				"==Recent edit#s# to [[#a#]]==\n" + 
 				"[[Image:Information.svg|25px]]\n" + 
 				"<!--insert custom message here-->\n" + 
 				"Thank you! ~~~~");
 		
-		map.put("User custom #1", AGF_CUSTOM1);
-		map.put("User custom #2", AGF_CUSTOM2);
-		map.put("User custom #3", AGF_CUSTOM3);
-		map.put("User custom #4", AGF_CUSTOM4);
+		map.put("CUSTOM: User custom #1", AGF_CUSTOM1);
+		map.put("CUSTOM: User custom #2", AGF_CUSTOM2);
+		map.put("CUSTOM: User custom #3", AGF_CUSTOM3);
+		map.put("CUSTOM: User custom #4", AGF_CUSTOM4);
 		return(map);
 	}
 	
