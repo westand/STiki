@@ -313,11 +313,14 @@ public class gui_display_pkg{
 			// rollback actions. We don't want to display zero-diffs to 
 			// end users (what's the point? no change). However, we can't
 			// check for this at queuing time because the server-side
-			// does its an analysis at the per-edit (not rollback) level.
+			// does its analysis at the per-edit (not rollback) level.
 		
-			// Moreover, this is a hacky way to detect it. If there are no
+			// Here is a hacky way to detect it. If there are no
 			// colored HTML tables, then no comparison is being made.
-		return(!content.contains("bgcolor"));
+			// These tables have cells with a background color, but
+			// we must look for a second instance of these keyword 
+			// because the first sets the BG for the entire diff.
+		return(stiki_utils.num_matches_within("bgcolor", content) <= 1);
 	}
 	
 	/**

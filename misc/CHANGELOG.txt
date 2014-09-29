@@ -23,9 +23,13 @@
         labels were pre-pended to help better manage this growing list.
         The code copy was also synced with community copy at:
         http://en.wikipedia.org/wiki/WP:STiki/Good-faith-revert_messages
-      
-      = Need to fix a problem pertaining to null diffs being displayed
+      # Null diffs should no longer be displayed (T#038). This was a bug
+        introduced when STiki enabled custom color options for users.
+      # Users will not be displayed their own edits from the queues, as this
+        is a conflict of interest (T#043).
+        
       = Investigate mouseover to show full edit comments when lengthy
+  
   
   * 2014-03-25
       # Emergency release in order to fix login code broken by a small

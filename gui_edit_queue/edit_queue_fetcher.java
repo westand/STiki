@@ -111,6 +111,16 @@ public class edit_queue_fetcher implements Runnable{
 				parent.client_interface.queues.queue_delete(rid);
 			}
 			
+				// Do not allow a user to classify his/her own edits.
+				// We also ignore such edits in the queue, so clients do
+				// not keep re-fetching the RID at every reservation fetch.
+			if(cur_edit.metadata.user.equalsIgnoreCase(
+					parent.login_panel.get_editing_user())){
+				cur_edit = null;
+				parent.client_interface.queues.queue_ignore(
+						rid, parent.login_panel.get_editing_user());
+			}
+				
 				// If RID was most recent on page, we got data, and the diff
 				// was non-zero -- then add it to the cache/queue.
 			if(cur_edit != null)
