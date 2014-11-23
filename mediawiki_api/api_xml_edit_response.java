@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class api_xml_edit_response extends DefaultHandler{
 
 	// **************************** PRIVATE FIELDS ***************************
-	
+		
 	/**
 	 * Given the event-driven nature of the class, methods cannot simply
 	 * return objects as we'd like. Instead, we store the result and
@@ -41,6 +41,10 @@ public class api_xml_edit_response extends DefaultHandler{
 		  // beats the editor to revert action.
 		
 		if(qName.equals("error")){
+			
+			if(attributes.getValue("code").equals("assertuserfailed"))
+				this.edit_result = EDIT_OUTCOME.ASSERT_FAIL;
+			
 			try{System.err.println("An edit (not rollback) failed to commit. " +
 					"The server returned code \"" + 
 					attributes.getValue("code") + 

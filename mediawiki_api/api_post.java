@@ -53,7 +53,7 @@ public class api_post{
 	/**
 	 * Three possible outcomes of a revert/rollback action.
 	 */
-	public enum EDIT_OUTCOME{SUCCESS, BEATEN, ERROR};
+	public enum EDIT_OUTCOME{SUCCESS, BEATEN, ASSERT_FAIL, ERROR};
 	
 	/**
 	 * The [base_url()] function over which all API POSTS operate is 
@@ -139,11 +139,13 @@ public class api_post{
 	 * indicates the user doing the editing (in combination with 'token').
 	 * Anonymous sessions should simply pass in NULL or the empty string.
 	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_revert(long rid, String title, 
 			String summary, boolean minor, pair<String,String> edit_token,
-			String session_cookie, boolean no_watchlist) throws Exception{
+			String session_cookie, boolean no_watchlist, boolean assert_user) 
+			throws Exception{
 		
 			// Building post-string is straightforward. Fields known not
 			// to contain special characters are not encoded.
@@ -158,6 +160,8 @@ public class api_post{
 		post_data += "&starttimestamp=" + edit_token.snd;
 		if(no_watchlist)
 			post_data += "&watchlist=nochange";
+		if(assert_user)
+			post_data += "&assert=user";
 		post_data += "&format=xml";
 		return(api_post.post(post_data, session_cookie).getInputStream());
 	}
@@ -171,11 +175,12 @@ public class api_post{
 	 * @param rb_token Rollback token (fetched at RID granularity)
 	 * @param cookie Cookie string (as returned at login) identifying user
 	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_rollback(String title, String user, 
 			String summary, String rb_token, String cookie, 
-			boolean no_watchlist) throws Exception{
+			boolean no_watchlist, boolean assert_user) throws Exception{
 		
 		String post_data = "action=rollback";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
@@ -184,6 +189,8 @@ public class api_post{
 		post_data += "&token=" + URLEncoder.encode(rb_token, "UTF-8");
 		if(no_watchlist)
 			post_data += "&watchlist=nochange";
+		if(assert_user)
+			post_data += "&assert=user";
 		post_data += "&format=xml";
 		return(api_post.post(post_data, cookie).getInputStream());
 	}
@@ -198,12 +205,13 @@ public class api_post{
 	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_append_text(String title, String summary, 
 			String append_text, boolean minor, pair<String,String> edit_token, 
-			String cookie, boolean force, boolean no_watchlist) 
-			throws Exception{
+			String cookie, boolean force, boolean no_watchlist, 
+			boolean assert_user) throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
 		String post_data = "action=edit";
@@ -219,6 +227,8 @@ public class api_post{
 			post_data += "&starttimestamp=" + edit_token.snd;
 		if(no_watchlist)
 			post_data += "&watchlist=nochange";
+		if(assert_user)
+			post_data += "&assert=user";
 		post_data += "&format=xml";
 		return(api_post.post(post_data, cookie).getInputStream()); // Do it!
 	}
@@ -233,12 +243,13 @@ public class api_post{
 	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_prepend_text(String title, String summary, 
 			String prepend_text, boolean minor, pair<String,String> edit_token,
-			String cookie, boolean force, boolean no_watchlist) 
-			throws Exception{
+			String cookie, boolean force, boolean no_watchlist, 
+			boolean assert_user) throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
 		String post_data = "action=edit";
@@ -254,6 +265,8 @@ public class api_post{
 			post_data += "&starttimestamp=" + edit_token.snd;
 		if(no_watchlist)
 			post_data += "&watchlist=nochange";
+		if(assert_user)
+			post_data += "&assert=user";
 		post_data += "&format=xml";
 		return(api_post.post(post_data, cookie).getInputStream()); // Do it!
 	}
@@ -268,12 +281,13 @@ public class api_post{
 	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_full_text(String title, String summary,
 			String full_text, boolean minor, pair<String,String> edit_token, 
-			String cookie, boolean force, boolean no_watchlist) 
-			throws Exception{
+			String cookie, boolean force, boolean no_watchlist, 
+			boolean assert_user) throws Exception{
 		
 		String post_data = "action=edit";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
@@ -288,6 +302,8 @@ public class api_post{
 			post_data += "&starttimestamp=" + edit_token.snd;
 		if(no_watchlist)
 			post_data += "&watchlist=nochange";
+		if(assert_user)
+			post_data += "&assert=user";
 		post_data += "&format=xml";
 		return(api_post.post(post_data, cookie).getInputStream()); // Do it!	
 	}
@@ -332,8 +348,11 @@ public class api_post{
 	/**
 	 * Execute an XML parse over the server-response from a rollback POST.
 	 * @param in InputStream containing server response from rollback POST.
-	 * @return -1 if an error occured; 0 if the user was beaten to the revert.
-	 * If successful, the RID of the earliest reverted edit will be returned.
+	 * @return Return zero (0) if the user was beaten to the revert.
+	 * If successful, the RID (>0) of the earliest reverted edit will be 
+	 * returned. Responses less than zero (<0) are indicative of errors.
+	 * In particular, "-2" is reserved for "badtoken", and "-3" is
+	 * reserved for "assertuserfailed" errors.
 	 */
 	public static long rollback_response(InputStream in) 
 			throws Exception{

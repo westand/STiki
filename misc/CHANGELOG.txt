@@ -27,6 +27,11 @@
       # Metadata panel content now has "mouseover" support. In particular,
         this should permit the full display of comments which are truncated
         because they are too lengthy to fit in the fixed-size placeholder.
+      # STiki users have experienced a loss of edit session, resulting in 
+        editing while logged out. This results in privacy loss and community
+        confusion. This is believed to be a bug on the WMF server-side.
+        However, using the "assert=true" check, STiki can now at least detect
+        the error state -- it pops a dialog and forces a restart (T#048). 
       # Due to an WMF API change, we were forced to change the way user
         edit counts are performed. The WMF changed the way pagination is done,
         breaking our earlier parser in some cases. This code was used to 
@@ -34,7 +39,7 @@
         the regulars" logic, and non-critical aspects of milestone reporting.
       # Minor improvements to warning increment logic; in particular, better
         handling when duplicate section headers exist.
-        
+
   * 2014-03-25
       # Emergency release in order to fix login code broken by a small
         WMF change (most of the burden probably falls to STiki for getting

@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.swing.JOptionPane;
+
 import mediawiki_api.api_post;
 import mediawiki_api.api_post.EDIT_OUTCOME;
 import mediawiki_api.api_retrieve;
@@ -183,12 +185,16 @@ public class gui_revert_and_warn implements Runnable{
 					// Only "guilty" edits should make use of native RB
 				InputStream in = api_post.edit_rollback(metadata.title, 
 						metadata.user, revert_comment,
-						metadata.rb_token, cookie, no_watchlist);
+						metadata.rb_token, cookie, no_watchlist, true);
 				long earliest_rb_undone = api_post.rollback_response(in);
 				if(earliest_rb_undone < 0){
-					revert_outcome = EDIT_OUTCOME.ERROR;
-					if(earliest_rb_undone == -2)
+					if(earliest_rb_undone == -2){
+						revert_outcome = EDIT_OUTCOME.ERROR;
 						bad_rbtoken_handler();
+					} else if(earliest_rb_undone == -3){
+						revert_outcome = EDIT_OUTCOME.ASSERT_FAIL;
+						assert_fail_dialog();
+					} else revert_outcome = EDIT_OUTCOME.ERROR;
 				} else if(earliest_rb_undone == 0)
 					revert_outcome = EDIT_OUTCOME.BEATEN;
 				else // anything else (it would be an RID)
@@ -210,8 +216,13 @@ public class gui_revert_and_warn implements Runnable{
 					minor = true;
 				
 				int sw_rb_code = gui_soft_rollback.software_rollback(
-						edit_pkg, revert_comment, minor, cookie, no_watchlist);
-				if(sw_rb_code == -1)
+						edit_pkg, revert_comment, minor, cookie, 
+						no_watchlist, true);
+				
+				if(sw_rb_code == -2){
+					revert_outcome = EDIT_OUTCOME.ASSERT_FAIL;
+					assert_fail_dialog();
+				} else if(sw_rb_code == -1)
 					revert_outcome = EDIT_OUTCOME.ERROR;
 				else if(sw_rb_code == 0)
 					revert_outcome = EDIT_OUTCOME.BEATEN;
@@ -337,7 +348,7 @@ public class gui_revert_and_warn implements Runnable{
 			api_post.edit_append_text(AIV_PAGE, aiv_comment(queue_type, 
 					metadata.user, metadata.rid, !metadata.user_is_ip), aiv_msg, 
 					false, this.edit_pkg.get_token(), this.cookie, true, 
-					no_watchlist);
+					no_watchlist, true);
 			
 			if(imm_non_van_warn)
 				return(WARNING.YES_AIV_4IM);
@@ -358,7 +369,7 @@ public class gui_revert_and_warn implements Runnable{
 				// is always safe to append content.
 			api_post.edit_append_text(talk_page, warning_comment(queue_type), 
 					warning, false, this.edit_pkg.get_token(), this.cookie, 
-					true, no_watchlist);
+					true, no_watchlist, true);
 			
 				// Output which warning level was issued
 			if (warning_level == 1) return(WARNING.YES_UW1);
@@ -707,7 +718,8 @@ public class gui_revert_and_warn implements Runnable{
 			throws Exception{
 		String talkpage = "User_talk:" + this.metadata.user;
 		api_post.edit_append_text(talkpage, comment, message, false, 
-				this.edit_pkg.get_token(), this.cookie, true, no_watchlist);
+				this.edit_pkg.get_token(), this.cookie, true, 
+				no_watchlist, true);
 	}
 	
 	/**
@@ -724,6 +736,33 @@ public class gui_revert_and_warn implements Runnable{
 					api_retrieve.process_basic_rid(metadata.rid, cookie).rb_token);
 			System.err.println();
 		} catch(Exception e){};
+	}
+	
+	/**
+	 * Dialog to pop the user if the "assertuser" condition fails. That is,
+	 * this code should only be called if the WMF session has been
+	 * unexpectedly terminated/severed. This dialog will inform the user
+	 * of what has happened and force a shutdown of STiki. THIS METHOD
+	 * DOES NOT RETURN; IT KILLS THE PROGRAM!!
+	 */
+	private void assert_fail_dialog(){
+		
+		JOptionPane.showMessageDialog(this.gui_revert_panel.parent,
+				"A check associated with your last revert/AGF action \n" +
+				"found your login session has been unexpectedly \n" +
+				"terminated. This is believed to be a bug on the WMF \n" +
+				"server-side, not within STiki itself.\n" +
+				"\n" +
+				"Regardless, to protect your privacy (i.e., your IP \n" +
+				"address), your last revert and warnings did not commit.\n" +
+				"\n" +
+				"When you click \"OK\" below, STiki will shut down. \n" +
+				"Restarting the program and logging in again will \n" +
+				"initiate a new session and correct the issue.\n\n",
+				"Error: WMF has dropped session",
+	 		    JOptionPane.ERROR_MESSAGE);
+
+		this.gui_revert_panel.parent.exit_handler(true); // Kill program
 	}
 	
 }

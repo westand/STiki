@@ -54,7 +54,9 @@ public class api_xml_rb_response extends DefaultHandler{
 							attributes.getValue("info") + "\"");
 					if(attributes.getValue("code").equals("badtoken"))
 						earliest_rid_rbed = -2; // Special error code
-				} // One error case is implicitly handled
+					if(attributes.getValue("code").equals("assertuserfailed"))
+						earliest_rid_rbed = -3; // Special error code
+				} // Two error case are explicitly handled
 			} catch(Exception e){} // Debugging output for edit failure
 		}
 		

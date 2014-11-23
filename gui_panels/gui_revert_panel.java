@@ -29,13 +29,16 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class gui_revert_panel extends JPanel implements ActionListener{
 	
-	// **************************** PRIVATE FIELDS ***************************
-
+	// **************************** PUBLIC FIELDS ****************************
+	
 	/**
 	 * Frame which contains this panel; for settings access.
 	 */
-	private stiki_frontend_driver parent;
+	public final stiki_frontend_driver parent;
 	
+	
+	// **************************** PRIVATE FIELDS ***************************
+
 	/**
 	 * Offending-editor for which reversion was attempted.
 	 */

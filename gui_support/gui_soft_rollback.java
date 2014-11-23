@@ -34,13 +34,15 @@ public class gui_soft_rollback{
 	 * @param edit_token Edit token held on the article which 'meta' wraps
 	 * @param session_cookie Cookie identifying editing user
 	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+ 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return Number of edits reverted as part of rollback action. Zero (0)
-	 * will be returned if "beaten" to edit. Negative one (-1) will be
-	 * returned in case of error.
+	 * will be returned if "beaten" to edit. Negative values (< 0) will be
+	 * returned in case of error, special value "-2" is reserved for the
+	 * "assertuserfailed" error.
 	 */
 	public static int software_rollback(gui_display_pkg edit_pkg, 
 			String revert_comment, boolean minor, String session_cookie, 
-			boolean no_watchlist) throws Exception{
+			boolean no_watchlist, boolean assert_user) throws Exception{
 		
 		metadata meta = edit_pkg.page_hist.get(0);
 		if(edit_pkg.rb_depth == 1 || 
@@ -48,11 +50,12 @@ public class gui_soft_rollback{
 			
 			InputStream in = api_post.edit_revert(meta.rid, meta.title, 
 					revert_comment, minor, edit_pkg.get_token(), 
-					session_cookie, no_watchlist); 
+					session_cookie, no_watchlist, assert_user); 
 			EDIT_OUTCOME undo_success = api_post.edit_was_made(in);
 			in.close();
 			
-			if(undo_success.equals(EDIT_OUTCOME.ERROR)) return -1;
+			if(undo_success.equals(EDIT_OUTCOME.ASSERT_FAIL)) return -2;
+			else if(undo_success.equals(EDIT_OUTCOME.ERROR)) return -1;
 			else if(undo_success.equals(EDIT_OUTCOME.BEATEN)) return 0;
 			else /*if(undo_success.equals(EDIT_OUTCOME.SUCCESS))*/ return 1;
 	
@@ -73,11 +76,13 @@ public class gui_soft_rollback{
 			InputStream in = api_post.edit_full_text(meta.title,
 					revert_comment, api_retrieve.process_page_content(
 					edit_pkg.page_hist.get(edit_pkg.rb_depth).rid), minor, 
-					edit_pkg.get_token(), session_cookie, false, no_watchlist);
+					edit_pkg.get_token(), session_cookie, 
+					false, no_watchlist, assert_user);
 			EDIT_OUTCOME undo_success = api_post.edit_was_made(in);
 			in.close();
 			
-			if(undo_success.equals(EDIT_OUTCOME.ERROR)) return -1;
+			if(undo_success.equals(EDIT_OUTCOME.ASSERT_FAIL)) return -2;
+			else if(undo_success.equals(EDIT_OUTCOME.ERROR)) return -1;
 			else if(undo_success.equals(EDIT_OUTCOME.BEATEN)) return 0;
 			else /*if(undo_success.equals(EDIT_OUTCOME.SUCCESS))*/ 
 				return(edit_pkg.rb_depth);

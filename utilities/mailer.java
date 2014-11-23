@@ -90,7 +90,7 @@ public class mailer{
 			edit_token = api_retrieve.process_edit_token(pages.get(i), cookie);
 			api_post.edit_append_text(pages.get(i), COMMENT, MESSAGE.replace(
 					"#u#", pages.get(i).replace("User_talk:", "")), 
-					false, edit_token, cookie, false, true);
+					false, edit_token, cookie, false, true, true);
 			System.out.println("Message posted to: " + pages.get(i));
 			Thread.sleep(1000 * 45);
 		}  // iterate over all users to be targeted
