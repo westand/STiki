@@ -50,6 +50,12 @@ public class gui_revert_and_warn implements Runnable{
 	public enum RV_STYLE{NOGO_RB, NOGO_SW, SIMPLE_UNDO, RB_NATIVE_ONE, 
 		RB_NATIVE_MANY, RB_SW_ONE, RB_SW_MULTIPLE}
 	
+	/**
+	 * Page where extreme vandals are reported, so admins may block them.
+	 */
+	public final String AIV_PAGE = "Wikipedia:Administrator_" +
+			"intervention_against_vandalism";
+	
 	
 	// **************************** PRIVATE FIELDS ***************************
 	
@@ -114,13 +120,7 @@ public class gui_revert_and_warn implements Runnable{
 	
 	
 	// ********** CONSTANTS ***********
-		
-	/**
-	 * Page where extreme vandals are reported, so admins may block them.
-	 */
-	private final String AIV_PAGE = "Wikipedia:Administrator_" +
-			"intervention_against_vandalism";
-	
+
 	/**
 	 * STiki may present a user's vandalism which occured long in the past.
 	 * However, especially with IP edits, it may be inappropriate to warn
@@ -496,10 +496,10 @@ public class gui_revert_and_warn implements Runnable{
 		
 			// Find last matching form on the page (likely the ONLY)
 		int start_ind = Math.max(Math.max(Math.max(
-				content.indexOf(sec_start_form1), 
-				content.indexOf(sec_start_form2)), 
-				content.indexOf(sec_start_form3)), 
-				content.indexOf(sec_start_form4));
+				content.lastIndexOf(sec_start_form1), 
+				content.lastIndexOf(sec_start_form2)), 
+				content.lastIndexOf(sec_start_form3)), 
+				content.lastIndexOf(sec_start_form4));
 		if(start_ind == -1)
 			return(""); // If section doesn't exist, return empty string
 		

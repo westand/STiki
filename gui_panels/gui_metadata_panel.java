@@ -209,6 +209,16 @@ public class gui_metadata_panel extends JPanel implements
 		data_timestamp.setText(time_ago_str(this.cur_pkg.metadata.timestamp));
 		data_comment.setText(this.cur_pkg.metadata.comment);
 		
+			// We set tool tip text for all fields, but "comment" in particular
+			// in the hope the ToolTip will be able to show complete
+			// text that overruns STiki's horizontal space
+		data_rid.setToolTipText(this.cur_pkg.metadata.rid + "");
+		data_title.setToolTipText(this.cur_pkg.metadata.title);
+		data_user.setToolTipText(this.cur_pkg.metadata.user + 
+				summarize_perms(this.cur_pkg.user_perms));
+		data_timestamp.setToolTipText(time_ago_str(this.cur_pkg.metadata.timestamp));
+		data_comment.setToolTipText(this.cur_pkg.metadata.comment);
+		
 			// Link colors may need adjusted
 		if(gui_pkg.user_has_talkpage)
 			link_user_talk.setFont(gui_globals.get_link_font(false, false));

@@ -75,6 +75,7 @@ public class gui_settings extends Properties{
 		options_https,			// Whether the HTTPS protocol should be used
 		options_dttr,			// Whether to warn if "templating a regular"
 		options_agf_comment,    // Whether to message AGF-reverted users
+		options_aiv_popup,		// Whether to pop-up notify on AIV post
 		filter_privileged};     // Show edits by privileged editors?
 		
 	
@@ -280,6 +281,9 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_BOOL.options_agf_comment.toString(),
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_agf_comment_policy()));
+		props.setProperty(SETTINGS_BOOL.options_aiv_popup.toString(),
+				String.valueOf(parent.menu_bar.
+				get_options_menu().get_aiv_popup_policy()));
 		
 			// Custom AGF messages internal to that dialog
 		props.setProperty(SETTINGS_STR.agf_custom1.toString(), 

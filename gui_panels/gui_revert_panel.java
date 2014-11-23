@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import executables.stiki_frontend_driver;
 import gui_edit_queue.gui_display_pkg;
 import gui_support.gui_globals;
 import gui_support.gui_revert_and_warn;
@@ -15,6 +16,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -29,6 +31,11 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 	
 	// **************************** PRIVATE FIELDS ***************************
 
+	/**
+	 * Frame which contains this panel; for settings access.
+	 */
+	private stiki_frontend_driver parent;
+	
 	/**
 	 * Offending-editor for which reversion was attempted.
 	 */
@@ -48,14 +55,23 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 	private JButton link_talk;
 	private JButton link_page;
 	
+		// If an AIV pop-up is displayed, the ActionListener needs
+		// access to the following links/buttons within
+	private JButton aiv_notify_link_aiv;
+	private JButton aiv_notify_link_utalk;
+	
 	
 	// ***************************** CONSTRUCTORS ****************************
 	
 	/**
 	 * Create a [gui_reverted_panel], intializing the visual components, in
 	 * addition to setting their positioning. Initialize to blank
+	 * @param parent Frame which contains this panel; for settings access
 	 */
-	public gui_revert_panel(){
+	public gui_revert_panel(stiki_frontend_driver parent){
+		
+			// Set passed parameters
+		this.parent = parent;
 				
 			// Create panel that displays offending-user links
 		link_contribs = gui_globals.create_small_link("(edits)", false, this);
@@ -144,6 +160,14 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 			// This leaves two-terse lines, dependent on warning outcome
 		String warn = get_warn_message(rv_style, outcome);
 		data_warning.setText("<HTML><CENTER>" + warn + "</CENTER></HTML>");
+		
+			// User may opt for explicit notify of AIV events
+			// Do this after display is already set
+		if((outcome.equals(WARNING.YES_AIV) || 
+				outcome.equals(WARNING.YES_AIV_4IM)) && 
+				parent.menu_bar.get_options_menu().get_aiv_popup_policy()){			
+			pop_aiv_notify_dialogue();
+		}
 	}
 	
 	/**
@@ -162,7 +186,12 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 		else if(event.getSource().equals(this.link_page))	
 			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
 					this.last_page);
-		
+		else if(event.getSource().equals(this.aiv_notify_link_aiv))
+			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" + 
+					"WP:AIV");
+		else if(event.getSource().equals(this.aiv_notify_link_utalk))
+			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" + 
+					"User_talk:" + this.guilty_user);
 	}
 	
 	
@@ -226,6 +255,43 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 			warn_message += "reported to AIV<BR>(special 4im case)";
 		return(warn_message);
 	}	
+	
+	/**
+	 * Pop the dialogue message that says (paraphrasing) "you just 
+	 * reported someone to AIV", with helpful links
+	 */
+	private void pop_aiv_notify_dialogue(){
+		
+		JLabel pane_text1 = gui_globals.plain_multiline_label(
+			"A vandalism revert you initiated has resulted in a <BR>" +
+			"report being lodged at \"Administrator Intervention <BR>" +
+			"against Vandalism\" (AIV).<BR><BR>");
+		
+		JButton aiv_notify_link_aiv = gui_globals.create_link(
+				"Current version of [[WP:AIV]]", false, null);
+		JButton aiv_notify_link_utalk = gui_globals.create_link(
+				"User talk page of offending editor", false, null);
+		
+		JLabel pane_text2 = gui_globals.plain_multiline_label(
+			"<BR>You may wish to confirm the legitimacy of that report. <BR>" +
+			"Alternatively, sufficiently permissioned users may want <BR>" +
+			"to confirm and enact the block themselves.<BR>" +
+			"<BR>" +
+			"You are receiving this notification because of an opt-in <BR>" +
+			"setting in the \"Options\" menu; this dialog is not a  <BR>" +
+			"requirement for reporting users to AIV.<BR><BR>");
+	
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(pane_text1);
+		panel.add(aiv_notify_link_aiv);
+		panel.add(aiv_notify_link_utalk);
+		panel.add(pane_text2);
+		
+		JOptionPane.showMessageDialog(parent, panel,
+	 		    "Notification: AIV report just lodged",
+	 		    JOptionPane.INFORMATION_MESSAGE);
+	}
 	
 	/**
 	 * Trim the editor name so it does not overflow the panel width.

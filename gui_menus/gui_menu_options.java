@@ -61,6 +61,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	private JCheckBoxMenuItem https_cb;
 	private JCheckBoxMenuItem dttr_cb;
 	private JCheckBoxMenuItem agf_comment_cb;
+	private JCheckBoxMenuItem aiv_popup_cb;
 	
 
 	// ***************************** CONSTRUCTORS ****************************
@@ -89,6 +90,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		this.add(https_cb);
 		this.add(dttr_cb);
 		this.add(agf_comment_cb);
+		this.add(aiv_popup_cb);
 		
 			// Set default menu selections (per persistent settings)
 		this.selected_browser_font_size(gui_settings.get_int_def(
@@ -106,6 +108,8 @@ public class gui_menu_options extends JMenu implements ActionListener{
 				gui_settings.SETTINGS_BOOL.options_dttr, true));
 		this.set_agf_comment_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_agf_comment, true));
+		this.set_aiv_popup_policy(gui_settings.get_bool_def(
+				gui_settings.SETTINGS_BOOL.options_aiv_popup, false));
 	}
 	
 	
@@ -133,6 +137,10 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		
 			// Do nothing
 			
+		} else if(event.getSource().equals(aiv_popup_cb)){
+			
+			// Do nothing
+				
 		} else if(event.getSource().equals(browser_font_10) || 
 				event.getSource().equals(browser_font_12) || 
 				event.getSource().equals(browser_font_14) || 
@@ -345,6 +353,23 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		return(agf_comment_cb.isSelected());
 	}
 	
+	/**
+	 * Set the AIV popup policy in the menu
+	 * @param enable TRUE if STiki users will be popped an explicit
+	 * notification window upon posting to AIV. Else, false.
+	 */
+	public void set_aiv_popup_policy(boolean enable){
+		aiv_popup_cb.setSelected(enable);
+	}
+	
+	/**
+	 * Return whether the 'AIV popup' checkbox is selected.
+	 * @return whether the 'AIV popup' checkbox is selected
+	 */
+	public boolean get_aiv_popup_policy(){
+		return(aiv_popup_cb.isSelected());
+	}
+	
 
 	// **************************** PRIVATE FIELDS ***************************
 	
@@ -421,6 +446,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		https_cb = create_cb_item("Use HTTPS (restart reqd.)", KeyEvent.VK_H);
 		dttr_cb = create_cb_item("Warn if templating regular", KeyEvent.VK_W);
 		agf_comment_cb = create_cb_item("Message AGF reverted users", KeyEvent.VK_A);
+		aiv_popup_cb = create_cb_item("Explicit notify on AIV post", KeyEvent.VK_V);
 	}
 	
 	/**

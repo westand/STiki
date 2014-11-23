@@ -321,6 +321,20 @@ public class gui_globals{
 	}
 	
 	/**
+	 * Create a multiline-plain-text JLabel which is left-justified.
+	 * @param text Text which should appear on the JLabel
+	 * @return A new JLabel object, with left-justified "text", and with 
+	 * "text" wrapped onto multiple lines, if necessary.
+	 */
+	public static JLabel plain_multiline_label(String text){
+		JLabel label = new JLabel("<HTML>" + text + "</HTML>");
+		label.setFont(gui_globals.PLAIN_NORMAL_FONT);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setHorizontalTextPosition(SwingConstants.CENTER);
+		return(label);
+	}
+	
+	/**
 	 * Create a multiline-plain-text JLabel which is completely centered.
 	 * @param text Text which should appear on the JLabel
 	 * @return A new JLabel object, with centered-text "text", and with 

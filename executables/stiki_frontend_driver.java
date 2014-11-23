@@ -234,7 +234,7 @@ public class stiki_frontend_driver extends JFrame{
 			// Initialize all main-window components 
 		button_panel = new gui_button_panel(this, default_type);
 	    metadata_panel = new gui_metadata_panel();
-	    revert_panel = new gui_revert_panel();
+	    revert_panel = new gui_revert_panel(this);
 	    login_panel = new gui_login_panel(this);
 	    comment_panel = new gui_comment_panel(default_type);
 		diff_browser = new gui_diff_panel();
