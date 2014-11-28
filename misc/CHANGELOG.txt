@@ -30,7 +30,8 @@
       # A "small numerical edits" filter has been created. Sometimes
         monotonous and difficult to casually assess, this filter can allow
         users to skip edits where "only a single numerical value is changed,
-        and the magnitude of that change is (0.5 < change < 2.0)" (T#049).   
+        and the magnitude of that change is (0.5 < change < 2.0)" (T#049). 
+      # Remove reference to "editing anonymously" in login dialog (T#044).  
         
       # There have been reports of user's edit session's dropping, resulting 
         in editing while logged out. This results in privacy loss and community

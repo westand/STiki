@@ -324,9 +324,8 @@ public class stiki_frontend_driver extends JFrame{
 
 		if(!login_panel.is_state_stable()){ 
 			JOptionPane.showMessageDialog(this,
-					"To classify using STiki, you must either log-in\n" +
-	       		 	"or choose to edit as an anonymous user.",
-	       		    "Warning: Must set user-mode",
+					"To classify using STiki, you must log-in.",
+	       		    "Warning: Must login",
 	       		    JOptionPane.WARNING_MESSAGE);
 			return;
 		} // Confirm that the login-panel has an established editing user, if
