@@ -1,12 +1,14 @@
 package gui_edit_queue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.mysql.jdbc.CommunicationsException;
 
+import learn_frontend.feature_language;
 import mediawiki_api.api_retrieve;
 import core_objects.metadata;
 import core_objects.pair;
@@ -47,6 +49,11 @@ public class gui_display_pkg{
 	public final metadata metadata;
 	
 	/**
+	 * The raw diff text for the wrapped revision; as provided by API.
+	 */
+	public final String raw_diff;
+	
+	/**
 	 * Colored HTML diff, which will be displayed in the diff-browser. 
 	 */
 	public final String content;
@@ -84,6 +91,12 @@ public class gui_display_pkg{
 	 */
 	public final SCORE_SYS source_queue;
 	
+	/**
+	 * Lists tracking additions and removals captured in textual diff. 
+	 */
+	public final List<String> added_tokens, added_blocks, 
+			removed_tokens, removed_blocks;
+	
 	
 	// **************************** PRIVATE FIELDS ***************************
 	
@@ -117,7 +130,7 @@ public class gui_display_pkg{
 	 * descriptions are not java doc'ed -- are identical to private vars.
 	 */
 	public gui_display_pkg(List<metadata> page_hist, 
-			pair<String,String> edit_token, String content, 
+			pair<String,String> edit_token, String raw_diff, String content, 
 			String content_linked, SCORE_SYS source_queue, 
 			int rb_depth, Set<String> user_perms, boolean user_has_talkpage,
 			boolean user_has_userpage, Integer user_edit_count){
@@ -125,6 +138,7 @@ public class gui_display_pkg{
 		this.page_hist = page_hist;
 		this.metadata = page_hist.get(0);
 		this.edit_token = edit_token;
+		this.raw_diff = raw_diff;
 		this.content = content;
 		this.content_linked = content_linked;
 		this.rb_depth = rb_depth;
@@ -133,6 +147,23 @@ public class gui_display_pkg{
 		this.user_has_talkpage = user_has_talkpage;
 		this.user_has_userpage = user_has_userpage;
 		this.user_edit_count = user_edit_count;
+		
+		if(raw_diff == null){
+			this.added_tokens = Collections.emptyList();
+			this.added_blocks = Collections.emptyList();
+			this.removed_tokens = Collections.emptyList();
+			this.removed_blocks = Collections.emptyList();
+		} else{ 
+			pair<List<String>,List<String>> additions = 
+					feature_language.only_added_text(raw_diff);
+			this.added_tokens = additions.fst;
+			this.added_blocks = additions.snd;
+			
+			pair<List<String>,List<String>> removals = 
+					feature_language.only_removed_text(raw_diff);
+			this.removed_tokens = removals.fst;
+			this.removed_blocks = removals.snd;
+		}
 	}
 	
 	// **************************** PUBLIC METHODS ***************************
@@ -175,7 +206,7 @@ public class gui_display_pkg{
 			
 			List<metadata> meta_list = new ArrayList<metadata>(1);
 			meta_list.add(md); // Just create a one element list
-			return(new gui_display_pkg(meta_list, null, content, 
+			return(new gui_display_pkg(meta_list, null, diff, content, 
 					con_link, null, 0, perms, user_has_talkpage, 
 					user_has_userpage, null));
 			
@@ -286,7 +317,7 @@ public class gui_display_pkg{
 			  // his/her edit count. But only take this performance
 			  // penalty if we expected this to be used in DTTR warning
 
-			return(new gui_display_pkg(page_hist, edit_token, content, 
+			return(new gui_display_pkg(page_hist, edit_token, diff, content, 
 					con_link, source_queue, edits_to_rb, perms, 
 					user_has_talkpage, user_has_userpage, edit_count));
 			
@@ -340,7 +371,7 @@ public class gui_display_pkg{
 		
 		List<metadata> meta_list = new ArrayList<metadata>(1);
 		meta_list.add(new metadata()); // Just create a one element list
-		return(new gui_display_pkg(meta_list, null, end_con, 
+		return(new gui_display_pkg(meta_list, null, null, end_con, 
 				end_con, null, 0, new HashSet<String>(0), false, false, null));
 	}
 	

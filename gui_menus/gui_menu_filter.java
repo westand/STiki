@@ -30,6 +30,7 @@ public class gui_menu_filter extends JMenu implements ActionListener{
 	private stiki_frontend_driver parent;
 	
 		// A hierarchical view of this menu's components
+	private JCheckBoxMenuItem cb_numerical;
 	private JCheckBoxMenuItem cb_privileged;
 	
 	
@@ -48,20 +49,25 @@ public class gui_menu_filter extends JMenu implements ActionListener{
 			// First set properties of top-level menu item
 		this.setText("Displayed Edits");
 		this.setFont(gui_globals.PLAIN_NORMAL_FONT);
-		this.setMnemonic(KeyEvent.VK_R);
+		this.setMnemonic(KeyEvent.VK_D);
 		
 			// Then initialize interesting items, using settings file
+		cb_numerical = gui_globals.checkbox_item(
+				"Small Numerical Edits", KeyEvent.VK_N, true, 
+				gui_settings.get_bool_def(
+				gui_settings.SETTINGS_BOOL.filter_numerical, true));
 		cb_privileged = gui_globals.checkbox_item(
-				"Edits by Privileged Users", KeyEvent.VK_X, true, 
+				"Edits by Privileged Users", KeyEvent.VK_P, true, 
 				gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.filter_privileged, true));
-		
+
 			// Add items to the menu
+		this.add(cb_numerical);
 		this.add(cb_privileged);
 		this.add(gui_globals.HORIZ_MENU_SEP);
 		this.add(gui_globals.checkbox_item("Namespace-Zero (NS0)", 
 				KeyEvent.VK_Z, false, true));
-		this.add(gui_globals.checkbox_item("Anonymous User Edits", 
+		this.add(gui_globals.checkbox_item("IP Address Edits", 
 				KeyEvent.VK_A, false, true));
 		this.add(gui_globals.checkbox_item("Registered User Edits", 
 				KeyEvent.VK_R, false, true));
@@ -77,9 +83,6 @@ public class gui_menu_filter extends JMenu implements ActionListener{
 	 */
 	public void actionPerformed(ActionEvent event){
 		
-		if(event.getActionCommand().equals(this.cb_privileged)){
-			pop_filter_cache_dialog();
-		}
 	}
 	
 	/**
@@ -90,6 +93,14 @@ public class gui_menu_filter extends JMenu implements ActionListener{
 		return(cb_privileged.isSelected());
 	}
 	
+	/**
+	 * Accessor into the status of the "small numerical edits" option.
+	 * @return Whether the "small numerical edits" option is checked
+	 */
+	public boolean get_numerical_status(){
+		return(cb_numerical.isSelected());
+	}
+	
 	
 	// *************************** PRIVATE METHODS ***************************
 	
@@ -98,6 +109,7 @@ public class gui_menu_filter extends JMenu implements ActionListener{
 	 * edit filters may take several edits to take effect due to the
 	 * way client-side caching of revisions operates.
 	 */
+	@SuppressWarnings("unused")
 	private void pop_filter_cache_dialog(){
 		
 		JOptionPane.showMessageDialog(parent,

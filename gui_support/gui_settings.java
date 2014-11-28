@@ -76,7 +76,8 @@ public class gui_settings extends Properties{
 		options_dttr,			// Whether to warn if "templating a regular"
 		options_agf_comment,    // Whether to message AGF-reverted users
 		options_aiv_popup,		// Whether to pop-up notify on AIV post
-		filter_privileged};     // Show edits by privileged editors?
+		filter_privileged,      // Show edits by privileged editors?
+		filter_numerical};      // Show small numerical edits?
 		
 	
 	// **************************** PRIVATE FIELDS ***************************
@@ -261,6 +262,9 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_BOOL.filter_privileged.toString(),
 				String.valueOf(parent.menu_bar.get_filter_menu().
 				get_privileged_status()));
+		props.setProperty(SETTINGS_BOOL.filter_numerical.toString(),
+				String.valueOf(parent.menu_bar.get_filter_menu().
+				get_numerical_status()));
 		
 			// Menu properties found in "options"
 		props.setProperty(SETTINGS_INT.options_fontsize.toString(), 

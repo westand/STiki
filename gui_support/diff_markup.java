@@ -140,8 +140,8 @@ public class diff_markup{
 		html = html.replace("<ins class=\"diffchange diffchange-inline\">", 
 				"<font color=" + COLOR_DIFF_WORDS + "><b>");
 		html = html.replace("</span>", "</b></font>");
-		html = html.replace("</del>", "</b></font>");
-		html = html.replace("</ins>", "</b></font>");
+		html = html.replace("</del>", "</b></font>"); // <del> new 2014-01
+		html = html.replace("</ins>", "</b></font>"); // <ins> new 2014-01
 			
 			// No style associated with the printing of context-line
 		html = html.replace("class=\"diff-lineno\"", "");

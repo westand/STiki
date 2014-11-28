@@ -23,12 +23,17 @@
         merge (our first community code contribution!). Some category
         labels were pre-pended to help better manage this growing list.
         The code copy was also synced with community copy at:
-        http://en.wikipedia.org/wiki/WP:STiki/Good-faith-revert_messages
+        [http://en.wikipedia.org/wiki/WP:STiki/Good-faith-revert_messages]
       # Metadata panel content now has "mouseover" support. In particular,
         this should permit the full display of comments which are truncated
         because they are too lengthy to fit in the fixed-size placeholder.
-      # STiki users have experienced a loss of edit session, resulting in 
-        editing while logged out. This results in privacy loss and community
+      # A "small numerical edits" filter has been created. Sometimes
+        monotonous and difficult to casually assess, this filter can allow
+        users to skip edits where "only a single numerical value is changed,
+        and the magnitude of that change is (0.5 < change < 2.0)" (T#049).   
+        
+      # There have been reports of user's edit session's dropping, resulting 
+        in editing while logged out. This results in privacy loss and community
         confusion. This is believed to be a bug on the WMF server-side.
         However, using the "assert=true" check, STiki can now at least detect
         the error state -- it pops a dialog and forces a restart (T#048). 
@@ -39,6 +44,9 @@
         the regulars" logic, and non-critical aspects of milestone reporting.
       # Minor improvements to warning increment logic; in particular, better
         handling when duplicate section headers exist.
+        
+        IN PROG:
+        * Adjusting "don't template the regulars" warning?
 
   * 2014-03-25
       # Emergency release in order to fix login code broken by a small

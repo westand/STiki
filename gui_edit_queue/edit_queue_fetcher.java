@@ -90,23 +90,14 @@ public class edit_queue_fetcher implements Runnable{
 					using_native_rb, source_queue);
 			
 				// Having obtained all data, we can also check the edit
-				// against user-set filters from the STiki menu. This could
-				// cause some edits to already been enqueued under old
-				// settings, but we pop a dialogue explaining this fact.
-			
-			if((!parent.menu_bar.get_filter_menu().get_privileged_status()) &&
-					(cur_edit.user_perms.contains("reviewer")  || 
-					cur_edit.user_perms.contains("rollbacker")  || 
-					cur_edit.user_perms.contains("administrator") ||
-					cur_edit.user_perms.contains("sysop"))){
-				cur_edit = null;
-				parent.client_interface.queues.queue_delete(rid);	
-			} 
-			
+				// against user-set filters from the STiki menu. 
+				// Edit will be NULL'ed if an enabled filter is enacted
+			cur_edit = edit_queue_filters.run_all_filters(parent, cur_edit);
+
 				// Make sure we have not obtained a zero-diff (no change, 
 				// a consequence of the diff browser showing rollback results)
 				// If we have, don't make anyone else deal with it.
-			if(cur_edit.has_zero_diff()){
+			if(cur_edit != null && cur_edit.has_zero_diff()){
 				cur_edit = null;
 				parent.client_interface.queues.queue_delete(rid);
 			}
@@ -114,7 +105,7 @@ public class edit_queue_fetcher implements Runnable{
 				// Do not allow a user to classify his/her own edits.
 				// We also ignore such edits in the queue, so clients do
 				// not keep re-fetching the RID at every reservation fetch.
-			if(cur_edit.metadata.user.equalsIgnoreCase(
+			if(cur_edit != null && cur_edit.metadata.user.equalsIgnoreCase(
 					parent.login_panel.get_editing_user())){
 				cur_edit = null;
 				parent.client_interface.queues.queue_ignore(

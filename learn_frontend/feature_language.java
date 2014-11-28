@@ -66,7 +66,7 @@ public class feature_language{
 	private List<String> added_blocks;
 	
 	/**
-	 * Complement to [added_text]. Those tokens removed by revision.
+	 * Complement to [added_tokens]. Those tokens removed by revision.
 	 */
 	private List<String> removed_tokens;
 	
@@ -267,7 +267,7 @@ public class feature_language{
 	}
 	
 	
-	// *************************** PRIVATE METHODS ***************************
+	// ************************ PUBLIC-STATIC METHODS ***********************
 		
 	/**
 	 * Reduce a raw edit-diff to only additions made in the most recent edit.
@@ -287,7 +287,7 @@ public class feature_language{
 	 * prove useful in contextualizing the token-level changes that the
 	 * first element tracks. 
 	 */
-	private static pair<List<String>,List<String>> only_added_text(
+	public static pair<List<String>,List<String>> only_added_text(
 			String raw_diff_text){
 		
 			// The return sets
@@ -347,7 +347,7 @@ public class feature_language{
 	 * [only_added_text()] method. However, we choose to implement this 
 	 * version in-code to reduct network traffic.
 	 */
-	private static pair<List<String>,List<String>> only_removed_text(
+	public static pair<List<String>,List<String>> only_removed_text(
 			String raw_diff_text){
 		
 			// The return sets

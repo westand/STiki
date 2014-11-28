@@ -95,6 +95,8 @@ The "anti-link-spam" queue is described here because it was written by STiki's a
 <P>The various <A HREF="#sec_queue">revision queues</A> contain all edits made on Wikipedia, sorted by vandalism probability. If a STiki user wants to further constrain the edits they review, then local <B>revision filters</B> should be applied. These are accessible via the STiki menu-bar. The following filters are currently implemented:
   
   <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
+    <LI><B>Small Numerical Edits:</B> When enabled, "minor numerical" edits will be shown. These are defined to be edits where only a single numerical value is changed, and the magnitude of that change is (0.5 < <I>change</I> < 2.0). Disabling this filter will prevent such edits from being shown, which some users find monotonous and difficult to casually assess.<P>
+  
     <LI><B>Edits by Privileged Users:</B> When enabled, edits made by users with "sysop", "rollback", or "review" permissions will be shown. Disabling this option will cause the GUI to only show edits made by less privileged users.<P>
 
     <LI><B>Namespace-Zero (NS0):</B> When enabled, this filter permits only edits that reside in NS0 -- which constitutes the encyclopedic content. Other namespaces are reserved for article "talk" pages, user pages, <I>etc.</I><P>
