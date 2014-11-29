@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import com.mysql.jdbc.CommunicationsException;
 
 import gui_edit_queue.gui_display_pkg;
+import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
 import gui_panels.gui_revert_panel;
 import core_objects.metadata;
 import core_objects.stiki_utils;
@@ -82,9 +83,9 @@ public class gui_fb_handler implements Runnable{
 	private boolean rollback;
 	
 	/**
-	 * Whether or not watchlisting should be explicitly prevented.
+	 * How to handle watchlisting w.r.t. to articles and warned user.
 	 */
-	private boolean no_watchlist;
+	private STIKI_WATCHLIST_OPTS watchlist_opt;
 	
 	/**
 	 * Whether or not a warning should be left on guilty UserTalk page. 
@@ -118,7 +119,7 @@ public class gui_fb_handler implements Runnable{
 	public gui_fb_handler(stiki_frontend_driver parent, FB_TYPE fb, 
 			gui_display_pkg edit_pkg, String user, String summary, 
 			String session_cookie, boolean user_has_native_rb, 
-			boolean rollback, boolean no_watchlist,  boolean warn, 
+			boolean rollback, STIKI_WATCHLIST_OPTS watchlist_opt, boolean warn, 
 			String usr_talk_msg, gui_revert_panel gui_revert_panel, 
 			ExecutorService threads){
 		
@@ -131,7 +132,7 @@ public class gui_fb_handler implements Runnable{
 		this.session_cookie = session_cookie;
 		this.user_has_native_rb = user_has_native_rb;
 		this.rollback = rollback;
-		this.no_watchlist = no_watchlist;
+		this.watchlist_opt = watchlist_opt;
 		this.warn = warn;
 		this.usr_talk_msg = usr_talk_msg;
 		this.gui_revert_panel = gui_revert_panel;
@@ -198,7 +199,7 @@ public class gui_fb_handler implements Runnable{
 			// Should be a straightforward rollback w/o warning
 		threads.submit(new gui_revert_and_warn(FB_TYPE.AGF, edit_pkg, summary, 
 				session_cookie, user_has_native_rb, rollback, 
-				no_watchlist, warn, usr_talk_msg, gui_revert_panel));
+				watchlist_opt, warn, usr_talk_msg, gui_revert_panel));
 		
 		try{parent.client_interface.feedback_insert( // RID delete internal
 					md.rid, fb_constant(fb, edit_pkg.source_queue), user);
@@ -221,7 +222,7 @@ public class gui_fb_handler implements Runnable{
 			// A panel displays the result/warning to end users
 		threads.submit(new gui_revert_and_warn(FB_TYPE.GUILTY, edit_pkg, 
 				summary, session_cookie, user_has_native_rb, rollback, 
-				no_watchlist, warn, usr_talk_msg, gui_revert_panel));
+				watchlist_opt, warn, usr_talk_msg, gui_revert_panel));
 		
 		try{parent.client_interface.feedback_insert( // RID delete internal
 					md.rid, fb_constant(fb, edit_pkg.source_queue), user);

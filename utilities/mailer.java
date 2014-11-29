@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mediawiki_api.api_post;
+import mediawiki_api.api_post.EDIT_WATCHLIST;
 import mediawiki_api.api_retrieve;
 
 import core_objects.pair;
@@ -90,7 +91,8 @@ public class mailer{
 			edit_token = api_retrieve.process_edit_token(pages.get(i), cookie);
 			api_post.edit_append_text(pages.get(i), COMMENT, MESSAGE.replace(
 					"#u#", pages.get(i).replace("User_talk:", "")), 
-					false, edit_token, cookie, false, true, true);
+					false, edit_token, cookie, false, 
+					EDIT_WATCHLIST.NOCHANGE, true);
 			System.out.println("Message posted to: " + pages.get(i));
 			Thread.sleep(1000 * 45);
 		}  // iterate over all users to be targeted

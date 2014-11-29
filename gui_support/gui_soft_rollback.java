@@ -1,6 +1,7 @@
 package gui_support;
 
 import gui_edit_queue.gui_display_pkg;
+import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
 
 import java.io.InputStream;
 
@@ -33,7 +34,7 @@ public class gui_soft_rollback{
 	 * @param minor Whether or not the edit should be marked as minor
 	 * @param edit_token Edit token held on the article which 'meta' wraps
 	 * @param session_cookie Cookie identifying editing user
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist_opt How edits should be watchlisted
  	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return Number of edits reverted as part of rollback action. Zero (0)
 	 * will be returned if "beaten" to edit. Negative values (< 0) will be
@@ -42,7 +43,8 @@ public class gui_soft_rollback{
 	 */
 	public static int software_rollback(gui_display_pkg edit_pkg, 
 			String revert_comment, boolean minor, String session_cookie, 
-			boolean no_watchlist, boolean assert_user) throws Exception{
+			STIKI_WATCHLIST_OPTS watchlist_opt, boolean assert_user) 
+			throws Exception{
 		
 		metadata meta = edit_pkg.page_hist.get(0);
 		if(edit_pkg.rb_depth == 1 || 
@@ -50,7 +52,9 @@ public class gui_soft_rollback{
 			
 			InputStream in = api_post.edit_revert(meta.rid, meta.title, 
 					revert_comment, minor, edit_pkg.get_token(), 
-					session_cookie, no_watchlist, assert_user); 
+					session_cookie, api_post.convert_wl(watchlist_opt, false), 
+					assert_user);
+			
 			EDIT_OUTCOME undo_success = api_post.edit_was_made(in);
 			in.close();
 			
@@ -77,7 +81,9 @@ public class gui_soft_rollback{
 					revert_comment, api_retrieve.process_page_content(
 					edit_pkg.page_hist.get(edit_pkg.rb_depth).rid), minor, 
 					edit_pkg.get_token(), session_cookie, 
-					false, no_watchlist, assert_user);
+					false, api_post.convert_wl(watchlist_opt, false), 
+					assert_user);
+			
 			EDIT_OUTCOME undo_success = api_post.edit_was_made(in);
 			in.close();
 			

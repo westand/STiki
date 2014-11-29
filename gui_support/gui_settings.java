@@ -60,6 +60,7 @@ public class gui_settings extends Properties{
 		win_locx,				// Horizontal position of STiki window
 		win_loxy,				// Vertical position of STiki window
 		options_fontsize,		// Size of the diff-browser font
+		watchlist_set,			// Watchlisting semantic being applied
 		settings_version,		// Version of the settings XML
 		passes_used};			// Number of times "pass" used in career
 		
@@ -70,7 +71,6 @@ public class gui_settings extends Properties{
 		{warn_vand,				// Whether vandalism warnings places.
 		warn_spam,				// Whether spam warnings placed.
 		warn_agf,				// Whether AGF warnings placed.
-		login_watch,			// The "never watchlist" checkbox setting
 		options_hyperlinks,		// Whether URLs are hyperlinked in diffs
 		options_https,			// Whether the HTTPS protocol should be used
 		options_dttr,			// Whether to warn if "templating a regular"
@@ -255,8 +255,8 @@ public class gui_settings extends Properties{
 			// Properties in the login panel
 		props.setProperty(SETTINGS_STR.login_user.toString(), 
 				parent.login_panel.get_login_user_field());
-		props.setProperty(SETTINGS_BOOL.login_watch.toString(), String.valueOf(
-				parent.login_panel.watchlist_checkbox_selected()));
+		props.setProperty(SETTINGS_INT.watchlist_set.toString(), 
+				String.valueOf(parent.login_panel.watchlist_combobox_index()));
 		
 			// Queue options and filters over those queues
 		props.setProperty(SETTINGS_BOOL.filter_privileged.toString(),

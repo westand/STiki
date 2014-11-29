@@ -1,5 +1,6 @@
 package gui_panels;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -74,6 +76,27 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	 * Whether rollback permission is required to use the STIki tool.
 	 */
 	public static final boolean ROLLBACK_REQUIRED = false;
+	
+	/**
+	 * Options for watchlist behavior. This should have a 1-to-1 mapping
+	 * onto the more user friendly presentations of [WATCHLIST_OPTIONS_STR].
+	 */
+	public static enum STIKI_WATCHLIST_OPTS{
+		NEVER, 
+		ONLY_ARTICLES, 
+		ONLY_USERTALK, 
+		WATCH_BOTH, 
+		USER_PREFS};
+	
+	/**
+	 * Options for watchlist behavior, as presented to the user.
+	 */
+	public static final String[] STIKI_WATCHLIST_OPTS_STR = 
+		{"Never watchlist", 
+		"Watch reverted articles",
+		"Watch user talk if warned",
+		"Watch article and user talk",
+		"Use account preferences"};
 	
 	
 	// **************************** PRIVATE FIELDS ***************************
@@ -147,22 +170,17 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	 * as well as the current editing mode ("logged in as... {IP, user}").
 	 */
 	private JLabel label_status;
+
+	/**
+	 * Combo box which contains various watchlist options.
+	 */
+	private JComboBox<String> watchlist_combobox;
 	
 	/**
-	 * Checkbox to indicate if rollback should be used for reverts.
+	 * Checkbox to indicate if rollback should be used for reverts. This is
+	 * an optional part of the GUI setup.
 	 */
 	private JCheckBox rollback_checkbox;
-	
-	/**
-	 * Checkbox to indicate watchlist semanatics for edits.
-	 */
-	private JCheckBox watchlist_checkbox;
-	
-	/**
-	 * Link adjacent to the watchlist checkbox, which will pop a dialog
-	 * providing more information about its functionality. 
-	 */
-	private JButton watchlist_link;
 	
 	/**
 	 * Parent class; For using client-interface to DB for permissions check
@@ -236,8 +254,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 				this.logout_clicked();
 			else if(event.getSource().equals(this.anon_link))
 				this.anon_dialog();
-			else if(event.getSource().equals(this.watchlist_link))
-				this.watchlist_dialog();
 			else if(event.getSource().equals(this.rollback_checkbox))
 				this.state_changed = true;
 		} catch(Exception e){
@@ -335,11 +351,35 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	}
 	
 	/**
-	 * Whether or not the "never watchlist" checkbox is selected.
-	 * @return TRUE if the checkbox is selected; FALSE, otherwise
+	 * Return the currently selected option in the "watchlist combo-box"
+	 * @return the currently selected option in the "watchlist combo-box".
 	 */
-	public boolean watchlist_checkbox_selected(){
-		return (this.watchlist_checkbox.isSelected());
+	public STIKI_WATCHLIST_OPTS watchlist_combobox(){
+		
+		 /* WATCHLIST_OPTIONS_STR = {"Never watchlist",	0
+			"Watch reverted articles",					1
+			"Watch user talk if warned",				2
+			"Watch article and user talk",				3
+			"Use account preferences"}; 				4 */
+		
+		if(watchlist_combobox.getSelectedIndex() == 0)
+			return(STIKI_WATCHLIST_OPTS.NEVER);
+		else if(watchlist_combobox.getSelectedIndex() == 1)
+			return(STIKI_WATCHLIST_OPTS.ONLY_ARTICLES);
+		else if(watchlist_combobox.getSelectedIndex() == 2)
+			return(STIKI_WATCHLIST_OPTS.ONLY_USERTALK);
+		else if(watchlist_combobox.getSelectedIndex() == 3)
+			return(STIKI_WATCHLIST_OPTS.WATCH_BOTH);
+		else // if(watchlist_combobox.getSelectedIndex() == 4)
+			return(STIKI_WATCHLIST_OPTS.USER_PREFS);
+	}
+	
+	/**
+	 * Return the currently selected index in the "watchlist combo-box"
+	 * @return the currently selected index in the "watchlist combo-box".
+	 */
+	public int watchlist_combobox_index(){
+		return(watchlist_combobox.getSelectedIndex());
 	}
 	
 	
@@ -469,24 +509,30 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	 */
 	private JPanel get_watchlist_subpanel(){
 		
-			// Initialize the checkbox and link, try persistent settings
+		/* OLD SETUP WITH SINGLE CHECKBOX AND INFORMATIONAL DIALOG:
 		watchlist_checkbox = new JCheckBox("Never Watchlist", 
 				gui_settings.get_bool_def(
 						gui_settings.SETTINGS_BOOL.login_watch, true));
 		watchlist_checkbox.setMnemonic(KeyEvent.VK_N);
 		watchlist_checkbox.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		watchlist_checkbox.addActionListener(this);		
-		watchlist_link = gui_globals.create_link("[?]", false, this);
-
-			// Simple horizontal arrangement of CB and link
+		watchlist_link = gui_globals.create_link("[?]", false, this); */
+		
+		watchlist_combobox = new JComboBox<String>(STIKI_WATCHLIST_OPTS_STR);
+		watchlist_combobox.setSelectedIndex(gui_settings.get_int_def(
+				gui_settings.SETTINGS_INT.watchlist_set, 0));
+		watchlist_combobox.setBackground(Color.WHITE);
+		watchlist_combobox.setFont(gui_globals.SMALL_NORMAL_FONT);
+		watchlist_combobox.setPreferredSize(
+				new Dimension(watchlist_combobox.getPreferredSize().width,0));		
+		
+			// Simple vertical arrangement of label and combo-box
 		JPanel subpanel = new JPanel();
-		subpanel.setLayout(new BoxLayout(subpanel, BoxLayout.X_AXIS));
-		subpanel.add(Box.createHorizontalGlue());
-		subpanel.add(watchlist_checkbox);
-		subpanel.add(watchlist_link);
-		subpanel.add(Box.createHorizontalGlue());
-		subpanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		return(subpanel);	
+		subpanel.setLayout(new BoxLayout(subpanel, BoxLayout.Y_AXIS));
+		subpanel.add(gui_globals.center_comp_with_glue(
+				gui_globals.create_intro_label("Watchlist options:")));
+		subpanel.add(gui_globals.center_comp_with_glue(watchlist_combobox));
+		return(subpanel);
 	}
 	
 	/**
@@ -571,7 +617,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 			this.editing_user = user;
 			this.editor_has_native_rb = native_rb;
 					
-
 				// Disable login, enable logout
 			field_user.setEditable(false);
 			field_pass.setEditable(false);
@@ -609,7 +654,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 		} // Notify user if qualifications are not met
 		
 	}
-	
 	
 	/**
 	 * If the user has clicked the "logout" button -- terminate the
@@ -678,6 +722,7 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	/**
 	 * The dialog popped when the 'watchlist link' is clicked.
 	 */
+	@SuppressWarnings("unused")
 	private void watchlist_dialog(){
 		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this),
 				"If this box is checked, STiki will *never* add an article\n" +

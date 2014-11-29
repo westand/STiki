@@ -2,6 +2,7 @@ package gui_support;
 
 import executables.stiki_frontend_driver.FB_TYPE;
 import gui_edit_queue.gui_display_pkg;
+import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
 import gui_panels.gui_revert_panel;
 
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import mediawiki_api.api_post;
 import mediawiki_api.api_post.EDIT_OUTCOME;
+import mediawiki_api.api_post.EDIT_WATCHLIST;
 import mediawiki_api.api_retrieve;
 
 import core_objects.metadata;
@@ -95,9 +97,9 @@ public class gui_revert_and_warn implements Runnable{
 	private boolean user_has_native_rb;
 	
 	/**
-	 * Whether or not watchlisting should be explicitly prevented.
+	 * How to handle watchlisting w.r.t. to articles and warned user.
 	 */
-	private boolean no_watchlist;
+	private STIKI_WATCHLIST_OPTS watchlist_opt;
 	
 	/**
 	 * If the revert succceeds, whether the offending user should be warned.
@@ -141,7 +143,7 @@ public class gui_revert_and_warn implements Runnable{
 	 * @param cookie Cookie headers to include when POST-ing (user-mapping)
 	 * @param user_has_native_rb If editing user has native rollback permission
 	 * @param rollback Whether or not rollback is being used to revert
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist_opt How edits should be watchlisted
 	 * @param warn If offending-user should be warned on revert-success
 	 * @param usr_talk_msg Custom message to be posted to offending user's
 	 * talk page. Presumably should not be used in conjuction with 
@@ -150,8 +152,8 @@ public class gui_revert_and_warn implements Runnable{
 	 */
 	public gui_revert_and_warn(FB_TYPE fb_type, gui_display_pkg edit_pkg, 
 			String revert_comment, String cookie, boolean user_has_native_rb, 
-			boolean rollback, boolean no_watchlist, boolean warn, String
-			usr_talk_msg, gui_revert_panel gui_revert_panel){
+			boolean rollback, STIKI_WATCHLIST_OPTS watchlist_opt, boolean warn, 
+			String usr_talk_msg, gui_revert_panel gui_revert_panel){
 		
 		this.fb_type = fb_type;
 		this.edit_pkg = edit_pkg;
@@ -159,7 +161,7 @@ public class gui_revert_and_warn implements Runnable{
 		this.revert_comment = revert_comment;
 		this.cookie = cookie;
 		this.user_has_native_rb = user_has_native_rb;
-		this.no_watchlist = no_watchlist;
+		this.watchlist_opt = watchlist_opt;
 		this.warn = warn;
 		this.usr_talk_msg = usr_talk_msg;
 		this.gui_revert_panel = gui_revert_panel;
@@ -185,7 +187,9 @@ public class gui_revert_and_warn implements Runnable{
 					// Only "guilty" edits should make use of native RB
 				InputStream in = api_post.edit_rollback(metadata.title, 
 						metadata.user, revert_comment,
-						metadata.rb_token, cookie, no_watchlist, true);
+						metadata.rb_token, cookie, 
+						api_post.convert_wl(watchlist_opt, false), true);
+			
 				long earliest_rb_undone = api_post.rollback_response(in);
 				if(earliest_rb_undone < 0){
 					if(earliest_rb_undone == -2){
@@ -217,7 +221,7 @@ public class gui_revert_and_warn implements Runnable{
 				
 				int sw_rb_code = gui_soft_rollback.software_rollback(
 						edit_pkg, revert_comment, minor, cookie, 
-						no_watchlist, true);
+						watchlist_opt, true);
 				
 				if(sw_rb_code == -2){
 					revert_outcome = EDIT_OUTCOME.ASSERT_FAIL;
@@ -348,7 +352,7 @@ public class gui_revert_and_warn implements Runnable{
 			api_post.edit_append_text(AIV_PAGE, aiv_comment(queue_type, 
 					metadata.user, metadata.rid, !metadata.user_is_ip), aiv_msg, 
 					false, this.edit_pkg.get_token(), this.cookie, true, 
-					no_watchlist, true);
+					EDIT_WATCHLIST.NOCHANGE, true); // Don't watchlist AIV
 			
 			if(imm_non_van_warn)
 				return(WARNING.YES_AIV_4IM);
@@ -369,7 +373,7 @@ public class gui_revert_and_warn implements Runnable{
 				// is always safe to append content.
 			api_post.edit_append_text(talk_page, warning_comment(queue_type), 
 					warning, false, this.edit_pkg.get_token(), this.cookie, 
-					true, no_watchlist, true);
+					true, api_post.convert_wl(watchlist_opt, true), true);
 			
 				// Output which warning level was issued
 			if (warning_level == 1) return(WARNING.YES_UW1);
@@ -719,7 +723,7 @@ public class gui_revert_and_warn implements Runnable{
 		String talkpage = "User_talk:" + this.metadata.user;
 		api_post.edit_append_text(talkpage, comment, message, false, 
 				this.edit_pkg.get_token(), this.cookie, true, 
-				no_watchlist, true);
+				api_post.convert_wl(watchlist_opt, true), true);
 	}
 	
 	/**

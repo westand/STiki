@@ -1,5 +1,6 @@
 package mediawiki_api;
 
+import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
 import gui_support.gui_settings;
 import gui_support.gui_settings.SETTINGS_BOOL;
 
@@ -56,9 +57,17 @@ public class api_post{
 	public enum EDIT_OUTCOME{SUCCESS, BEATEN, ASSERT_FAIL, ERROR};
 	
 	/**
+	 * Watchlisting behavior when interacting with an article. This ENUM
+	 * references how it is handled at the *per-edit* level. Contrast this
+	 * with [gui_login_panel.STIKI_WATCHLIST_OPTS] which wraps 
+	 * watchlisting behavior at broader granularity.
+	 */
+	public enum EDIT_WATCHLIST{WATCH, UNWATCH, PREFERENCES, NOCHANGE};
+	
+	/**
 	 * The [base_url()] function over which all API POSTS operate is 
 	 * specific to English Wikipedia. Should we wish to override it, this
-	 * value can be set or overwritten. It's contents will be interpeted
+	 * value can be set or overwritten. It's contents will be interpreted
 	 * if it is a non-null value.
 	 */
 	public static String BASE_URL_OVERRIDE = null;
@@ -138,14 +147,14 @@ public class api_post{
 	 * @param session_cookie Cookie string (as returned at login), which
 	 * indicates the user doing the editing (in combination with 'token').
 	 * Anonymous sessions should simply pass in NULL or the empty string.
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_revert(long rid, String title, 
 			String summary, boolean minor, pair<String,String> edit_token,
-			String session_cookie, boolean no_watchlist, boolean assert_user) 
-			throws Exception{
+			String session_cookie, EDIT_WATCHLIST watchlist, 
+			boolean assert_user) throws Exception{
 		
 			// Building post-string is straightforward. Fields known not
 			// to contain special characters are not encoded.
@@ -158,8 +167,7 @@ public class api_post{
 		else post_data += "&notminor=true";
 		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		post_data += "&starttimestamp=" + edit_token.snd;
-		if(no_watchlist)
-			post_data += "&watchlist=nochange";
+		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
@@ -174,21 +182,20 @@ public class api_post{
 	 * @param summary Edit summary to leave with the rollback action
 	 * @param rb_token Rollback token (fetched at RID granularity)
 	 * @param cookie Cookie string (as returned at login) identifying user
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_rollback(String title, String user, 
 			String summary, String rb_token, String cookie, 
-			boolean no_watchlist, boolean assert_user) throws Exception{
+			EDIT_WATCHLIST watchlist, boolean assert_user) throws Exception{
 		
 		String post_data = "action=rollback";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
 		post_data += "&user=" + URLEncoder.encode(user, "UTF-8");
 		post_data += "&summary=" + URLEncoder.encode(summary, "UTF-8");
 		post_data += "&token=" + URLEncoder.encode(rb_token, "UTF-8");
-		if(no_watchlist)
-			post_data += "&watchlist=nochange";
+		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
@@ -204,13 +211,13 @@ public class api_post{
 	 * @param token Edit token specific to user editing
 	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_append_text(String title, String summary, 
 			String append_text, boolean minor, pair<String,String> edit_token, 
-			String cookie, boolean force, boolean no_watchlist, 
+			String cookie, boolean force, EDIT_WATCHLIST watchlist, 
 			boolean assert_user) throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
@@ -225,8 +232,7 @@ public class api_post{
 		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		if(!force)
 			post_data += "&starttimestamp=" + edit_token.snd;
-		if(no_watchlist)
-			post_data += "&watchlist=nochange";
+		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
@@ -242,13 +248,13 @@ public class api_post{
 	 * @param token Edit token specific to user editing
 	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_prepend_text(String title, String summary, 
 			String prepend_text, boolean minor, pair<String,String> edit_token,
-			String cookie, boolean force, boolean no_watchlist, 
+			String cookie, boolean force, EDIT_WATCHLIST watchlist, 
 			boolean assert_user) throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
@@ -263,8 +269,7 @@ public class api_post{
 		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		if(!force)
 			post_data += "&starttimestamp=" + edit_token.snd;
-		if(no_watchlist)
-			post_data += "&watchlist=nochange";
+		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
@@ -280,13 +285,13 @@ public class api_post{
 	 * @param token Edit token specific to user editing
 	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
-	 * @param no_watchlist Should watchlisting should be explicitly prevented?
+	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_full_text(String title, String summary,
 			String full_text, boolean minor, pair<String,String> edit_token, 
-			String cookie, boolean force, boolean no_watchlist, 
+			String cookie, boolean force, EDIT_WATCHLIST watchlist, 
 			boolean assert_user) throws Exception{
 		
 		String post_data = "action=edit";
@@ -300,8 +305,7 @@ public class api_post{
 		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		if(!force)
 			post_data += "&starttimestamp=" + edit_token.snd;
-		if(no_watchlist)
-			post_data += "&watchlist=nochange";
+		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
@@ -327,6 +331,33 @@ public class api_post{
 			post_data += "&comment=" + URLEncoder.encode(comment, "UTF-8");
 		post_data += "&format=xml";
 		return(api_post.post(post_data, cookie).getInputStream());
+	}
+	
+	/**
+	 * Convert STiki's global watchlist settings (which users pick) to one
+	 * that applies at the per-edit level
+	 * @param opt STiki's global watchlist setting
+	 * @param is_warn Should be set to TRUE if the edit in question is 
+	 * a warning message/template. FALSE if this is an article revert.
+	 * @return The per-edit watchlist strategy that should be applied
+	 */
+	public static EDIT_WATCHLIST convert_wl(
+			STIKI_WATCHLIST_OPTS opt, boolean is_warn){
+		
+		if(opt.equals(STIKI_WATCHLIST_OPTS.NEVER))
+			return(EDIT_WATCHLIST.NOCHANGE);
+		else if(opt.equals(STIKI_WATCHLIST_OPTS.ONLY_ARTICLES)){
+			if(is_warn)
+				return(EDIT_WATCHLIST.NOCHANGE);
+			else return(EDIT_WATCHLIST.WATCH);
+		} else if(opt.equals(STIKI_WATCHLIST_OPTS.ONLY_USERTALK)){
+			if(is_warn)
+				return(EDIT_WATCHLIST.WATCH);
+			else return(EDIT_WATCHLIST.NOCHANGE);
+		} else if(opt.equals(STIKI_WATCHLIST_OPTS.WATCH_BOTH))
+			return(EDIT_WATCHLIST.WATCH);
+		else // if(opt.equals(STIKI_WATCHLIST_OPTS.USER_PREFS))
+			return(EDIT_WATCHLIST.PREFERENCES);
 	}
 	
 	

@@ -399,7 +399,7 @@ public class stiki_frontend_driver extends JFrame{
 				login_panel.get_session_cookie(),
 				login_panel.editor_has_native_rb(),
 				login_panel.rb_checkbox_selected(),
-				login_panel.watchlist_checkbox_selected(),
+				login_panel.watchlist_combobox(),
 				comment_panel.get_warn_status(ct),
 				usr_talk_msg,
 				revert_panel, WORKER_THREADS);
