@@ -444,7 +444,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		
 		xlink_cb = create_cb_item("Activate Ext-Links", KeyEvent.VK_X);
 		https_cb = create_cb_item("Use HTTPS (restart reqd.)", KeyEvent.VK_H);
-		dttr_cb = create_cb_item("Warn if templating regular", KeyEvent.VK_W);
+		dttr_cb = create_cb_item("Warn if reverting regular", KeyEvent.VK_W);
 		agf_comment_cb = create_cb_item("Message AGF reverted users", KeyEvent.VK_A);
 		aiv_popup_cb = create_cb_item("Explicit notify on AIV post", KeyEvent.VK_V);
 	}

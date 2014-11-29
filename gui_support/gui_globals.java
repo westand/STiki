@@ -630,21 +630,20 @@ public class gui_globals{
 	public static void pop_dttr_warning(JComponent parent){	
 		JOptionPane.showMessageDialog(parent,
 				"The user you are about to revert has at least 50\n" +
-				"article edits. Many editors of Wikipedia suggest\n" +
-				"\"not templating the regulars\" (see [[WP:DTTR]]).\n" +
+				"article edits. Experienced users are not infallible,\n" +
+				"so if upon reconsideration the edit is unconstructive,\n" +
+				"it should be reverted.\n" +
+				"\n"  +
+				"However, when dealing with such users, wiki-etiquette\n" +
+				"dictates that a personalized user message or article\n" +
+				"talk page thread is preferred to issuing a standardized\n" +
+				"warning template, i.e., \"don't template the regulars\"\n" +
+				"(see [[WP:DTTR]]).\n" + 
 				"\n" + 
 				"You will now be returned to the STiki window to\n" +
 				"re-inspect the edit. Whichever option you choose this\n" +
-				"time will be applied as normal.\n" +
-				"\n" +
-				"If the edit is truly unconstructive, revert it.\n" +
-				"However, wiki-etiquette dictates that a polite and\n" +
-				"personalized user talk page message is preferred over\n" +
-				"standardized warning templates for such users.\n" +
-				"\n" +
-				"Alternatively, if the situation is ambiguous you\n" +
-				"should consider leaving an article talk page message.\n\n",
-	 		    "Warning: Potential to template a regular",
+				"time will be applied as normal.\n\n",
+	 		    "Warning: Reverting a user w/50+ edits",
 	 		    JOptionPane.WARNING_MESSAGE);
 	}
 }

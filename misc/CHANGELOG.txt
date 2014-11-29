@@ -32,6 +32,8 @@
         users to skip edits where "only a single numerical value is changed,
         and the magnitude of that change is (0.5 < change < 2.0)" (T#049). 
       # Remove reference to "editing anonymously" in login dialog (T#044).  
+      # The "don't template the regulars" option/dialog was re-focused such
+        that it is now labeled: "warn if reverting regular" (T#050).
         
       # There have been reports of user's edit session's dropping, resulting 
         in editing while logged out. This results in privacy loss and community
@@ -45,9 +47,6 @@
         the regulars" logic, and non-critical aspects of milestone reporting.
       # Minor improvements to warning increment logic; in particular, better
         handling when duplicate section headers exist.
-        
-        IN PROG:
-        * Adjusting "don't template the regulars" warning?
 
   * 2014-03-25
       # Emergency release in order to fix login code broken by a small
