@@ -40,21 +40,23 @@ public class gui_metadata_panel extends JPanel implements
 		// We forgoe a Javadoc description of these components. Basically,
 		// each displays the appropriately-named metadata component of
 		// the RID currently being displayed in the browser panel.
-	private JTextField data_rid;
-	private JTextField data_title;
-	private JTextField data_user;
-	private JTextField data_timestamp;
 	private JTextField data_comment;
-
+	private JTextField data_user;
+	private JTextField data_title;
+	private JTextField data_rid;
+	private JTextField data_timestamp;
+	
 		// We forgoe a Javadoc description of these components. Basically,
 		// for each metadata component above, these buttons constitute an 
 		// on-Wikipedia link, which is opened in the user-browser. These links
 		// provide detailed data, as their textual component suggests.
-	private JButton link_rid;
+	private JButton link_user_cont;
+	private JButton link_user_user;
+	private JButton link_user_talk;
 	private JButton link_title;
 	private JButton link_title_hist;
-	private JButton link_user_cont;
-	private JButton link_user_talk;
+	private JButton link_title_talk;
+	private JButton link_rid;
 	
 		// JComponents are grouped vertically into cols; each itself a panel.
 	private JPanel intro_panel;
@@ -83,7 +85,6 @@ public class gui_metadata_panel extends JPanel implements
 		intro_panel.add(gui_globals.create_intro_label("REVISION-ID:"));
 		intro_panel.add(gui_globals.create_intro_label("TIME-STAMP:"));
 
-		
 			// Create and layout the labels that will display actual-metadata		
 		this.data_panel = new JPanel();
 		data_panel.setLayout(new GridLayout(5, 0, 0, 0));
@@ -94,31 +95,35 @@ public class gui_metadata_panel extends JPanel implements
 		data_panel.add(this.data_timestamp = gui_globals.create_data_field(""));
 		
 			// Intialize the Wikipedia-links for more information
+		this.link_user_cont = gui_globals.create_link("(Contribs.)", false, this);
+		this.link_user_user = gui_globals.create_link("(User)", false, this);
+		this.link_user_talk = gui_globals.create_link("(Talk)", false, this);
+		this.link_title = gui_globals.create_link("(Current)", false, this);
+		this.link_title_hist = gui_globals.create_link("(Hist.)", false, this);
+		this.link_title_talk = gui_globals.create_link("(Talk)", false, this);
 		this.link_rid = gui_globals.create_link("(Wiki-DIFF)", false, this);
-		this.link_title = gui_globals.create_link("(Current-Page)", false, this);
-		this.link_title_hist = gui_globals.create_link("(Page-Hist)", false, this);
-		this.link_user_cont = gui_globals.create_link("(User-Contribs)", false, this);
-		this.link_user_talk = gui_globals.create_link("(User-Talk)", false, this);
 		
 			// Arrange links in a simple horizontal fashion
-		JPanel panel_rev = new JPanel();
-		panel_rev.setLayout(new BoxLayout(panel_rev, BoxLayout.X_AXIS));
-		panel_rev.add(Box.createHorizontalStrut(gui_globals.INTRO_LABEL_SPACER));
-		panel_rev.add(this.link_rid);
-		panel_rev.add(Box.createHorizontalGlue());
+		JPanel panel_usr = new JPanel();
+		panel_usr.setLayout(new BoxLayout(panel_usr, BoxLayout.X_AXIS));
+		panel_usr.add(Box.createHorizontalStrut(gui_globals.INTRO_LABEL_SPACER));
+		panel_usr.add(this.link_user_cont);
+		panel_usr.add(this.link_user_user);
+		panel_usr.add(this.link_user_talk);
+		panel_usr.add(Box.createHorizontalGlue());
 		JPanel panel_art = new JPanel();
 		panel_art.setLayout(new BoxLayout(panel_art, BoxLayout.X_AXIS));
 		panel_art.add(Box.createHorizontalStrut(gui_globals.INTRO_LABEL_SPACER));
 		panel_art.add(this.link_title);
 		panel_art.add(this.link_title_hist);
+		panel_art.add(this.link_title_talk);
 		panel_art.add(Box.createHorizontalGlue());
-		JPanel panel_usr = new JPanel();
-		panel_usr.setLayout(new BoxLayout(panel_usr, BoxLayout.X_AXIS));
-		panel_usr.add(Box.createHorizontalStrut(gui_globals.INTRO_LABEL_SPACER));
-		panel_usr.add(this.link_user_cont);
-		panel_usr.add(this.link_user_talk);
-		panel_usr.add(Box.createHorizontalGlue());
-		
+		JPanel panel_rev = new JPanel();
+		panel_rev.setLayout(new BoxLayout(panel_rev, BoxLayout.X_AXIS));
+		panel_rev.add(Box.createHorizontalStrut(gui_globals.INTRO_LABEL_SPACER));
+		panel_rev.add(this.link_rid);
+		panel_rev.add(Box.createHorizontalGlue());
+
 			// Stack the horizontal link-panels vertically
 		this.link_panel = new JPanel();
 		link_panel.setLayout(new GridLayout(5, 0, 0, 0));
@@ -164,13 +169,13 @@ public class gui_metadata_panel extends JPanel implements
 			// for instance). However, this decision is more practically 
 			// driven than based on any wiki documentation.
 		try{
-			if(event.getSource().equals(this.link_rid))	
-				gui_globals.open_url(this, "http://en.wikipedia.org/w/" +
-					"index.php?oldid=" + this.cur_pkg.page_hist.get(
-					this.cur_pkg.rb_depth).rid + "&diff=cur");
+			
 			if(event.getSource().equals(this.link_user_cont))
 				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
 					"Special:Contributions/" + this.cur_pkg.metadata.user);
+			if(event.getSource().equals(this.link_user_user))
+				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+					"User:" + this.cur_pkg.metadata.user);
 			if(event.getSource().equals(this.link_user_talk))
 				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
 					"User_talk:" + this.cur_pkg.metadata.user +
@@ -183,6 +188,14 @@ public class gui_metadata_panel extends JPanel implements
 				gui_globals.open_url(this, "http://en.wikipedia.org/w/" +
 					"index.php?title=" + URLEncoder.encode(
 					this.cur_pkg.metadata.title, "UTF-8") + "&action=history");
+			if(event.getSource().equals(this.link_title_talk))
+				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+					"Talk:" + this.cur_pkg.metadata.title);
+			if(event.getSource().equals(this.link_rid))	
+				gui_globals.open_url(this, "http://en.wikipedia.org/w/" +
+					"index.php?oldid=" + this.cur_pkg.page_hist.get(
+					this.cur_pkg.rb_depth).rid + "&diff=cur");
+			
 		} catch(Exception e){
 			
 			JOptionPane.showMessageDialog(this,
@@ -223,7 +236,15 @@ public class gui_metadata_panel extends JPanel implements
 		if(gui_pkg.user_has_talkpage)
 			link_user_talk.setFont(gui_globals.get_link_font(false, false));
 		else link_user_talk.setFont(gui_globals.get_link_font(false, true));
-
+		
+		if(gui_pkg.user_has_userpage)
+			link_user_user.setFont(gui_globals.get_link_font(false, false));
+		else link_user_user.setFont(gui_globals.get_link_font(false, true));
+		
+		if(gui_pkg.title_has_talkpage)
+			link_title_talk.setFont(gui_globals.get_link_font(false, false));
+		else link_title_talk.setFont(gui_globals.get_link_font(false, true));
+		
 		resize(); // Adjust space given to panel containing MD-items
 	}
 	

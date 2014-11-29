@@ -87,6 +87,11 @@ public class gui_display_pkg{
 	public final boolean user_has_userpage;
 	
 	/**
+	 * Whether the article has a "talk" page
+	 */
+	public final boolean title_has_talkpage;
+	
+	/**
 	 * Queue from which the RID wrapped by this object was obtained.
 	 */
 	public final SCORE_SYS source_queue;
@@ -133,7 +138,8 @@ public class gui_display_pkg{
 			pair<String,String> edit_token, String raw_diff, String content, 
 			String content_linked, SCORE_SYS source_queue, 
 			int rb_depth, Set<String> user_perms, boolean user_has_talkpage,
-			boolean user_has_userpage, Integer user_edit_count){
+			boolean user_has_userpage, boolean title_has_talkpage, 
+			Integer user_edit_count){
 		
 		this.page_hist = page_hist;
 		this.metadata = page_hist.get(0);
@@ -146,6 +152,7 @@ public class gui_display_pkg{
 		this.user_perms = user_perms;
 		this.user_has_talkpage = user_has_talkpage;
 		this.user_has_userpage = user_has_userpage;
+		this.title_has_talkpage = title_has_talkpage;
 		this.user_edit_count = user_edit_count;
 		
 		if(raw_diff == null){
@@ -191,9 +198,11 @@ public class gui_display_pkg{
 			Set<String> titles_missing = new HashSet<String>();
 			titles_missing.add("User_talk:" + md.user);
 			titles_missing.add("User:" + md.user);
+			titles_missing.add("Talk:" + md.title);
 			titles_missing = api_retrieve.process_pages_missing(titles_missing);
 			boolean user_has_talkpage = !titles_missing.contains("User_talk:" + md.user);
 			boolean user_has_userpage = !titles_missing.contains("User:" + md.user);
+			boolean title_has_talkpage = !titles_missing.contains("Talk:" + md.title);
 			
 				// And manipulate the diff-content as needed
 			String diff = api_retrieve.process_diff_prev(rid);
@@ -208,7 +217,7 @@ public class gui_display_pkg{
 			meta_list.add(md); // Just create a one element list
 			return(new gui_display_pkg(meta_list, null, diff, content, 
 					con_link, null, 0, perms, user_has_talkpage, 
-					user_has_userpage, null));
+					user_has_userpage, title_has_talkpage, null));
 			
 		} catch(Exception e){
 			return null;
@@ -304,9 +313,11 @@ public class gui_display_pkg{
 			Set<String> titles_missing = new HashSet<String>();
 			titles_missing.add("User_talk:" + meta.user);
 			titles_missing.add("User:" + meta.user);
+			titles_missing.add("Talk:" + meta.title);
 			titles_missing = api_retrieve.process_pages_missing(titles_missing);
 			boolean user_has_talkpage = !titles_missing.contains("User_talk:" + meta.user);
 			boolean user_has_userpage = !titles_missing.contains("User:" + meta.user);
+			boolean title_has_talkpage = !titles_missing.contains("Talk:" + meta.title);
 			
 			Integer edit_count = null;
 			if(meta.user_is_ip)
@@ -319,7 +330,8 @@ public class gui_display_pkg{
 
 			return(new gui_display_pkg(page_hist, edit_token, diff, content, 
 					con_link, source_queue, edits_to_rb, perms, 
-					user_has_talkpage, user_has_userpage, edit_count));
+					user_has_talkpage, user_has_userpage, title_has_talkpage, 
+					edit_count));
 			
 		} catch(CommunicationsException e){
 			parent.reset_connection(false);
@@ -372,7 +384,8 @@ public class gui_display_pkg{
 		List<metadata> meta_list = new ArrayList<metadata>(1);
 		meta_list.add(new metadata()); // Just create a one element list
 		return(new gui_display_pkg(meta_list, null, null, end_con, 
-				end_con, null, 0, new HashSet<String>(0), false, false, null));
+				end_con, null, 0, new HashSet<String>(0), 
+				false, false, false, null));
 	}
 	
 	

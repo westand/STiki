@@ -31,6 +31,7 @@
         monotonous and difficult to casually assess, this filter can allow
         users to skip edits where "only a single numerical value is changed,
         and the magnitude of that change is (0.5 < change < 2.0)" (T#049). 
+      # Additional user/article-talk links added to metadata panel (T#036).
       # Remove reference to "editing anonymously" in login dialog (T#044).  
       # The "don't template the regulars" option/dialog was re-focused such
         that it is now labeled: "warn if reverting regular" (T#050).
