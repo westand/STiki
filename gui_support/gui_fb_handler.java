@@ -152,7 +152,8 @@ public class gui_fb_handler implements Runnable{
 				this.submit_pass();
 			else if(this.fb.equals(FB_TYPE.AGF))
 				this.submit_agf();
-			else if(this.fb.equals(FB_TYPE.GUILTY))
+			else if(this.fb.equals(FB_TYPE.GUILTY) || 
+					this.fb.equals(FB_TYPE.GUILTY_4IM))
 				this.submit_vandalism();
 		} catch(Exception e){}
 	}
@@ -220,9 +221,12 @@ public class gui_fb_handler implements Runnable{
 			// Being by reverting the edit on Wikipedia (threaded)
 			// If the reversion succeeds, user may also be warned.
 			// A panel displays the result/warning to end users
-		threads.submit(new gui_revert_and_warn(FB_TYPE.GUILTY, edit_pkg, 
-				summary, session_cookie, user_has_native_rb, rollback, 
-				watchlist_opt, warn, usr_talk_msg, gui_revert_panel));
+			//
+			// Note that 'fb' can be (FB_TYPE.GUILTY || FB_TYPE.GUILTY_4IM)
+			//
+		threads.submit(new gui_revert_and_warn(fb, edit_pkg, 
+			summary, session_cookie, user_has_native_rb, rollback, 
+			watchlist_opt, warn, usr_talk_msg, gui_revert_panel));
 		
 		try{parent.client_interface.feedback_insert( // RID delete internal
 					md.rid, fb_constant(fb, edit_pkg.source_queue), user);
@@ -257,7 +261,7 @@ public class gui_fb_handler implements Runnable{
 				
 		if(fb.equals(FB_TYPE.INNOCENT)) // innocents made negative
 			return(-1 * stiki_utils.queue_to_constant(source_queue));
-		else if(fb.equals(FB_TYPE.GUILTY))
+		else if(fb.equals(FB_TYPE.GUILTY) || fb.equals(FB_TYPE.GUILTY_4IM))
 			return(stiki_utils.queue_to_constant(source_queue));
 		else if(fb.equals(FB_TYPE.AGF))
 			return(5 * stiki_utils.queue_to_constant(source_queue));

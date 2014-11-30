@@ -53,7 +53,7 @@ public class stiki_frontend_driver extends JFrame{
 	/**
 	 * Classification types available to end-users.
 	 */
-	public enum FB_TYPE{INNOCENT, PASS, AGF, GUILTY};
+	public enum FB_TYPE{INNOCENT, PASS, AGF, GUILTY, GUILTY_4IM};
 	
 	
 	// ******* VISUAL ELEMENTS ********
@@ -63,7 +63,7 @@ public class stiki_frontend_driver extends JFrame{
 	 * While this should be updated at every distribution, it is only checked
 	 * against to see if a forced update is required.
 	 */
-	public static final int CUR_VERSION = 20141125;
+	public static final int CUR_VERSION = 20141129;
 	
 	
 	// ******* VISUAL ELEMENTS ********
@@ -341,7 +341,8 @@ public class stiki_frontend_driver extends JFrame{
 		
 		gui_display_pkg edit_pkg = edit_queue.get_cur_edit();
 		metadata md = edit_pkg.page_hist.get(0); // convenience
-		if((fb_type.equals(FB_TYPE.AGF) || fb_type.equals(FB_TYPE.GUILTY)) && 
+		if((fb_type.equals(FB_TYPE.AGF) || fb_type.equals(FB_TYPE.GUILTY) || 
+				fb_type.equals(FB_TYPE.GUILTY_4IM)) && 
 				menu_bar.get_options_menu().get_dttr_policy() && 
 				!secondary_review && edit_pkg.get_user_edit_count() >= 50){
 			gui_globals.pop_dttr_warning(this.diff_browser);
@@ -352,8 +353,8 @@ public class stiki_frontend_driver extends JFrame{
 		secondary_review = false;
 		
 		boolean login_change = login_panel.check_and_reset_state_change();
-		if((fb_type.equals(FB_TYPE.GUILTY) || fb_type.equals(FB_TYPE.AGF))  
-				&& login_change){
+		if((fb_type.equals(FB_TYPE.AGF) || fb_type.equals(FB_TYPE.GUILTY) || 
+				fb_type.equals(FB_TYPE.GUILTY_4IM)) && login_change){
 			edit_queue.refresh_edit_token(login_panel.get_session_cookie());
 			if(login_panel.editor_using_native_rb())
 				edit_queue.refresh_rb_token(login_panel.get_session_cookie());
@@ -379,11 +380,13 @@ public class stiki_frontend_driver extends JFrame{
 		COMMENT_TAB ct;
 		String usr_talk_msg = null;
 		gui_fb_handler fb_task;
-		if(fb_type.equals(FB_TYPE.GUILTY) && stiki_utils.queue_to_type(
-				edit_pkg.source_queue).equals(QUEUE_TYPE.VANDALISM))
+		if((fb_type.equals(FB_TYPE.GUILTY) || fb_type.equals(FB_TYPE.GUILTY_4IM)) 
+				&& stiki_utils.queue_to_type(edit_pkg.source_queue).equals(
+				QUEUE_TYPE.VANDALISM))
 			ct = COMMENT_TAB.VAND;
-		else if(fb_type.equals(FB_TYPE.GUILTY) && stiki_utils.queue_to_type(
-				edit_pkg.source_queue).equals(QUEUE_TYPE.LINK_SPAM))
+		else if((fb_type.equals(FB_TYPE.GUILTY) || fb_type.equals(FB_TYPE.GUILTY_4IM)) 
+				&& stiki_utils.queue_to_type(edit_pkg.source_queue).equals(
+				QUEUE_TYPE.LINK_SPAM))
 			ct = COMMENT_TAB.SPAM;
 		else if(fb_type.equals(FB_TYPE.AGF)){
 			ct = COMMENT_TAB.AGF;
@@ -406,7 +409,8 @@ public class stiki_frontend_driver extends JFrame{
 		WORKER_THREADS.submit(fb_task); // GIVE THE FB-TASK TO A THREAD
 		
 			// Configure functionality of the "back" button
-		if(fb_type.equals(FB_TYPE.GUILTY) || fb_type.equals(FB_TYPE.AGF)) 
+		if(fb_type.equals(FB_TYPE.GUILTY) || fb_type.equals(FB_TYPE.GUILTY_4IM) 
+				|| fb_type.equals(FB_TYPE.AGF)) 
 			this.button_panel.back_button_enabled(false); // "back" button
 		else this.button_panel.back_button_enabled(true);
 		last_classification = new pair<FB_TYPE, Long>( // Store result

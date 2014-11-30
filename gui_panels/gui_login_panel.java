@@ -523,8 +523,15 @@ public class gui_login_panel extends JPanel implements ActionListener{
 				gui_settings.SETTINGS_INT.watchlist_set, 0));
 		watchlist_combobox.setBackground(Color.WHITE);
 		watchlist_combobox.setFont(gui_globals.SMALL_NORMAL_FONT);
+		
+			// JComboBox's have well documented sizing difficulties;
+			// following is a best effort to keep things sane
 		watchlist_combobox.setPreferredSize(
-				new Dimension(watchlist_combobox.getPreferredSize().width,0));		
+				new Dimension(watchlist_combobox.getPreferredSize().width, 
+				watchlist_combobox.getFont().getSize()));	
+		watchlist_combobox.setMinimumSize(
+				new Dimension(watchlist_combobox.getPreferredSize().width, 
+				watchlist_combobox.getFont().getSize()));	
 		
 			// Simple vertical arrangement of label and combo-box
 		JPanel subpanel = new JPanel();

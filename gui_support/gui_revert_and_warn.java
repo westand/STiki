@@ -182,7 +182,8 @@ public class gui_revert_and_warn implements Runnable{
 		try{
 			RV_STYLE revert_type;
 			EDIT_OUTCOME revert_outcome;
-			if(user_has_native_rb && fb_type.equals(FB_TYPE.GUILTY)){
+			if(user_has_native_rb && (fb_type.equals(FB_TYPE.GUILTY) || 
+					fb_type.equals(FB_TYPE.GUILTY_4IM))){
 				
 					// Only "guilty" edits should make use of native RB
 				InputStream in = api_post.edit_rollback(metadata.title, 
@@ -216,7 +217,8 @@ public class gui_revert_and_warn implements Runnable{
 					// rollback can't be used due to "minor" settings
 					// And "guilty" reverts where user w/o native rollback
 				boolean minor = false;
-				if(fb_type.equals(FB_TYPE.GUILTY))
+				if(fb_type.equals(FB_TYPE.GUILTY) || 
+						fb_type.equals(FB_TYPE.GUILTY_4IM))
 					minor = true;
 				
 				int sw_rb_code = gui_soft_rollback.software_rollback(
@@ -250,6 +252,10 @@ public class gui_revert_and_warn implements Runnable{
 				else revert_type = RV_STYLE.NOGO_SW;
 				in.close();
 			} // Decide between undo paths */
+			
+				// If the type of revert is "4im" we override the warn option
+			if(fb_type.equals(FB_TYPE.GUILTY_4IM))
+				warn = true;
 			
 				// If reversion successful, warn user if requested
 				// No matter the case, set final outcome variable
@@ -361,6 +367,9 @@ public class gui_revert_and_warn implements Runnable{
 		
 		else{ // if(warning_level <= 4){
 			
+			if(fb_type.equals(FB_TYPE.GUILTY_4IM))
+				warning_level = -4; // cheat code for "4im" warnings
+			
 			String warning = warning_template(queue_type, 
 					warning_level, metadata.title, metadata.user_is_ip);
 			if(sec_content.equals("")){
@@ -379,7 +388,7 @@ public class gui_revert_and_warn implements Runnable{
 			if (warning_level == 1) return(WARNING.YES_UW1);
 			else if (warning_level == 2) return(WARNING.YES_UW2);
 			else if (warning_level == 3) return(WARNING.YES_UW3);
-			else return (WARNING.YES_UW4);
+			else return (WARNING.YES_UW4); // "4" or "-4"->4im warnings
 			
 		} // Warning levels < 5 get issued a UserTalk warning
 	}
@@ -388,7 +397,8 @@ public class gui_revert_and_warn implements Runnable{
 	 * Produce the warning message (template) that should be appended to the
 	 * UserTalk of offending users -- by providing the template fields
 	 * @param warn_type Type of warning to place (vandalism, spam, etc.)
-	 * @param level Number [1--4], indicating warning severity
+	 * @param level Number [-4,1-4], indicating warning severity. Note that
+	 * passing a "-4" will produce a "4im" (immediate) level warning.
 	 * @param page_title Title of the page which was vandalized
 	 * @param is_ip Whether or not the user being warned is an IP address.
 	 * @return String containing warning, which should be put on UserTalk.
@@ -406,8 +416,11 @@ public class gui_revert_and_warn implements Runnable{
 			template += "{{subst:uw-vandalism";
 		else template += "{{subst:uw-spam";
 		
-		template += level + 
-				"|" + page_title + 
+		if(level == -4)
+			template += "4im";
+		else template += level;
+
+		template += "|" + page_title + 
 				"|" + template_note + 
 				"|" + "subst=subst:}}  ~~~~"; // Signature
 		

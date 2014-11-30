@@ -37,6 +37,9 @@
       # Remove reference to "editing anonymously" in login dialog (T#044).  
       # The "don't template the regulars" option/dialog was re-focused such
         that it is now labeled: "warn if reverting regular" (T#050).
+      # A classification button was added to support reversion and immediate 
+        "4im" issuance (assuming warning criteria are met and escalation 
+        wouldn't already result in an AIV report)(T#041)  
         
       # There have been reports of user's edit session's dropping, resulting 
         in editing while logged out. This results in privacy loss and community
@@ -50,6 +53,7 @@
         the regulars" logic, and non-critical aspects of milestone reporting.
       # Minor improvements to warning increment logic; in particular, better
         handling when duplicate section headers exist.
+      # Documentation changes in support of above
 
   * 2014-03-25
       # Emergency release in order to fix login code broken by a small

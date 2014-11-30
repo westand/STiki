@@ -146,7 +146,7 @@ One functionality of note is the display of <B>user permissions</B>. The "permis
 <P>Assuming an edit-diff (say, <I>x</I> against <I>x-n</I>) has been rendered into the <A HREF="#sec_browser">diff browser</A>, it is the responsibility of the user to determine the worth of revision <I>x</I> (or the entire user chain) and press the appropriately labeled <B>classification button</B>:
 
   <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
-     <LI><B>Vandalism/Spam (Revert):</B> If clicked, the currently displayed edit(s) will be reverted/un-done on Wikipedia. This action constitutes an <U>actual change to live Wikipedia content</U> and should not be abused. Further, the classification is sent to the STiki backend to improve scoring systems. If an edit occurs on the edit-page after the edit was displayed but before the button is pressed, then no change will be made to Wikipedia. After the button is pressed, the <A HREF="#sec_lastrevert">last revert panel</A> will display whether the revert actually took place (as well as any warnings issued).<P>
+     <LI><B>Vandalism/Spam:</B> If clicked, the currently displayed edit(s) will be reverted/un-done on Wikipedia. This action constitutes an <U>actual change to live Wikipedia content</U> and should not be abused. Further, the classification is sent to the STiki backend to improve scoring systems. If an edit occurs on the edit-page after the edit was displayed but before the button is pressed, then no change will be made to Wikipedia. After the button is pressed, the <A HREF="#sec_lastrevert">last revert panel</A> will display whether the revert actually took place (as well as any warnings issued). The <B>4im</B> button functions identically to the adjacent "vandalism/spam" one, but will hasten the warning hierarchy to issue a  "final warning" (or AIV report), assuming that warning criteria are met.<P>
 
 		<LI><B>Good-faith Revert:</B> This is reserved for cases where an edit is clearly unconstructive, but does not constitute vandalism/spam. It is a "nice way" to undo damage from clueless or well-intending authors. The edit will be reverted/rolled-back on Wikipedia, but no warning will be issued.<P>
 
@@ -157,7 +157,7 @@ One functionality of note is the display of <B>user permissions</B>. The "permis
 
 When <B>any</B> classification button is pressed, the <A HREF="#sec_queue">revision queue</A> will be popped, the <A HREF="#sec_filter">revision filters</A> checked, and a new diff will be rendered in the <A HREF="#sec_browser">diff browser</A>. Thus, after initially tweaking the settings, a user should interact primarily with the classification panel.
 <P>
-To this end, <I>hotkeys</I> simplify user-interaction with the GUI. Simple presses of the <B>i</B>, <B>p</B>, <B>g</B>, or <B>v</B> key perform classification (<B>i</B>nnocent - <B>p</B>ass - <B>g</B>ood faith - <B>v</B>andalism), assuming the button panel has <I>focus</I>. Focus is obtained by performing a single mnemonic (<B>ALT+[key]</B>) or mouse-driven classification. Interaction with a non-classification GUI component will cause the panel to lose focus.
+To this end, <I>hotkeys</I> simplify user-interaction with the GUI. Simple presses of the <B>i</B>, <B>p</B>, <B>g</B>, or <B>v/s</B> key perform classification (<B>i</B>nnocent - <B>p</B>ass - <B>g</B>ood faith - <B>v</B>andalism/<B>s</B>pam), assuming the button panel has <I>focus</I>. Focus is obtained by performing a single mnemonic (<B>ALT+[key]</B>) or mouse-driven classification. Interaction with a non-classification GUI component will cause the panel to lose focus.
 <P>
 Finally, the panel has a <B>back button</B> that allows users to revisit the previous edit displayed. Certain criteria disable the back button: (1) "Back" cannot be used after a reversion, and (2) A user may only go "back" a single edit. After a prior edit is re-classified, the diff-browser will re-show the edit displayed when "back" was pressed. 
 
@@ -173,7 +173,7 @@ Finally, the panel has a <B>back button</B> that allows users to revisit the pre
 <P>
 A STiki user may choose to <B>login</B> or edit <B>anonymously</B> (Note that anonymous login may be disabled, in order to prevent abuse). Log-in credentials are those provided by Wikipedia. It is suggested that a user login so his/her contributions may be persistently tracked. Login credentials are never stored by STiki; they are passed directly to the Wikipedia API. Credentials must be obtained directly from Wikipedia.
 <P>
-The login panel also provides a <B>watchlist option.</B>. Wikipedia has a setting that allows users to "watchlist every article edited." This checkbox allows a user to override this setting; so his/her watchlist does not become diluted from their STiki actions.
+The login panel also provides several <B>watchlisting options</B>. These should be self explanatory.
 
   <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
 

@@ -37,6 +37,12 @@ public class gui_button_panel extends JPanel implements
 	private JButton button_guilty;
 	
 	/**
+	 * Button corresponding to the "guilty" classification, but also
+	 * immediately issuing a 4im warning.
+	 */
+	private JButton button_4im;
+	
+	/**
 	 * Button corresponding to "good faith revert" classifications
 	 */
 	private JButton button_agf;
@@ -82,7 +88,8 @@ public class gui_button_panel extends JPanel implements
 		this.parent = parent;
 		
 			// Initialize the individual buttons
-		button_guilty = new JButton("Vandalism (Undo)");
+		button_guilty = new JButton("Vandalism");
+		button_4im = new JButton("4im");
 		button_agf = new JButton("Good Faith Revert");
 		button_pass = new JButton("Pass");
 		button_innocent = new JButton("Innocent");
@@ -91,6 +98,7 @@ public class gui_button_panel extends JPanel implements
 
 			// Set the button mnemonics
 		button_guilty.setMnemonic(KeyEvent.VK_V);
+		button_4im.setMnemonic(KeyEvent.VK_4);
 		button_agf.setMnemonic(KeyEvent.VK_G);
 		button_pass.setMnemonic(KeyEvent.VK_P);
 		button_innocent.setMnemonic(KeyEvent.VK_I);
@@ -98,6 +106,7 @@ public class gui_button_panel extends JPanel implements
 		
 			// Set the buttons to a non-bold, font style
 		button_guilty.setFont(gui_globals.PLAIN_NORMAL_FONT);
+		button_4im.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		button_agf.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		button_pass.setFont(gui_globals.PLAIN_NORMAL_FONT);
 		button_innocent.setFont(gui_globals.PLAIN_NORMAL_FONT);
@@ -105,11 +114,13 @@ public class gui_button_panel extends JPanel implements
 		
 			// Add action/key-listeners to the buttons
 		button_guilty.addActionListener(this);
+		button_4im.addActionListener(this);
 		button_agf.addActionListener(this);
 		button_pass.addActionListener(this);
 		button_innocent.addActionListener(this);
 		button_back.addActionListener(this);
 		button_guilty.addKeyListener(this);
+		button_4im.addKeyListener(this);
 		button_agf.addKeyListener(this);
 		button_pass.addKeyListener(this);
 		button_innocent.addKeyListener(this);
@@ -117,37 +128,67 @@ public class gui_button_panel extends JPanel implements
 		
 			// Nullify space repeating on all buttons
 		nullify_space_press(button_guilty);
+		nullify_space_press(button_4im);
 		nullify_space_press(button_agf);
 		nullify_space_press(button_pass);
 		nullify_space_press(button_innocent);
 		nullify_space_press(button_back);
-		
-			// We assume the 'vandalism' button to be the largest of
-			// the classification buttons. Taking its preferred size, 
-			// we size all other buttons equivalently
-		Dimension largest_pref_button_dim = button_agf.getPreferredSize();
-		button_guilty.setMaximumSize(largest_pref_button_dim);
-		button_agf.setMaximumSize(largest_pref_button_dim);
-		button_pass.setMaximumSize(largest_pref_button_dim);
-		button_innocent.setMaximumSize(largest_pref_button_dim);
 	
-			// Make the "back" button as tight as possible
+			// Make the "back" and "4im" buttons as tight as possible
 		button_back.setMargin(new Insets(0, 0, 0, 0));
 		button_back.setMaximumSize(button_back.getPreferredSize());
 		button_back.setEnabled(false); // Initially un-usable
+		button_4im.setMargin(new Insets(button_4im.getMargin().top, 0, 
+				button_4im.getMargin().bottom, 0)); // Insets: tlbr
 		
+			// Tiny sub-sub-pane for "revert" + "4im" warnings
+		JPanel guilty_subpanel = new JPanel();
+		guilty_subpanel.setLayout(
+				new BoxLayout(guilty_subpanel, BoxLayout.X_AXIS));
+		guilty_subpanel.add(button_guilty);
+		guilty_subpanel.add(button_4im);
+		
+			// We assume the 'agf' button to be the largest of
+			// the classification buttons. Taking its preferred size, 
+			// we size all other buttons/panels equivalently
+			//
+			// Observe we also set the [button_guilty] preferred size, so it
+			// consumes available space in its sub-sub-panel
+			// 
+		int pref_width = button_agf.getPreferredSize().width;
+		guilty_subpanel.setPreferredSize(new Dimension(
+				pref_width, guilty_subpanel.getPreferredSize().height));
+		button_guilty.setPreferredSize(new Dimension(
+				pref_width, button_guilty.getPreferredSize().height));
+		button_agf.setPreferredSize(new Dimension(
+				pref_width, button_agf.getPreferredSize().height));
+		button_pass.setPreferredSize(new Dimension(
+				pref_width, button_pass.getPreferredSize().height));
+		button_innocent.setPreferredSize(new Dimension(
+				pref_width, button_innocent.getPreferredSize().height));
+		
+			// ... and some minimums ... 
+		guilty_subpanel.setMinimumSize(new Dimension(
+				pref_width, guilty_subpanel.getPreferredSize().height));
+		button_agf.setMinimumSize(new Dimension(
+				pref_width, button_agf.getPreferredSize().height));
+		button_pass.setMinimumSize(new Dimension(
+				pref_width, button_pass.getPreferredSize().height));
+		button_innocent.setMinimumSize(new Dimension(
+				pref_width, button_innocent.getPreferredSize().height));
+			
 			// Provide even vertical spacing between class-buttons
 		JPanel button_subpanel = new JPanel();
 		button_subpanel.setLayout(new BoxLayout(button_subpanel, 
 				BoxLayout.Y_AXIS));
 		button_subpanel.add(Box.createVerticalGlue());
-		button_subpanel.add(button_guilty);
+		button_subpanel.add(gui_globals.center_comp_with_glue(guilty_subpanel));
 		button_subpanel.add(Box.createVerticalGlue());
-		button_subpanel.add(button_agf);
+		button_subpanel.add(gui_globals.center_comp_with_glue(button_agf));
 		button_subpanel.add(Box.createVerticalGlue());
-		button_subpanel.add(button_pass);
+		button_subpanel.add(gui_globals.center_comp_with_glue(button_pass));
 		button_subpanel.add(Box.createVerticalGlue());
-		button_subpanel.add(button_innocent);
+		button_subpanel.add(gui_globals.center_comp_with_glue(button_innocent));
 		button_subpanel.add(Box.createVerticalGlue());
 		
 			// Align all components in the larger, parent panel
@@ -159,7 +200,7 @@ public class gui_button_panel extends JPanel implements
 		this.add(button_subpanel);
 		this.add(Box.createHorizontalGlue());
 		this.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+			
 			// Set intial state
 		change_type_setup(type);
 	}
@@ -175,10 +216,10 @@ public class gui_button_panel extends JPanel implements
 		
 		if(this.cur_type != type){		
 			if(type.equals(QUEUE_TYPE.VANDALISM)){
-				button_guilty.setText("Vandalism (Undo)");
+				button_guilty.setText("Vandalism");
 				button_guilty.setMnemonic(KeyEvent.VK_V);
 			} else if(type.equals(QUEUE_TYPE.LINK_SPAM)){
-				button_guilty.setText("Link Spam (Undo)");
+				button_guilty.setText("Link Spam");
 				button_guilty.setMnemonic(KeyEvent.VK_S);
 			} // Setup the button text and mnemonic
 			this.cur_type = type;
@@ -209,6 +250,8 @@ public class gui_button_panel extends JPanel implements
 				parent.class_action(FB_TYPE.AGF);
 			else if(event.getSource().equals(this.button_guilty))
 				parent.class_action(FB_TYPE.GUILTY);
+			else if(event.getSource().equals(this.button_4im))
+				parent.class_action(FB_TYPE.GUILTY_4IM);
 			else if(event.getSource().equals(this.button_back))
 				parent.back_button_pressed();
 		} catch(Exception e){
@@ -238,6 +281,9 @@ public class gui_button_panel extends JPanel implements
 					this.cur_type == QUEUE_TYPE.LINK_SPAM){
 				parent.class_action(FB_TYPE.GUILTY);
 				this.button_guilty.requestFocusInWindow();
+			} else if(ke.getKeyChar() == '4'){
+				parent.class_action(FB_TYPE.GUILTY_4IM);
+				this.button_4im.requestFocusInWindow();
 			} else if(ke.getKeyChar() == 'g' || ke.getKeyChar() == 'G'){
 				parent.class_action(FB_TYPE.AGF);
 				this.button_agf.requestFocusInWindow();
