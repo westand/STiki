@@ -12,7 +12,7 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2014-XX-XX
+  * 2014-12-01
       # The "Options" menu now has setting that allows clients to be notified
         via pop-up if an AIV post has been lodged (T#018; T#046).
       # Null diffs should no longer be displayed (T#038). This was a bug
