@@ -384,7 +384,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"Thank you! ~~~~");
 		
 		map.put("COMMON: Unsourced content", 
-				"==Recent edit#s# to [[#a#]]==\n " +
+				"==Recent edit#s# to [[#a#]]==\n" +
 				"[[Image:Information.svg|25px|alt=Information icon]] Hello, " +
 				"and welcome to Wikipedia. I noticed that you made a " +
 				"change to an article, [[#a#]], but you didn't provide " +
@@ -398,7 +398,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"me a message on my talk page. Thank you! ~~~~");
 		
 		map.put("COMMON: Blanking/removal of content", 
-				"==Recent edit#s# to [[#a#]]==\n " +
+				"==Recent edit#s# to [[#a#]]==\n" +
 				"[[Image:Information.svg|25px]] Hello, and welcome to " +
 				"Wikipedia. I noticed that you removed some content " +
 				"from [[#a#]] without explaining why. In the future, it " +
@@ -411,7 +411,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"leave me a message on my talk page. Thank you! ~~~~");
 		
 		map.put("COMMON: Puffery or promotion",
-				"==Recent edit#s# to #a#==\n " +
+				"==Recent edit#s# to #a#==\n" +
 				"[[Image:Information.svg|25px]] Hello. I noticed that " +
 				"you made an edit that introduces praise or promotional " +
 				"language to the [[#a#]] article. On Wikipedia, we adhere " +
@@ -466,7 +466,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"article. Thank you! ~~~~");
 		
 		map.put("TOOMUCH: Inappropriate external links", 
-				"==Recent edit#s# to [[#a#]]==\n " +
+				"==Recent edit#s# to [[#a#]]==\n" +
 				"[[Image:Information.svg|25px]] Hello, and welcome to " +
 				"Wikipedia. I wanted to let you know that I removed one or " +
 				"more external links you added to the [[#a#]] article, " +
@@ -480,7 +480,7 @@ public class gui_agf_dialogue extends JDialog implements
 		///// NONSENSE
 		
 		map.put("NONSENSE: Test edit", 
-				"==Recent edit#s# to #a#==\n " +
+				"==Recent edit#s# to #a#==\n" +
 				"[[Image:Information.svg|25px]] Hello. I noticed that " +
 				"you recently made a contribution to the [[#a#]] article " +
 				"that seemed to be a test. Your test worked! However, test " +
@@ -505,7 +505,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"you write. Thank you! ~~~~");
 		
 		map.put("NONSENSE: Non-English contributions", 
-				"==Recent edit#s# to [[#a#]]==\n " +  
+				"==Recent edit#s# to [[#a#]]==\n" +  
 				"[[Image:Information.svg|25px]] Thank you for your " +  
 				"contribution#s# to Wikipedia. I noticed that you have " +  
 				"posted content to the [[#a#]] article in a language other " +  
@@ -515,7 +515,7 @@ public class gui_agf_dialogue extends JDialog implements
 		///// LEGAL
 		
 		map.put("LEGAL: Uncited BLP change", 
-				"==Recent edit#s# to #a#==\n " +
+				"==Recent edit#s# to #a#==\n" +
 				"[[Image:Information.svg|25px]] Hello. I noticed that you " +
 				"made an edit to a biography of a living person ([[#a#]]), " +
 				"but that you didn't support your changes with a citation " +
@@ -527,7 +527,7 @@ public class gui_agf_dialogue extends JDialog implements
 				"Thank you! ~~~~");
 		
 		map.put("LEGAL: Copyrighted material", 
-				"==Recent edit#s# to [[#a#]]==\n " +
+				"==Recent edit#s# to [[#a#]]==\n" +
 				"[[Image:Stop hand nuvola.svg|30px|alt=Stop icon]] Your " +
 				"addition to [[#a#]] has been removed, as it appears to " +
 				"have added [[Wikipedia:Copyrights|copyrighted]] material " +
