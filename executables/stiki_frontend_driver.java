@@ -63,7 +63,7 @@ public class stiki_frontend_driver extends JFrame{
 	 * While this should be updated at every distribution, it is only checked
 	 * against to see if a forced update is required.
 	 */
-	public static final int CUR_VERSION = 20141129;
+	public static final int CUR_VERSION = 20141201;
 	
 	
 	// ******* VISUAL ELEMENTS ********
