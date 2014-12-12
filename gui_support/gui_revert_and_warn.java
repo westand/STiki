@@ -373,9 +373,9 @@ public class gui_revert_and_warn implements Runnable{
 			String warning = warning_template(queue_type, 
 					warning_level, metadata.title, metadata.user_is_ip);
 			if(sec_content.equals("")){
-				warning = "\r== " + date_header + " ==\r" + warning;
+				warning = "\n== " + date_header + " ==\n" + warning;
 			} else{ // If header doesn't exist, need to make one
-				warning = "\r\r" + warning + "\r\r";
+				warning = "\n\n" + warning + "\n\n";
 			} // Just a nice little space buffer if section exists
 			
 				// We assume current month/year is last on page, so it
@@ -447,25 +447,25 @@ public class gui_revert_and_warn implements Runnable{
 		String aiv_text = "";
 		if(!unrel_imm){
 			if(registered){
-				aiv_text = "\r* {{Vandal|" + user + "}} ### " +
+				aiv_text = "\n* {{Vandal|" + user + "}} ### " +
 					"({{diff2|" + rid + "|diff}}) " +
-					"after recently receiving last warning ~~~~ \r"; 
+					"after recently receiving last warning ~~~~ \n"; 
 			} else{
-				aiv_text = "\r* {{IPvandal|" + user + "}} ### " +
+				aiv_text = "\n* {{IPvandal|" + user + "}} ### " +
 					"({{diff2|" + rid + "|diff}}) " +
-					"after recently receiving last warning ~~~~ \r";
+					"after recently receiving last warning ~~~~ \n";
 			} // Registration status alters template used
 		} else{
 			if(registered){
-				aiv_text = "\r* {{Vandal|" + user + "}} ### " +
+				aiv_text = "\n* {{Vandal|" + user + "}} ### " +
 					"({{diff2|" + rid + "|diff}}) " +
 					"after recently receiving unrelated 4im warning " +
-					"(may require administrative attention) ~~~~ \r"; 
+					"(may require administrative attention) ~~~~ \n"; 
 			} else{
-				aiv_text = "\r* {{IPvandal|" + user + "}} ### " +
+				aiv_text = "\n* {{IPvandal|" + user + "}} ### " +
 					"({{diff2|" + rid + "|diff}}) " +
 					"after recently receiving unrelated 4im warning " +
-					"(may require administrative attention) ~~~~ \r";
+					"(may require administrative attention) ~~~~ \n";
 			} // Registration status alters template used
 		} // Note made when AIV'ing after an vandalism-unrelated 4im
 		
