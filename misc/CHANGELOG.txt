@@ -12,6 +12,10 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2015-XX-XX
+      # Resolved issue where custom AGF messages were not saving and 
+        persisting between edits/sessions (T#051).
+  
   * 2014-12-12
       # Something seems to have changed with the way Mediawiki parses 
         new line instructions, causing section headers to not be displayed, 

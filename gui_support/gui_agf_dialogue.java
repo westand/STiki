@@ -325,18 +325,18 @@ public class gui_agf_dialogue extends JDialog implements
 	public void keyReleased(KeyEvent ke){}
 	public void keyTyped(KeyEvent ke){
 		if(ke.getSource().equals(text_area)){
-			if(combo_opts.getSelectedItem().equals("User custom #1")){
+			if(combo_opts.getSelectedItem().equals("CUSTOM: User custom #1")){
 				AGF_CUSTOM1 = text_area.getText();
-				message_map.put("User custom #1", AGF_CUSTOM1);
-			} else if(combo_opts.getSelectedItem().equals("User custom #2")){
+				message_map.put("CUSTOM: User custom #1", AGF_CUSTOM1);
+			} else if(combo_opts.getSelectedItem().equals("CUSTOM: User custom #2")){
 				AGF_CUSTOM2 = text_area.getText();
-				message_map.put("User custom #2", AGF_CUSTOM2);
-			} else if(combo_opts.getSelectedItem().equals("User custom #3")){
+				message_map.put("CUSTOM: User custom #2", AGF_CUSTOM2);
+			} else if(combo_opts.getSelectedItem().equals("CUSTOM: User custom #3")){
 				AGF_CUSTOM3 = text_area.getText();
-				message_map.put("User custom #3", AGF_CUSTOM3);
-			} else if(combo_opts.getSelectedItem().equals("User custom #4")){
+				message_map.put("CUSTOM: User custom #3", AGF_CUSTOM3);
+			} else if(combo_opts.getSelectedItem().equals("CUSTOM: User custom #4")){
 				AGF_CUSTOM4 = text_area.getText();
-				message_map.put("User custom #4", AGF_CUSTOM4);
+				message_map.put("CUSTOM: User custom #4", AGF_CUSTOM4);
 			} // Save text if a custom option has been selected
 		} // Only concerned with typing in text-area
 	}
