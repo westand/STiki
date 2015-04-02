@@ -15,6 +15,7 @@
   * 2015-XX-XX
       # Resolved issue where custom AGF messages were not saving and 
         persisting between edits/sessions (T#051).
+      # Test comment
   
   * 2014-12-12
       # Something seems to have changed with the way Mediawiki parses 
