@@ -17,6 +17,7 @@
   		  long had an HTTPS option, for those that did not have it enabled, 
   		  all API requests began failing when the change was initiated. STiki
   		  now uses HTTPS only and the option has been removed from the menu.
+  		  Several hard-coded paths were also discovered in the code.
       # Resolved issue where custom AGF messages were not saving and 
         persisting between edits/sessions (T#051).
   
