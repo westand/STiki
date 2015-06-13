@@ -58,7 +58,6 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		private JMenuItem browser_color_note;
 		private JMenuItem browser_color_reset;
 	private JCheckBoxMenuItem xlink_cb;
-	private JCheckBoxMenuItem https_cb;
 	private JCheckBoxMenuItem dttr_cb;
 	private JCheckBoxMenuItem agf_comment_cb;
 	private JCheckBoxMenuItem aiv_popup_cb;
@@ -87,7 +86,6 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		this.add(submenu_browser_font_family);
 		this.add(submenu_browser_colors);
 		this.add(xlink_cb);
-		this.add(https_cb);
 		this.add(dttr_cb);
 		this.add(agf_comment_cb);
 		this.add(aiv_popup_cb);
@@ -102,8 +100,6 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		this.set_hyperlink_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_hyperlinks, 
 				parent.diff_browser.get_hyperlink_policy()));
-		this.set_https_policy(gui_settings.get_bool_def(
-				gui_settings.SETTINGS_BOOL.options_https, false));
 		this.set_dttr_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_dttr, true));
 		this.set_agf_comment_policy(gui_settings.get_bool_def(
@@ -122,12 +118,6 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		
 		if(event.getSource().equals(xlink_cb)){
 			set_hyperlink_policy(xlink_cb.isSelected());
-		} else if(event.getSource().equals(https_cb)){
-			
-			// Do nothing. As label notes, a restart is required. Thus,
-			// at shutdown the CB status will be written to settings,
-			// and read from that file at next startup.
-		
 		} else if(event.getSource().equals(dttr_cb)){
 		
 			// Again, nothing. Other classes will check-in with this class
@@ -303,23 +293,6 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	}
 	
 	/**
-	 * Set the HTTPS policy in the menu
-	 * @param enable TRUE if HTTPS should be used for all Mediawiki
-	 * interface/API links. FALSE, otherwise
-	 */
-	public void set_https_policy(boolean enable){
-		https_cb.setSelected(enable);
-	}
-	
-	/**
-	 * Return whether the 'use HTTPS' checkbox is selected.
-	 * @return whether the 'use HTTPS' checbox is selected
-	 */
-	public boolean get_https_policy(){
-		return(https_cb.isSelected());
-	}
-	
-	/**
 	 * Set the DTTR policy in the menu (i.e., 'warn if templating regular')
 	 * @param enable TRUE if editors should be warned if trying to revert/
 	 * template/warn a regular user (whose definition is elsewehere).
@@ -443,7 +416,6 @@ public class gui_menu_options extends JMenu implements ActionListener{
 				"Reset defaults", null, KeyEvent.VK_T));
 		
 		xlink_cb = create_cb_item("Activate Ext-Links", KeyEvent.VK_X);
-		https_cb = create_cb_item("Use HTTPS (restart reqd.)", KeyEvent.VK_H);
 		dttr_cb = create_cb_item("Warn if reverting regular", KeyEvent.VK_W);
 		agf_comment_cb = create_cb_item("Message AGF reverted users", KeyEvent.VK_A);
 		aiv_popup_cb = create_cb_item("Explicit notify on AIV post", KeyEvent.VK_V);

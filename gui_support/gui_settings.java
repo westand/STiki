@@ -72,7 +72,6 @@ public class gui_settings extends Properties{
 		warn_spam,				// Whether spam warnings placed.
 		warn_agf,				// Whether AGF warnings placed.
 		options_hyperlinks,		// Whether URLs are hyperlinked in diffs
-		options_https,			// Whether the HTTPS protocol should be used
 		options_dttr,			// Whether to warn if "templating a regular"
 		options_agf_comment,    // Whether to message AGF-reverted users
 		options_aiv_popup,		// Whether to pop-up notify on AIV post
@@ -97,7 +96,7 @@ public class gui_settings extends Properties{
 	 * slowing things down and inhibiting manual editing. Thus by
 	 * checking this parameter, we can create new file versions.
 	 */
-	private static final int SETTINGS_VERSION = 2;
+	private static final int SETTINGS_VERSION = 3;
 	
 	
 	// **************************** PUBLIC METHODS ***************************
@@ -276,9 +275,6 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_BOOL.options_hyperlinks.toString(), 
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_hyperlink_policy()));
-		props.setProperty(SETTINGS_BOOL.options_https.toString(), 
-				String.valueOf(parent.menu_bar.
-				get_options_menu().get_https_policy()));
 		props.setProperty(SETTINGS_BOOL.options_dttr.toString(),
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_dttr_policy()));
