@@ -9,7 +9,7 @@
   
 ####### SIMPLE METADATA QUERY ########
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&
+  https://en.wikipedia.org/w/api.php?action=query&prop=revisions&
   revids=343171840&rvprop=ids|timestamp|user|comment&format=xml
 
 <?xml version="1.0"?>
@@ -29,7 +29,7 @@
 
 ##### SIMPLE MULTIPLE-RID QUERY ######
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&revids=
+  https://en.wikipedia.org/w/api.php?action=query&prop=revisions&revids=
   343171840|343171841|343171842&rvprop=ids|timestamp|user|comment&format=xml
 
 <?xml version="1.0"?>
@@ -60,7 +60,7 @@
 
 ####### RECENT-PAGE-HIST QUERY #######
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=
+  https://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=
   15580374&rvstartid=332442135&rvlimit=10&rvprop=ids|user&rvdir=older&format=xml
 
 <?xml version="1.0"?>
@@ -92,7 +92,7 @@
 
 ####### USER-PERMISSION QUERY ########
 
-  http://en.wikipedia.org/w/api.php?action=query&list=allusers&
+  https://en.wikipedia.org/w/api.php?action=query&list=allusers&
   aufrom=David%20Levy&aulimit=1&auprop=groups&format=xml
   
 <?xml version="1.0"?>
@@ -114,7 +114,7 @@
 
 ###### USER-REGISTRATION QUERY ########
 
-  http://en.wikipedia.org/w/api.php?action=query&list=usercontribs&ucuser=
+  https://en.wikipedia.org/w/api.php?action=query&list=usercontribs&ucuser=
   YurikBot&uclimit=1&ucdir=newer&ucnamespace=0&ucprop=timestamp&format=xml
   
 <?xml version="1.0"?>
@@ -132,7 +132,7 @@
 
 ###### TIME SINCE LAST PAGE Q #########
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=10
+  https://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=10
   &rvstartid=56681914&rvlimit=2&rvprop=timestamp&rvdir=older&format=xml
   
 <?xml version="1.0"?>
@@ -155,7 +155,7 @@
 
 ######### SIZE CHANGE QUERY ##########
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=3489767
+  https://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=3489767
   &rvstartid=346524739&rvlimit=2&rvprop=size&rvdir=older&format=xml
   
 <?xml version="1.0"?>
@@ -180,13 +180,13 @@
 
   The average diff-query produces output too volumous to display here, try:
   
-  http://en.wikipedia.org/w/api.php?action=query&prop=revisions
+  https://en.wikipedia.org/w/api.php?action=query&prop=revisions
   &revids=344126068&rvdiffto=prev&format=xml
  
  
 ######### MOST RECENT QUERY ##########
 
-  http://en.wikipedia.org/w/api.php?action=query&
+  https://en.wikipedia.org/w/api.php?action=query&
   prop=info&pageids=1001&format=xml
   
 <api>
@@ -202,7 +202,7 @@
 
 ########## EDIT TOKEN QUERY ##########
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=info&
+  https://en.wikipedia.org/w/api.php?action=query&prop=info&
   pageids=1001&intoken=edit&format=xml
   
  <?xml version="1.0"?>
@@ -220,7 +220,7 @@
 
 ########### LOGIN REQUEST ############
 
-  POST: http://en.wikipedia.org/w/api.php?action=login&
+  POST: https://en.wikipedia.org/w/api.php?action=login&
   lgname=user&lgpassword=password&format=xml
 
 <?xml version="1.0"?>
@@ -244,7 +244,7 @@
 
 ########### PAGE-FLAGGED? ############
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=flagged&pageids=533265
+  https://en.wikipedia.org/w/api.php?action=query&prop=flagged&pageids=533265
   
 <?xml version="1.0"?>
 <api>
@@ -260,7 +260,7 @@
 
 ########## PAGE-PROTECTED ############
 
-  http://en.wikipedia.org/w/api.php?action=query&prop=info&
+  https://en.wikipedia.org/w/api.php?action=query&prop=info&
   inprop=protection&pageids=534366
 
 <?xml version="1.0"?>
@@ -282,7 +282,7 @@
 
 ######## AUTO-CONFIRMED USER #########
 
-  http://en.wikipedia.org/w/api.php?action=query&list=allusers&auprop=
+  https://en.wikipedia.org/w/api.php?action=query&list=allusers&auprop=
   editcount|registration&aufrom=West.andrew.g&aulimit=1
 
 <?xml version="1.0"?>

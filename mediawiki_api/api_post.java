@@ -1,8 +1,6 @@
 package mediawiki_api;
 
 import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
-import gui_support.gui_settings;
-import gui_support.gui_settings.SETTINGS_BOOL;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -77,19 +75,13 @@ public class api_post{
 	
 	/**
 	 * Return the base URL for making API POSTS over en.wp. Note that 
-	 * this is fixed aside from the (HTTP|HTTPS) protocol choice, which
-	 * is implemented as a persistent user option
+	 * this is fixed aside from an internal code override option.
 	 * @return Base URL for making API POSTS over en.wp.
 	 */
 	public static String base_url(){
 		if(BASE_URL_OVERRIDE != null)
 			return(BASE_URL_OVERRIDE);
-		else{
-			String base = "en.wikipedia.org/w/api.php";
-			if(gui_settings.get_bool_def(SETTINGS_BOOL.options_https, false))
-					return("https://" + base);
-			else return("http://" + base);
-		} // alllow manual override of this logic
+		else return("https://en.wikipedia.org/w/api.php");
 	}
 	
 

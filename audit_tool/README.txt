@@ -106,7 +106,7 @@
 ######### SOURCE/LICENSING ############
 
   The WikiAudit source code can be obtained by visiting 
-  [http://en.wikipedia.org/wiki/WP:STiki] and downloading the source for
+  [https://en.wikipedia.org/wiki/WP:STiki] and downloading the source for
   the STiki tool (as these tools share a code-base). All WikiAudit 
   code is included in the [audit_tool/] directory. Just as with STiki, 
   all code is released under the GPL license.
@@ -116,7 +116,7 @@
   
       [*] West, A.G. (2012). WikiAudit: Examining Organizational 
       Contribitions to Wiki Environments (software). Available from 
-      http://en.wikipedia.org/wiki/WP:WikiAudit
+      https://en.wikipedia.org/wiki/WP:WikiAudit
   
   Hopefully there will also be WikiAudit-derived academic writing/
   demonstrations/posters that can be cited in the future. 
@@ -127,12 +127,12 @@
   WikiAudit was written by Andrew G. West and supported in part by 
   ONR-MURI-N00014-07-1-0907. He may be reached at 
   [last_name]+and@cis.upenn.edu. His website is:
-  [http://www.cis.upenn.edu/~westand]
+  [http://www.andrew-g-west.com]
   
   If you would like more information about WikiAudit, like to check for
   version updates, or anything else; visit WikiAudit's online presence:
   
-  http://en.wikipedia.org/wiki/Wikipedia:WikiAudit
+  https://en.wikipedia.org/wiki/Wikipedia:WikiAudit
   
 
 #################################### END ####################################

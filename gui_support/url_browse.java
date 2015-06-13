@@ -51,7 +51,6 @@ public class url_browse{
     * @param url A web address (URL) to be opened
     */
    public static void openURL(String url){
-	   url = adjust_protocol(url); // Possible HTTPS inclusion
 	   try{Class<?> d = Class.forName("java.awt.Desktop");
 		   d.getDeclaredMethod("browse", 
 				   new Class[] {java.net.URI.class}).invoke(
@@ -80,26 +79,6 @@ public class url_browse{
     		  new Exception(error_msg); // pass up
     	  }
 	   } // Try to use [awt.Desktop] out of the box
-   }
-   
-   /**
-    * The STiki GUI contains an option to "Use HTTPS." This intends chiefly to 
-    * secure interaction with English Wikipedia over the HTTPS protocol. This 
-    * is a simple switch for API functionality which is centralized in two 
-    * classes. Matters are more complicated for the many links to English 
-    * Wikipedia that are scattered elsewhere. Thus, rather than finding all of
-    * those, we implement a simple filter here just before they are opened
-    * in the browser (the only URL accesses besides those in API). 
-    * @param url Some URL
-    * @return Version of 'url' with possible protocol transition to HTTPS
-    * if the "use HTTPs" option is enabled and 'url' is know to be one
-    * that supports the protocol (i.e., Wikipedia itself). 
-    */
-   public static String adjust_protocol(String url){
-	   if(gui_settings.get_bool_def(gui_settings.SETTINGS_BOOL.options_https, 
-			   false) && url.contains(".wikipedia.org"))
-		   return(url.replace("http://", "https://"));
-	   else return(url);
    }
    
 }

@@ -18,7 +18,7 @@
 
   <LI><B>A frontend GUI</B> that presents likely-vandalism (found on the backend) to human users for classification. The interface is designed to enable the quick review and reversion of poor edits. Moreover, the classification process establishes a feedback loop to improve detection algorithms.</TD></TR></TABLE>
 <BR>
-This document concerns itself primarily with the user-facing GUI. Once installed, STiki requires only that: (1) an <I>Internet connection</I> is maintained (with outbound port 3306 [MySQL] open), and that (2) a user has a <I>Wikipedia account with sufficient permissions</I>, having either: (a) The <A HREF="http://en.wikipedia.org/wiki/Wikipedia:Rollback">rollback permission</A>, (b) greater than 1000 edits to Wikipedia's article namespace, or (c) explicit access as can be request at <A HREF="http://en.wikipedia.org/wiki/Wikipedia_talk:STiki">STiki's talk page</A>. This document proceeds by discussing the STiki components in greater depth. 
+This document concerns itself primarily with the user-facing GUI. Once installed, STiki requires only that: (1) an <I>Internet connection</I> is maintained (with outbound port 3306 [MySQL] open), and that (2) a user has a <I>Wikipedia account with sufficient permissions</I>, having either: (a) The <A HREF="https://en.wikipedia.org/wiki/Wikipedia:Rollback">rollback permission</A>, (b) greater than 1000 edits to Wikipedia's article namespace, or (c) explicit access as can be request at <A HREF="https://en.wikipedia.org/wiki/Wikipedia_talk:STiki">STiki's talk page</A>. This document proceeds by discussing the STiki components in greater depth. 
 <P>
 Summarily, the backend engine populates a number of <A HREF="#sec_queue">edit queues</A> -- one for each scoring technique -- determining which edits a human will classify. In particular, the <A HREF="#sec_stiki_scoring">metadata scoring technique</A> and  <A HREF="#sec_link_spam">anti-link-spam technique</A>, both developed by STiki's authors, are discussed in some detail. Having selected a queue to use, an end-user may use <A HREF="#sec_filter">revision filters</A> to further constrain the edits displayed. 
 <P>
@@ -36,11 +36,11 @@ Also included in this distribution is the <A HREF="#sec_ort">Offline Review Tool
 <P>The "Queue" menu allows a user to select which scoring system is the basis for the edits that will be displayed. Here we briefly describe the different queues available (some of which may be disabled for various reasons):
 
   <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
-    <LI><B>Cluebot-NG:</B> <A HREF="http://en.wikipedia.org/wiki/User:ClueBot_NG">Cluebot-NG</A> (CBNG) is a bot which operates on Wikipedia, using an Artificial Neural Network (ANN) to score edits. The worst scoring edits are undone automatically. However. there are many edits that CBNG is quite confident are vandalism, but cannot revert due to a low false-positive tolerance, the one-revert-rule, or other constraints. These edits form the queue used by STiki. CBNG publishes scores to an IRC feed on which the STiki backend listens. Due to expected performance, this is currently the default queue.<P>
+    <LI><B>Cluebot-NG:</B> <A HREF="https://en.wikipedia.org/wiki/User:ClueBot_NG">Cluebot-NG</A> (CBNG) is a bot which operates on Wikipedia, using an Artificial Neural Network (ANN) to score edits. The worst scoring edits are undone automatically. However. there are many edits that CBNG is quite confident are vandalism, but cannot revert due to a low false-positive tolerance, the one-revert-rule, or other constraints. These edits form the queue used by STiki. CBNG publishes scores to an IRC feed on which the STiki backend listens. Due to expected performance, this is currently the default queue.<P>
 
     <LI><B>STiki (metadata):</B> This scoring system uses the <I>metadata</I> associated with an edit to arrive at vandalism predictions. Metadata includes properties such as the time-of-day an edit was made, the geographical location from which it originated, and the page on which it was made. More detail about this technique is available in the <A HREF="#sec_stiki_scoring">STiki Scoring System</A> section.<P>
 
-    <LI><B>WikiTrust:</B> Built upon editor reputations calculated from content-persistence is the <A HREF="http://en.wikipedia.org/wiki/WikiTrust">WikiTrust</A> system of Adler <I>et al.</I>. More details are available at their <A HREF="http://wikitrust.soe.ucsc.edu/">website</A>. WikiTrust calculates scores on their own servers, which are accessible via a publically available API.<P>
+    <LI><B>WikiTrust:</B> Built upon editor reputations calculated from content-persistence is the <A HREF="https://en.wikipedia.org/wiki/WikiTrust">WikiTrust</A> system of Adler <I>et al.</I>. More details are available at their <A HREF="https://wikitrust.soe.ucsc.edu/">website</A>. WikiTrust calculates scores on their own servers, which are accessible via a publically available API.<P>
 
     <LI><B>Anti-link-spam:</B> This queue targets a subset of the vandalism problem, <I>external link spam</I>. When selected, this queue makes minor changes to the functionality described in this document: (1) the "vandalism" classification button becomes a "spam" one, (2) the default revision comment is altered slightly, and (3) anti-spam warnings are issued on user talk pages instead of generalized "vandalism" ones. More details about the technique can be found in the  <A HREF="#sec_link_spam">Anti-link-spam Scoring</A> section.<P>
 
@@ -49,7 +49,7 @@ Also included in this distribution is the <A HREF="#sec_ort">Offline Review Tool
 
 <P>An additional option in the queue menu allows a user to view <B>"recent usage stats"</B>. The popped dialog will show usage statistics for the prior hour. Large amounts of STiki use in a short period of time may "exhaust" queues and temporarily decrease vandalism hit-rates. A user noticing a high density of recent classifications may wish to return to the tool at a later time or use one of the less popular queues.
 
-<P>A final option in the queue menu allows one to <B>"generate leaderboard"</B>. This locally generates a slightly simplified version of the <A HREF="http://en.wikipedia.org/wiki/Wikipedia:STiki/leaderboard">public STiki leaderboard</A>. It should prove useful for those looking to examine their intra-daily stats and relative performance (whereas the public version only updates once daily).
+<P>A final option in the queue menu allows one to <B>"generate leaderboard"</B>. This locally generates a slightly simplified version of the <A HREF="https://en.wikipedia.org/wiki/Wikipedia:STiki/leaderboard">public STiki leaderboard</A>. It should prove useful for those looking to examine their intra-daily stats and relative performance (whereas the public version only updates once daily).
 <B></B> 
 
   <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
@@ -68,7 +68,7 @@ West, A.G., Kannan, S., and Lee, I (2010). Detecting Wikipedia Vandalism via Spa
 
 That paper was an academic attempt to show that language properties were not necessary to detect Wikipedia vandalism. It succeeded in this regard, but since then system has been relaxed for general-purpose use. For example, metadata processing now includes some simple NLP features. Moreover, there was the decision to integrate other <A HREF="#sec_queue">revision queues</A> in the GUI frontend.
 <P>
-A <A HREF="http://armstrong.cis.upenn.edu/stiki_api_readme.txt">public-facing API</A> has been been made available to the STiki/metadata scores. More can be learned about the software at <A HREF="http://en.wikipedia.org/wiki/WP:STiki">STiki's website</A> (including other citations appropriate for academic use).
+A <A HREF="http://armstrong.cis.upenn.edu/stiki_api_readme.txt">public-facing API</A> has been been made available to the STiki/metadata scores. More can be learned about the software at <A HREF="https://en.wikipedia.org/wiki/WP:STiki">STiki's website</A> (including other citations appropriate for academic use).
 
   <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
 
@@ -83,7 +83,7 @@ A <A HREF="http://armstrong.cis.upenn.edu/stiki_api_readme.txt">public-facing AP
 <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD><I>
 West, A.G., Agarwal, A., Baker, P., Exline, B., and Lee, I. (2011). Autonomous Detection of Link Spam in Purely Collaborative Environments. In WikiSym '11: Proceedings of the Seventh International Symposium on Wikis and Open Collaboration, Mountain View, CA, USA.</I></TD></TR></TABLE><BR>
 
-The "anti-link-spam" queue is described here because it was written by STiki's authors. The source-code is separate from the core-STiki engine, but also available at the <A HREF="http://en.wikipedia.org/wiki/WP:STiki">STiki website</A>. 
+The "anti-link-spam" queue is described here because it was written by STiki's authors. The source-code is separate from the core-STiki engine, but also available at the <A HREF="https://en.wikipedia.org/wiki/WP:STiki">STiki website</A>. 
 
   <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
 
@@ -123,7 +123,7 @@ At the top-center of the diff browser is the name of the article on which <I>x</
 <P>
 The presentation is intuitive. If content exists on the left-side but the corresponding right-side is empty, this is indicative of a text block which edit <I>x</I> <B>deleted</B>. Vice versa, a populated right-side with an empty left-side shows a text block which edit <I>x</I> <B>added</B>. When text is <B>modified</B> or fine-granularity changes are made, there is content on both the left and right-hand sides and the changed text is bold-faced red.
 <P>
-Otherwise, the diff browser is unremarkable. The diff is purely text-based -- image/table/figure content is not rendered and will instead show only the `code-behind' (<I>i.e.,</I> the markup language used to add the special content). An option in the "options" menu permits external hyperlinks/references (<I>i.e.,</I> any text of the form "http://...") to be activated (made click-able). These links will open in the user's default web browser. While this may be helpful in detecting spamming and other undesirable linking behaviors, do note that external pages may contain offensive, explicit, or malicious content.
+Otherwise, the diff browser is unremarkable. The diff is purely text-based -- image/table/figure content is not rendered and will instead show only the `code-behind' (<I>i.e.,</I> the markup language used to add the special content). An option in the "options" menu permits external hyperlinks/references (<I>i.e.,</I> any text of the form "https://...") to be activated (made click-able). These links will open in the user's default web browser. While this may be helpful in detecting spamming and other undesirable linking behaviors, do note that external pages may contain offensive, explicit, or malicious content.
 
   <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
 
@@ -234,7 +234,7 @@ Finally, the <B>last revert panel</B> provides links so that the contributions o
 
   <BR><TABLE ALIGN="LEFT" WIDTH="100%" CELLSPACING="15"><TR><TD>
 
-    <LI><B>Other Vandalism-Fighting Tools:</B> There are many tools in both literature and active use on Wikipedia that aim to curb vandalism. STiki does not intend to compete against these alternative systems, but complement them. STiki's novelty lies in the fact it is an <I>intelligent routing tool</I>, directing humans to those edits needing inspection. In some ways, STiki is similar to the vandalism reversion GUI, <A HREF="http://en.wikipedia.org/wiki/WP:Huggle">Huggle</A>. However, Huggle uses simple static rules to prioritize edits, whereas STiki uses dynamic machine-learning strategies. Further, STiki is written in Java and is platform independent.<P>
+    <LI><B>Other Vandalism-Fighting Tools:</B> There are many tools in both literature and active use on Wikipedia that aim to curb vandalism. STiki does not intend to compete against these alternative systems, but complement them. STiki's novelty lies in the fact it is an <I>intelligent routing tool</I>, directing humans to those edits needing inspection. In some ways, STiki is similar to the vandalism reversion GUI, <A HREF="https://en.wikipedia.org/wiki/WP:Huggle">Huggle</A>. However, Huggle uses simple static rules to prioritize edits, whereas STiki uses dynamic machine-learning strategies. Further, STiki is written in Java and is platform independent.<P>
 
     <LI><B>Expected Performance:</B> The performance of STiki is ultimately dependent on the <A HREF="#sec_queue">revision queue</A> being utilized. In some cases, offline/academic studies have measured the performance of these systems (for example, the <A HREF="#sec_stiki_scoring">STiki scoring system</A> <I>could</I> score around a 50% hit-rate). In practice, expected performance is much harder to quantify when running in a live fashion. Competing (often autonomous) tools cut performance rates dramatically, since STiki users won't see vandalism that has already been reverted. Even so, STiki has proven particularly adept at finding <I>embedded vandalism</I>, that which escapes initial detection.<P>
 
@@ -243,7 +243,7 @@ Finally, the <B>last revert panel</B> provides links so that the contributions o
     <LI><B>Depth-of-Search:</B> Realize that performance measures (both actual and user-perceived) depend on the extent to which the <A HREF="#sec_queue">revision queues</A> are "populated" (<I>i.e., </I> how full they are). While not formally defined, it is intuitive that a large user-base will progress deep into the queues. In such a circumstance, popped revisions will have a lower probability of being vandalism than if few users were occasionally using the tool. With greater depth-of-search comes decreased detection-rates.
   </TD></TR></TABLE><BR>
 
-Suggestions for improving STiki performance are welcomed.  Feel free to contact the STiki-author(s), whose contact data is available via the "About STiki" menu, or post discussion to <A HREF="http://en.wikipedia.org/wiki/Wikipedia_talk:STiki">STiki's talk page</A>.
+Suggestions for improving STiki performance are welcomed.  Feel free to contact the STiki-author(s), whose contact data is available via the "About STiki" menu, or post discussion to <A HREF="https://en.wikipedia.org/wiki/Wikipedia_talk:STiki">STiki's talk page</A>.
 
   <BR><BR><CENTER>^ <A HREF="#sec_top">Return to Top</A> ^</CENTER><BR><HR>
 

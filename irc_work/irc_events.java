@@ -22,7 +22,7 @@ public class irc_events implements IRCEventListener{
 	 * regex below are deemed to be of interest, and RID is parsed from URL.
 	 */
 	private static String DIFF_URL_REGEX = 
-		"http://en.wikipedia.org/w/index\\.php\\?diff=(\\d)+&oldid=(\\d)+";
+		"https://en.wikipedia.org/w/index\\.php\\?diff=(\\d)+&oldid=(\\d)+";
 	
 	/**
 	 * Structure to which RIDs in need of processing should be written (this

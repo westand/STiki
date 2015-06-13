@@ -8,7 +8,7 @@
 ################ TODO ###############
 
   * Basic TODO tasks are now managed on STiki's talk page:
-    http://en.wikipedia.org/wiki/Wikipedia_talk:STiki
+    https://en.wikipedia.org/wiki/Wikipedia_talk:STiki
 
 
 #### TOO SMALL/DISTANT TO MENTION ####

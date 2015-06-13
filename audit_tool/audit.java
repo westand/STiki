@@ -145,8 +145,8 @@ public class audit{
 			// Hacky way to modify what is normally a static connection
 			// String (in the context of larger STiki use).
 		String api_query_str = API_PATH;
-		if(!API_PATH.startsWith("http://"))
-			api_query_str = "http://" + api_query_str;
+		if(!API_PATH.startsWith("https://"))
+			api_query_str = "https://" + api_query_str;
 		if(!API_PATH.endsWith("/"))
 			api_query_str += "/";
 		API_PATH = api_query_str;

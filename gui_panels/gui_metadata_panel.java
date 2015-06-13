@@ -171,28 +171,28 @@ public class gui_metadata_panel extends JPanel implements
 		try{
 			
 			if(event.getSource().equals(this.link_user_cont))
-				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"Special:Contributions/" + this.cur_pkg.metadata.user);
 			if(event.getSource().equals(this.link_user_user))
-				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"User:" + this.cur_pkg.metadata.user);
 			if(event.getSource().equals(this.link_user_talk))
-				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"User_talk:" + this.cur_pkg.metadata.user +
 					"?vanarticle=" + this.cur_pkg.metadata.title); // Twinkle
 			if(event.getSource().equals(this.link_title))
-				gui_globals.open_url(this, "http://en.wikipedia.org/w/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?title=" + URLEncoder.encode(
 					this.cur_pkg.metadata.title, "UTF-8"));
 			if(event.getSource().equals(this.link_title_hist))
-				gui_globals.open_url(this, "http://en.wikipedia.org/w/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?title=" + URLEncoder.encode(
 					this.cur_pkg.metadata.title, "UTF-8") + "&action=history");
 			if(event.getSource().equals(this.link_title_talk))
-				gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"Talk:" + this.cur_pkg.metadata.title);
 			if(event.getSource().equals(this.link_rid))	
-				gui_globals.open_url(this, "http://en.wikipedia.org/w/" +
+				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?oldid=" + this.cur_pkg.page_hist.get(
 					this.cur_pkg.rb_depth).rid + "&diff=cur");
 			

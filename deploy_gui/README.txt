@@ -68,7 +68,7 @@
   and the homepage for the STiki tool:
   
     [*] West, A.G. (2011). STiki: An Anti-Vandalism Tool for Wikipedia
-    (software). Available from http://en.wikipedia.org/wiki/WP:STiki
+    (software). Available from https://en.wikipedia.org/wiki/WP:STiki
     
   those interested in the link-spam queue in particular should see:
   
@@ -83,12 +83,12 @@
   STiki was written by Andrew G. West and supported in part by 
   ONR-MURI-N00014-07-1-0907. He may be reached at 
   [last_name]+and@cis.upenn.edu. His website is:
-  [http://www.cis.upenn.edu/~westand]
+  [http://www.andrew-g-west.com]
   
   If you would like more information about STiki, like to check for
   version updates, or anything else; visit STiki's online presence:
   
-  http://en.wikipedia.org/wiki/Wikipedia:STiki
+  https://en.wikipedia.org/wiki/Wikipedia:STiki
   
 
 #################################### END ####################################

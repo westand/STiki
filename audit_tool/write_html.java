@@ -51,7 +51,7 @@ public class write_html{
 			"on a per-IP basis. " +
 			"\n<BR><BR>\n" +
 			"Bear in mind that this tool only considers edits made by " +
-			"<A HREF=\"http://en.wikipedia.org/wiki/Wikipedia:User_access_" +
+			"<A HREF=\"https://en.wikipedia.org/wiki/Wikipedia:User_access_" +
 			"levels#Unregistered_users\">unregistered</A> users. If someone " +
 			"in the IP space has a registered username and participates " +
 			"using that, it will not appear in these results. While useful " +
@@ -66,15 +66,15 @@ public class write_html{
 			"malicious users/contributions, which are <FONT COLOR=\"red\">" +
 			"<B>highlighted red</B></FONT> in the raw report data:" +
 			"\n<BR><BR>\n" +
-			"<LI> Users that have a <A HREF=\"http://en.wikipedia.org/wiki/" +
+			"<LI> Users that have a <A HREF=\"https://en.wikipedia.org/wiki/" +
 			"Wikipedia:Block\">block history</A> are likely the most " +
 			"problematic. However, the details of the block should be " +
 			"investigated (use the provided link), as it could be the result " +
-			"of collateral damage from a broad <A HREF=\"http://" +
+			"of collateral damage from a broad <A HREF=\"https://" +
 			"en.wikipedia.org/wiki/Wikipedia:Range_block#Range_blocks\">" +
 			"IP-range block</A>." +
 			"\n<BR><BR>\n" +
-			"<LI> Some users have a <A HREF=\"http://en.wikipedia.org/wiki/" +
+			"<LI> Some users have a <A HREF=\"https://en.wikipedia.org/wiki/" +
 			"Help:Using_talk_pages\">talk page</A>. Good (often, registered) " +
 			"editors use these for discussion and coordination. However, in " +
 			"the vast majority of cases, when an IP address has a talk page " +
@@ -82,7 +82,7 @@ public class write_html{
 			"transgressions." +
 			"\n<BR><BR>\n" +
 			"<LI> If a talk page exists for an IP, WikiAudit scans it for " +
-			"commonly-used <A HREF=\"http://en.wikipedia.org/wiki/" +
+			"commonly-used <A HREF=\"https://en.wikipedia.org/wiki/" +
 			"Wikipedia:Warning\">warning templates</A>. If vandalism/spam " +
 			"warnings are found, this is included in the WikiAudit report. " +
 			"Realize that when multiple such warnings accumulate in some " +
@@ -91,10 +91,10 @@ public class write_html{
 			"<LI> Talk pages (when they exist) can also be used to provide " +
 			"the wiki administration information about the nature of the IP " +
 			"address. For example, some IPs that map to <A HREF=\"" +
-			"http://en.wikipedia.org/wiki/Template:Shared_IP_edu\">" +
-			"educational institutions</A>, <A HREF=\"http://en.wikipedia.org/" +
+			"https://en.wikipedia.org/wiki/Template:Shared_IP_edu\">" +
+			"educational institutions</A>, <A HREF=\"https://en.wikipedia.org/" +
 			"wiki/Template:Shared_IP_corp\">corporations</A>, and " +
-			"<A HREF=\"http://en.wikipedia.org/wiki/Template:Shared_IP\">" +
+			"<A HREF=\"https://en.wikipedia.org/wiki/Template:Shared_IP\">" +
 			"generic shared/DHCP space</A> all have templates identifying " +
 			"them as such. If you administrate the IP addresses, it may be " +
 			"wise to label the talk pages appropriately and provide an " +
@@ -113,10 +113,10 @@ public class write_html{
 			"especially encourage administrators to review the edit diff's " +
 			"when the article topic is one related to the host " +
 			"organization/institution. Individuals advancing their own " +
-			"agenda to the detriment of <A HREF=\"http://en.wikipedia.org/" +
+			"agenda to the detriment of <A HREF=\"https://en.wikipedia.org/" +
 			"wiki/Wikipedia:NPOV\">neutral-point-of-view (NPOV)</A> policies " +
 			"is not well received. Similarly, there may be policies against " +
-			"<A HREF=\"http://en.wikipedia.org/wiki/Wikipedia:OR\">" +
+			"<A HREF=\"https://en.wikipedia.org/wiki/Wikipedia:OR\">" +
 			"original-research (OR)</A>" +
 			"\n<BR><BR>\n" +
 			"<I>So how should all of this be used?</I> We assume network/IT " +
@@ -139,7 +139,7 @@ public class write_html{
 			"WikiAudit should function reasonably for any MediaWiki wiki " +
 			"using an English installation. Support for foreign MediaWiki " +
 			"wikis is untested. Want to improve this? Visit " +
-			"<A HREF=\"http://en.wikipedia.org/wiki/WP:WikiAudit\">" +
+			"<A HREF=\"https://en.wikipedia.org/wiki/WP:WikiAudit\">" +
 			"WikiAudit</A> online and learn how to contribute to coding " +
 			"and localization efforts.<BR>\n";
 	
@@ -211,7 +211,7 @@ public class write_html{
 			// Reporting the input arguments
 		StringBuilder header = new StringBuilder();
 		header.append("<H2>INTRODUCTION</H2>\n");
-		header.append("This is a <A HREF=\"http://en.wikipedia.org/wiki/" +
+		header.append("This is a <A HREF=\"https://en.wikipedia.org/wiki/" +
 				"WP:WikiAudit\">WikiAudit</A> report, generated with " +
 				"the following parameters:<BR><BR>\n");
 		header.append("  Conn. string:   " + PARENT_AUDIT.API_PATH + "<BR>\n");

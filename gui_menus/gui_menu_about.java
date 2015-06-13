@@ -87,7 +87,7 @@ public class gui_menu_about extends JMenu implements ActionListener{
 			try{open_about_panel();}
 			catch(Exception e){}
 		}else if(event.getSource().equals(item_website)){
-			String url = "http://en.wikipedia.org/wiki/Wikipedia:STiki";
+			String url = "https://en.wikipedia.org/wiki/Wikipedia:STiki";
 			gui_globals.open_url(this, url);
 		} // Simple action-event handlers
 	}

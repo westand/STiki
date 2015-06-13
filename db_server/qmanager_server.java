@@ -82,7 +82,7 @@ public class qmanager_server{
 			else delete_pid(sys, pid);
 			db_scores_stiki.insert_classification(rid, score);
 			irc_out.msg(irc_output.CHANNELS.STIKI_SCORES, 
-					rid + " " + score + " " + "http://en.wikipedia.org/w/" +
+					rid + " " + score + " " + "https://en.wikipedia.org/w/" +
 					"index.php?oldid=" + rid + "&diff=prev");
 		} else if(sys.equals(SCORE_SYS.CBNG)){
 			if(enqueue)

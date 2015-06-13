@@ -180,20 +180,20 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent event){
 		
 		if(event.getSource().equals(this.link_contribs))	
-			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+			gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"Special:Contributions/" + this.guilty_user);
 		else if(event.getSource().equals(this.link_talk))	
-			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+			gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"User_talk:" + this.guilty_user +
 					"?vanarticle=" + this.last_page); // Twinkle
 		else if(event.getSource().equals(this.link_page))	
-			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" +
+			gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					this.last_page);
 		else if(event.getSource().equals(this.aiv_notify_link_aiv))
-			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" + 
+			gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" + 
 					"WP:AIV");
 		else if(event.getSource().equals(this.aiv_notify_link_utalk))
-			gui_globals.open_url(this, "http://en.wikipedia.org/wiki/" + 
+			gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" + 
 					"User_talk:" + this.guilty_user);
 	}
 	
