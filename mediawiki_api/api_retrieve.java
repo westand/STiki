@@ -751,7 +751,7 @@ public class api_retrieve{
 		//if((cookie != null) && (!cookie.equals("")))
 		//	conn2.setRequestProperty("Cookie", cookie);
 		//InputStream in2 = stream_from_url(conn2, api_retrieve.NUM_HTTP_RETRIES);
-		//System.out.println(wiki_utils.capture_stream(in2));
+		//System.out.println(stiki_utils.capture_stream(in2));
 		
 			// Having an InputStream, parse the XML it contains
 		SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -1122,6 +1122,7 @@ public class api_retrieve{
 		url = url.substring(0, url.length()-1); // Trim off trailing bar
 		url += "&uclimit=500&ucstart=" + timestamp;
 		url += "&ucprop=ids&ucdir=newer&format=xml";
+		url += "&rawcontinue=1"; // 2015-JUL: Needed if continuation
 		return(url);	
 	}
 
@@ -1151,6 +1152,7 @@ public class api_retrieve{
 		if(ns != Integer.MAX_VALUE)
 			url += "&ucnamespace=" + ns;
 		url += "&format=xml";
+		url += "&rawcontinue=1"; // 2015-JUL: Needed if continuation
 		return(url);
 	}
 	
@@ -1199,6 +1201,7 @@ public class api_retrieve{
 			url += "&cmcontinue=" + continue_key;
 		url += "&cmlimit=500";
 		url += "&format=xml";
+		url += "&rawcontinue=1"; // 2015-JUL: Needed if continuation
 		return(url);
 	}
 	
@@ -1219,6 +1222,7 @@ public class api_retrieve{
 		if(start_time != null)
 			url+= "&drstart=" + start_time;
 		url += "&drlimit=1&format=xml";
+		url += "&rawcontinue=1"; // 2015-JUL: Needed if continuation
 		return(url);
 	}
 	
@@ -1245,6 +1249,7 @@ public class api_retrieve{
 			url += "&clcontinue=" + continue_key;
 		url += "&cllimit=500";
 		url += "&format=xml";
+		url += "&rawcontinue=1"; // 2015-JUL: Needed if continuation
 		return(url);
 	}
 	

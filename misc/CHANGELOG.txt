@@ -12,6 +12,16 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2015-07-02 - EMERGENCY RELEASE
+  		# The WMF has changed the way pagination/continuation is handled for
+  		  API queries that produce many results. This breaks some legacy code,
+  		  but curiously, one can still use the "legacy approach" by providing
+  		  an additional parameter with requests. Some more WMF details are at:
+  			[https://lists.wikimedia.org/pipermail/wikitech-l/2015-June/081931.html].
+  			Internal to STiki this primarily affects the permission check of 
+  			"1000+ edits in NS0". Users who who rely on this criteria will likely
+  			need to upgrade in order to use STiki. 
+  			
   * 2015-06-13 - EMERGENCY RELEASE
   		# The WMF now requires all communication to be HTTPS. While STiki has 
   		  long had an HTTPS option, for those that did not have it enabled, 
