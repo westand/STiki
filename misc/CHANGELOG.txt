@@ -12,6 +12,9 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2016-XX-XX
+  		# Links fixed in the "AIV notification popup" dialog
+  
   * 2015-07-02 - EMERGENCY RELEASE
   		# The WMF has changed the way pagination/continuation is handled for
   		  API queries that produce many results. This breaks some legacy code,

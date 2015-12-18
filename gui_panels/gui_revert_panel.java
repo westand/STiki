@@ -271,9 +271,9 @@ public class gui_revert_panel extends JPanel implements ActionListener{
 			"against Vandalism\" (AIV).<BR><BR>");
 		
 		JButton aiv_notify_link_aiv = gui_globals.create_link(
-				"Current version of [[WP:AIV]]", false, null);
+				"Current version of [[WP:AIV]]", false, this);
 		JButton aiv_notify_link_utalk = gui_globals.create_link(
-				"User talk page of offending editor", false, null);
+				"User talk page of offending editor", false, this);
 		
 		JLabel pane_text2 = gui_globals.plain_multiline_label(
 			"<BR>You may wish to confirm the legitimacy of that report. <BR>" +
