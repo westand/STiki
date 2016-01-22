@@ -12,7 +12,12 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2016-XX-XX
+  * 2016-01-22 - EMERGENCY RELEASE
+  		# Seemingly related to WMF changes in the "SessionManager" module,
+  		  the way STiki handles cookies needed to be modified. Because sessions
+  		  were failing, edit tokens were not being obtained, and all
+  		  revert/editing actions were failing. This breaks all functionality
+  		  and an update requirement is being pushed. 
   		# Links fixed in the "AIV notification popup" dialog
   
   * 2015-07-02 - EMERGENCY RELEASE

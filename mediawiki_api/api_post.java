@@ -110,7 +110,7 @@ public class api_post{
 		api_xml_login token_handler = new api_xml_login();
 		do_parse_work(con_token.getInputStream(), token_handler);
 		String lgtoken = token_handler.get_result();
-		String token_cookie = get_cookie_from_response(con_token);
+		String token_cookie = wiki_login_cookie(con_token);
 		
 			// We append this token to the previous request (second phase) --
 			// Response is sufficient to build Wikipedia session cookie
@@ -119,7 +119,9 @@ public class api_post{
 		URLConnection con_cookie = post(post_data, token_cookie);
 		api_xml_login cookie_handler = new api_xml_login();
 		do_parse_work(con_cookie.getInputStream(), cookie_handler);
-		return(cookie_handler.get_result());
+		if(cookie_handler.get_result().contains(";"))
+			return(cookie_handler.get_result());
+		else return(null);
 	}
 	
 	/**
@@ -431,20 +433,22 @@ public class api_post{
 	}
 	
 	/**
-	 * Fetch a cookie sent from a URL connection/response.
+	 * Fetch a cookie obtained during Wikipedia's intermediate "NEEDTOKEN"
+	 * login phase. This looks for just a single cookie amongst many, 
+	 * that named "enWikiSession".
 	 * @param uc URL connection/response containing a cookie object
-	 * @return String version of the cookie object sent by 'uc'. It may
-	 * be possible for a response to contain multiple cookies. This method
-	 * should not be used in that case; only when 0 or 1 cookies are expected.
-	 * Empty string is returned if no cookies are present.
+	 * @return The "enwikiSession" cookie, if one exists, that is part of 'uc'.
+	 * NULL will be returned if such a cookie does not exist. 
 	 */
-	private static String get_cookie_from_response(URLConnection uc){
-		String cookie = "", headerName = null;
+	private static String wiki_login_cookie(URLConnection uc){
+		String headerName = null;
 		for(int i=1; (headerName = uc.getHeaderFieldKey(i)) != null; i++){
-		    if(headerName.equalsIgnoreCase("Set-Cookie"))
-		    	cookie += uc.getHeaderField(i); // Must APPEND
+		    if(headerName.equalsIgnoreCase("Set-Cookie")){
+		    	if(uc.getHeaderField(i).startsWith("enwikiSession"))
+		    		return(uc.getHeaderField(i));
+		    }
 		} // An HTTP response contains many headers; not all cookies
-		return(cookie);
+		return(null);
 	}
 
 }
