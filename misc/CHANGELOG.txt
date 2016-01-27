@@ -12,6 +12,9 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2016-XX-XX
+  		# Cleaned up code transitioning to implicitly-managed CookieManager
+  
   * 2016-01-22 - EMERGENCY RELEASE
   		# Seemingly related to WMF changes in the "SessionManager" module,
   		  the way STiki handles cookies needed to be modified. Because sessions
