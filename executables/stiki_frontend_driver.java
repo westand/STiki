@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,7 +23,6 @@ import core_objects.stiki_utils;
 import core_objects.stiki_utils.QUEUE_TYPE;
 import core_objects.stiki_utils.SCORE_SYS;
 import db_client.client_interface;
-
 import gui_edit_queue.edit_queue;
 import gui_edit_queue.gui_display_pkg;
 import gui_menus.gui_menu_bar;
@@ -219,6 +221,11 @@ public class stiki_frontend_driver extends JFrame{
 		
 			// Initialize communication to back-end DB (client version)
 		this.client_interface = ci;
+		
+			// Global cookie management for all HTTP 
+		CookieManager cm = new java.net.CookieManager(
+				null, CookiePolicy.ACCEPT_ALL);
+		CookieHandler.setDefault(cm);
 		
 			// Prepare work threads, go ahead and put static ones to work
 		SCORE_SYS default_queue = client_interface.default_queue();

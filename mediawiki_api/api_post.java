@@ -4,9 +4,6 @@ import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -101,11 +98,6 @@ public class api_post{
 	 */
 	public static boolean process_login(String user, String pass) 
 			throws Exception{
-		
-			// Setup implicit cookie handling 
-		CookieManager cm = new java.net.CookieManager(
-				null, CookiePolicy.ACCEPT_ALL);
-		CookieHandler.setDefault(cm);
 		
 			// Build the initial request, and POST it
 		String post_data = "action=login";
