@@ -4,6 +4,9 @@ import gui_panels.gui_login_panel.STIKI_WATCHLIST_OPTS;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -25,7 +28,7 @@ import core_objects.pair;
  * 
  * 		[1]:  "login" -- Provided credentials, log a user onto Wikipedia --
  * 			  and return a cookie with session variables/tokens. As of Apr.
- * 		      2010, this is a two-step process.
+ * 		      2010, this is a two-step process. More modifications in 2016-01
  * 		[2]:  "logout" -- Terminate a login session to Wikipedia
  * 		[3]:  "revert" -- Given an RID, revert the edit
  * 		[4]:  "rollback" -- Rollback from a page version
@@ -89,46 +92,50 @@ public class api_post{
 	
 	/**
 	 * Given credentials, login a user to Wikipedia (session-wise) --
-	 * returning cookie-data sufficient to maintain a login-session
+	 * obtaining cookie-data sufficient to maintain a login-session
 	 * @param user User-name of user to be logged in
 	 * @param pass Password associated with user 'user'
-	 * @return A semicolon separated list of pairs of the form "key=value", 
-	 * which constitute a cookie, and need to be issued with edit requests. 
-	 * If the login attempt falls for any reason, the structure will be NULL.
+	 * @return TRUE if the login succceded, FALSE otherwise. Note that
+	 * as of 2016-01 cookies are not explicitly constructed or passed.
+	 * An upstream CookieManager object handles this implicitly. 
 	 */
-	public static String process_login(String user, String pass) 
+	public static boolean process_login(String user, String pass) 
 			throws Exception{
+		
+			// Setup implicit cookie handling 
+		CookieManager cm = new java.net.CookieManager(
+				null, CookiePolicy.ACCEPT_ALL);
+		CookieHandler.setDefault(cm);
 		
 			// Build the initial request, and POST it
 		String post_data = "action=login";
 		post_data += "&lgname=" + URLEncoder.encode(user, "UTF-8"); 
 		post_data += "&lgpassword=" + URLEncoder.encode(pass, "UTF-8"); 
-		URLConnection con_token = post(post_data + "&format=xml", null);
-
-			// Given this initial post, we get the token returned, and build
-			// a temporary cookie containing a session identifier.
+		URLConnection con_token = post(post_data + "&format=xml");
 		api_xml_login token_handler = new api_xml_login();
 		do_parse_work(con_token.getInputStream(), token_handler);
 		String lgtoken = token_handler.get_result();
-		String token_cookie = wiki_login_cookie(con_token);
-		
+
 			// We append this token to the previous request (second phase) --
-			// Response is sufficient to build Wikipedia session cookie
-		post_data += "&lgtoken=" + URLEncoder.encode(lgtoken, "UTF-8"); 
+			// Response stores needed cookies in implicit CookieManager
+		post_data += "&lgtoken=" + URLEncoder.encode(lgtoken, "UTF-8");
 		post_data += "&format=xml";
-		URLConnection con_cookie = post(post_data, token_cookie);
+		URLConnection con_cookie = post(post_data);
 		api_xml_login cookie_handler = new api_xml_login();
 		do_parse_work(con_cookie.getInputStream(), cookie_handler);
-		if(cookie_handler.get_result().contains(";"))
-			return(cookie_handler.get_result());
-		else return(null);
+		
+		if(cookie_handler.get_result().equalsIgnoreCase("SUCCESS"))
+			return(true);
+		else return(false);
 	}
 	
 	/**
 	 * Terminate the current session, as initiated by [process_login()].
+	 * It is assumed implicit CookieManager handling will remove
+	 * all cookies/session-date of the previously logged-in user. 
 	 */
 	public static void process_logout() throws Exception{
-		post("action=logout", null);
+		post("action=logout");
 	}
 	
 	/**
@@ -138,17 +145,13 @@ public class api_post{
 	 * @param summary Edit-summary to associate with reversion
 	 * @param minor Whether or not the edit should be marked 'minor'
 	 * @param token Edit token to edit page 'rid' -- user/session specific
-	 * @param session_cookie Cookie string (as returned at login), which
-	 * indicates the user doing the editing (in combination with 'token').
-	 * Anonymous sessions should simply pass in NULL or the empty string.
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_revert(long rid, String title, 
 			String summary, boolean minor, pair<String,String> edit_token,
-			String session_cookie, EDIT_WATCHLIST watchlist, 
-			boolean assert_user) throws Exception{
+			EDIT_WATCHLIST watchlist,  boolean assert_user) throws Exception{
 		
 			// Building post-string is straightforward. Fields known not
 			// to contain special characters are not encoded.
@@ -165,7 +168,7 @@ public class api_post{
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
-		return(api_post.post(post_data, session_cookie).getInputStream());
+		return(api_post.post(post_data).getInputStream());
 	}
 	
 	/**
@@ -175,14 +178,13 @@ public class api_post{
 	 * @param user The OFFENDING EDITOR who will be rolled-back
 	 * @param summary Edit summary to leave with the rollback action
 	 * @param rb_token Rollback token (fetched at RID granularity)
-	 * @param cookie Cookie string (as returned at login) identifying user
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_rollback(String title, String user, 
-			String summary, String rb_token, String cookie, 
-			EDIT_WATCHLIST watchlist, boolean assert_user) throws Exception{
+			String summary, String rb_token, EDIT_WATCHLIST watchlist, 
+			boolean assert_user) throws Exception{
 		
 		String post_data = "action=rollback";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
@@ -193,7 +195,7 @@ public class api_post{
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
-		return(api_post.post(post_data, cookie).getInputStream());
+		return(api_post.post(post_data).getInputStream());
 	}
 	
 	/**
@@ -203,7 +205,6 @@ public class api_post{
 	 * @param append_text Text to be be appended to the page
 	 * @param minor Whether or not the edit should be marked 'minor'
 	 * @param token Edit token specific to user editing
-	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
@@ -211,8 +212,8 @@ public class api_post{
 	 */
 	public static InputStream edit_append_text(String title, String summary, 
 			String append_text, boolean minor, pair<String,String> edit_token, 
-			String cookie, boolean force, EDIT_WATCHLIST watchlist, 
-			boolean assert_user) throws Exception{
+			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user) 
+					throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
 		String post_data = "action=edit";
@@ -230,7 +231,7 @@ public class api_post{
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
-		return(api_post.post(post_data, cookie).getInputStream()); // Do it!
+		return(api_post.post(post_data).getInputStream()); // Do it!
 	}
 	
 	/**
@@ -240,7 +241,6 @@ public class api_post{
 	 * @param minor Whether or not the edit should be marked 'minor'
 	 * @param prepend_text Text to be be prepended to the page
 	 * @param token Edit token specific to user editing
-	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
@@ -248,8 +248,8 @@ public class api_post{
 	 */
 	public static InputStream edit_prepend_text(String title, String summary, 
 			String prepend_text, boolean minor, pair<String,String> edit_token,
-			String cookie, boolean force, EDIT_WATCHLIST watchlist, 
-			boolean assert_user) throws Exception{
+			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user) 
+			throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
 		String post_data = "action=edit";
@@ -267,7 +267,7 @@ public class api_post{
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
-		return(api_post.post(post_data, cookie).getInputStream()); // Do it!
+		return(api_post.post(post_data).getInputStream()); // Do it!
 	}
 	
 	/**
@@ -277,7 +277,6 @@ public class api_post{
 	 * @param append_text Text to be be appended to the page
 	 * @param minor Whether or not the edit should be marked 'minor'
 	 * @param token Edit token specific to user editing
-	 * @param cookie Cookie so edit will be mapped to logged-in user
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
@@ -285,8 +284,8 @@ public class api_post{
 	 */
 	public static InputStream edit_full_text(String title, String summary,
 			String full_text, boolean minor, pair<String,String> edit_token, 
-			String cookie, boolean force, EDIT_WATCHLIST watchlist, 
-			boolean assert_user) throws Exception{
+			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user) 
+			throws Exception{
 		
 		String post_data = "action=edit";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
@@ -303,7 +302,7 @@ public class api_post{
 		if(assert_user)
 			post_data += "&assert=user";
 		post_data += "&format=xml";
-		return(api_post.post(post_data, cookie).getInputStream()); // Do it!	
+		return(api_post.post(post_data).getInputStream()); // Do it!	
 	}
 	
 	/**
@@ -311,12 +310,10 @@ public class api_post{
 	 * @param rid Revision ID for which to approve an edit
 	 * @param edit_token An edit token retrieved for the page(?)
 	 * @param comment Optional comment to post with review
-	 * @param cookie Cookie so action will be mapped to logged-in user
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream review_rid(long rid, 
-			pair<String,String> edit_token, String comment, String cookie) 
-					throws Exception{
+			pair<String,String> edit_token, String comment) throws Exception{
 		
 		String post_data = "action=review";
 		post_data += "&revid=" + rid;
@@ -324,7 +321,7 @@ public class api_post{
 		if(comment != null && comment.length() > 0)
 			post_data += "&comment=" + URLEncoder.encode(comment, "UTF-8");
 		post_data += "&format=xml";
-		return(api_post.post(post_data, cookie).getInputStream());
+		return(api_post.post(post_data).getInputStream());
 	}
 	
 	/**
@@ -386,6 +383,19 @@ public class api_post{
 		return(handler.get_result());
 	}
 	
+	/**
+	 * Print to STDOUT all cookies returned from a connection, including
+	 * the metadata associated with those cookie objects.
+	 * @param uc URL connection/response containing a cookie object
+	 */
+	public static void get_cookies_metadata(URLConnection uc){
+		String headerName = null;
+		for(int i=1; (headerName = uc.getHeaderFieldKey(i)) != null; i++){
+		    if(headerName.equalsIgnoreCase("Set-Cookie"))
+		    	System.out.println(uc.getHeaderField(i));
+		} // An HTTP response contains many headers; not all cookies
+	}
+
 	
 	// *************************** PRIVATE METHODS ***************************
 
@@ -400,16 +410,16 @@ public class api_post{
 	 * @return The URLConnection created/used. The HTTP response can easily be
 	 * obtained by calling the con.getInputStream() method.
 	 */
-	private static URLConnection post(String post_data, String cookie) 
-			throws Exception{
+	private static URLConnection post(String post_data) throws Exception{
 		
 			// Open up the connection
 		URL url = new URL(base_url()); 
 		URLConnection conn = url.openConnection(); 
 		
+			// REMOVED 2016-01; towards implicit cookie handling
 			// If provided, insert the cookie data into headers
-		if((cookie != null) && (!cookie.equals("")))
-			conn.setRequestProperty("Cookie", cookie);
+		/*if((cookie != null) && (!cookie.equals("")))
+			conn.setRequestProperty("Cookie", cookie); */
 		
 			// Then make the POST request
 		conn.setDoOutput(true); 
@@ -430,25 +440,6 @@ public class api_post{
 		SAXParser parser = factory.newSAXParser();
 		parser.parse(in, handler); // Parse
 		in.close(); // Close up the URL-connection
-	}
-	
-	/**
-	 * Fetch a cookie obtained during Wikipedia's intermediate "NEEDTOKEN"
-	 * login phase. This looks for just a single cookie amongst many, 
-	 * that named "enWikiSession".
-	 * @param uc URL connection/response containing a cookie object
-	 * @return The "enwikiSession" cookie, if one exists, that is part of 'uc'.
-	 * NULL will be returned if such a cookie does not exist. 
-	 */
-	private static String wiki_login_cookie(URLConnection uc){
-		String headerName = null;
-		for(int i=1; (headerName = uc.getHeaderFieldKey(i)) != null; i++){
-		    if(headerName.equalsIgnoreCase("Set-Cookie")){
-		    	if(uc.getHeaderField(i).startsWith("enwikiSession"))
-		    		return(uc.getHeaderField(i));
-		    }
-		} // An HTTP response contains many headers; not all cookies
-		return(null);
 	}
 
 }

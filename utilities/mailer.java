@@ -85,13 +85,13 @@ public class mailer{
 	public static void main(String[] args) throws Exception{
 	
 		pair<String,String> edit_token;
-		String cookie = api_post.process_login(SEND_USER, SEND_PASS);
+		api_post.process_login(SEND_USER, SEND_PASS);
 		List<String> pages = pages_to_target();
 		for(int i=0; i < pages.size(); i++){
-			edit_token = api_retrieve.process_edit_token(pages.get(i), cookie);
+			edit_token = api_retrieve.process_edit_token(pages.get(i));
 			api_post.edit_append_text(pages.get(i), COMMENT, MESSAGE.replace(
 					"#u#", pages.get(i).replace("User_talk:", "")), 
-					false, edit_token, cookie, false, 
+					false, edit_token, false, 
 					EDIT_WATCHLIST.NOCHANGE, true);
 			System.out.println("Message posted to: " + pages.get(i));
 			Thread.sleep(1000 * 45);

@@ -244,7 +244,7 @@ public class query_wiki{
 	private pair<metadata,metadata> query_edit_this_next(long pid, long rid) 
 			throws Exception{
 		List<metadata> md_list = 
-				api_retrieve.process_page_next_meta(pid, rid, 2, "", null);
+				api_retrieve.process_page_next_meta(pid, rid, 2, null);
 		if(md_list.size() == 0)
 			return(new pair<metadata,metadata>(null, null));
 		else if(md_list.size() == 1)

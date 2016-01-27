@@ -68,11 +68,6 @@ public class gui_fb_handler implements Runnable{
 	private String summary;
 	
 	/**
-	 * Session cookie so revert action can be mapped to STiki user.
-	 */
-	private String session_cookie;
-	
-	/**
 	 * Whether or not the editing user has native rollback permissions.
 	 */
 	private boolean user_has_native_rb;
@@ -118,8 +113,8 @@ public class gui_fb_handler implements Runnable{
 	 */
 	public gui_fb_handler(stiki_frontend_driver parent, FB_TYPE fb, 
 			gui_display_pkg edit_pkg, String user, String summary, 
-			String session_cookie, boolean user_has_native_rb, 
-			boolean rollback, STIKI_WATCHLIST_OPTS watchlist_opt, boolean warn, 
+			boolean user_has_native_rb, boolean rollback, 
+			STIKI_WATCHLIST_OPTS watchlist_opt, boolean warn, 
 			String usr_talk_msg, gui_revert_panel gui_revert_panel, 
 			ExecutorService threads){
 		
@@ -129,7 +124,6 @@ public class gui_fb_handler implements Runnable{
 		this.md = edit_pkg.page_hist.get(0);
 		this.user = user;
 		this.summary = summary;
-		this.session_cookie = session_cookie;
 		this.user_has_native_rb = user_has_native_rb;
 		this.rollback = rollback;
 		this.watchlist_opt = watchlist_opt;
@@ -199,8 +193,8 @@ public class gui_fb_handler implements Runnable{
 			// Being by reverting the edit on Wikipedia (threaded)
 			// Should be a straightforward rollback w/o warning
 		threads.submit(new gui_revert_and_warn(FB_TYPE.AGF, edit_pkg, summary, 
-				session_cookie, user_has_native_rb, rollback, 
-				watchlist_opt, warn, usr_talk_msg, gui_revert_panel));
+				user_has_native_rb, rollback, watchlist_opt, warn, 
+				usr_talk_msg, gui_revert_panel));
 		
 		try{parent.client_interface.feedback_insert( // RID delete internal
 					md.rid, fb_constant(fb, edit_pkg.source_queue), user);
@@ -225,7 +219,7 @@ public class gui_fb_handler implements Runnable{
 			// Note that 'fb' can be (FB_TYPE.GUILTY || FB_TYPE.GUILTY_4IM)
 			//
 		threads.submit(new gui_revert_and_warn(fb, edit_pkg, 
-			summary, session_cookie, user_has_native_rb, rollback, 
+			summary, user_has_native_rb, rollback, 
 			watchlist_opt, warn, usr_talk_msg, gui_revert_panel));
 		
 		try{parent.client_interface.feedback_insert( // RID delete internal

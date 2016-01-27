@@ -32,11 +32,6 @@ public class edit_queue_fetcher implements Runnable{
 	private long pid;
 	
 	/**
-	 * Session-cookie, s.t. the edit-token obtained maps to some user.
-	 */
-	private String session_cookie;
-	
-	/**
 	 * Whether or not an edit token should be obtained. Users using 
 	 * rollback will not require this extra API call.
 	 */
@@ -60,15 +55,13 @@ public class edit_queue_fetcher implements Runnable{
 	 * Construct an [edit_queue_fetcher]. The arguments to this constructor
 	 * have already been described, as they are the private vars of this class.
 	 */
-	public edit_queue_fetcher(stiki_frontend_driver parent, 
-			long rid,  long pid, String session_cookie, 
+	public edit_queue_fetcher(stiki_frontend_driver parent, long rid, long pid,
 			boolean using_native_rb, SCORE_SYS source_queue,
 			LinkedBlockingQueue<gui_display_pkg> shared_queue){
 		
 		this.parent = parent;
 		this.rid = rid;
 		this.pid = pid;
-		this.session_cookie = session_cookie;
 		this.using_native_rb = using_native_rb;
 		this.source_queue = source_queue;
 		this.shared_queue = shared_queue;
@@ -86,8 +79,7 @@ public class edit_queue_fetcher implements Runnable{
 		try{
 				// Fetch the data, a simple call to a static method
 			gui_display_pkg cur_edit = gui_display_pkg.create_if_most_recent(
-					parent, rid, pid, session_cookie, 
-					using_native_rb, source_queue);
+					parent, rid, pid, using_native_rb, source_queue);
 			
 				// Having obtained all data, we can also check the edit
 				// against user-set filters from the STiki menu. 

@@ -355,9 +355,9 @@ public class stiki_frontend_driver extends JFrame{
 		boolean login_change = login_panel.check_and_reset_state_change();
 		if((fb_type.equals(FB_TYPE.AGF) || fb_type.equals(FB_TYPE.GUILTY) || 
 				fb_type.equals(FB_TYPE.GUILTY_4IM)) && login_change){
-			edit_queue.refresh_edit_token(login_panel.get_session_cookie());
+			edit_queue.refresh_edit_token();
 			if(login_panel.editor_using_native_rb())
-				edit_queue.refresh_rb_token(login_panel.get_session_cookie());
+				edit_queue.refresh_rb_token();
 		}	// If editing user has changed internal to this edit, and
 			// we are going to revert/rollback, then tokens need renewed.
 			// An edit token is ALWAYS needed (for placing user-talk warning)
@@ -371,9 +371,9 @@ public class stiki_frontend_driver extends JFrame{
 			// This sanity check should be unnecessary -- but somewhere (cache
 			// clearing?) -- missing tokens aren't getting populated
 		if(edit_pkg.get_token() == null)
-			edit_pkg.refresh_edit_token(login_panel.get_session_cookie());
+			edit_pkg.refresh_edit_token();
 		if(login_panel.editor_using_native_rb() && md.rb_token == null)
-			edit_pkg.refresh_rb_token(login_panel.get_session_cookie());
+			edit_pkg.refresh_rb_token();
 		
 			// Provide data necessary to provide feedback, wrap as a threaded
 			// object; certain parts dependent on feedback nature
@@ -399,7 +399,6 @@ public class stiki_frontend_driver extends JFrame{
 		fb_task = new gui_fb_handler(this, fb_type, edit_pkg,
 				login_panel.get_editing_user(),
 				comment_panel.get_comment(edit_pkg, ct), 
-				login_panel.get_session_cookie(),
 				login_panel.editor_has_native_rb(),
 				login_panel.rb_checkbox_selected(),
 				login_panel.watchlist_combobox(),
@@ -483,7 +482,6 @@ public class stiki_frontend_driver extends JFrame{
 		
 			// Fetch new edit, and display it in GUI		
 		edit_queue.next_rid(login_panel.get_editing_user(), 
-				login_panel.get_session_cookie(), 
 				login_panel.editor_using_native_rb(), 
 				menu_bar.selected_queue(), previous, false);
 		diff_browser.display_content(edit_queue.get_cur_edit());

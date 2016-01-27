@@ -231,7 +231,6 @@ public class gui_display_pkg{
 	 * @param parent Root GUI class containing all DB-handlers
 	 * @param rid Revision-ID of edit under inspection
 	 * @param pid Page-ID (article) on which 'rid' resides
-	 * @param cookie Cookie encoding user-mapping data
 	 * @param using_native_rb Whether or not an edit token should be obtained.
 	 * One is not needed if rollback being used (will be set to NULL)
 	 * @return A fully populated [gui_display_pkg] will be returned. If a 
@@ -239,14 +238,13 @@ public class gui_display_pkg{
 	 * return NULL if 'rid' is not the most recent revision on page 'pid'.
 	 */
 	public static gui_display_pkg create_if_most_recent(
-			stiki_frontend_driver parent, long rid, long pid, String cookie, 
+			stiki_frontend_driver parent, long rid, long pid,
 			boolean using_native_rb, SCORE_SYS source_queue) throws Exception{
 			
 		try{	// Begin by fetching recent page metadata
 				// Multiple RIDs are returned to determine rollback-depth
 			List<metadata> page_hist = api_retrieve.process_page_hist_meta(
-					pid, gui_display_pkg.HIST_DEPTH, cookie, 
-					parent.client_interface);
+					pid, gui_display_pkg.HIST_DEPTH, parent.client_interface);
 			
 			if((page_hist.size() == 0 && (api_retrieve.process_badrevid(rid) ||  
 					api_retrieve.process_page_missing(pid))) || 
@@ -260,7 +258,7 @@ public class gui_display_pkg{
 				
 			pair<String,String> edit_token;
 			if(!using_native_rb) // Fetch edit token, if not using native RB
-				edit_token = api_retrieve.process_edit_token(pid, cookie);
+				edit_token = api_retrieve.process_edit_token(pid);
 			else edit_token = null;
 						
 			int edits_to_rb = 0;
@@ -336,7 +334,7 @@ public class gui_display_pkg{
 		} catch(CommunicationsException e){
 			parent.reset_connection(false);
 			return(create_if_most_recent(parent, rid, pid, 
-					cookie, using_native_rb, source_queue));
+					using_native_rb, source_queue));
 		} // If a CommunicationsFailure, reset the connection and retry 
 		catch(Exception e){
 			// e.printStackTrace();
@@ -423,19 +421,16 @@ public class gui_display_pkg{
 
 	/**
 	 * Update method: Update RB token of the metadata object
-	 * @param session_cookie Cookie with which update should take place
 	 */
-	public void refresh_rb_token(String session_cookie) throws Exception{
-		this.metadata.refresh_rb_token(session_cookie);
+	public void refresh_rb_token() throws Exception{
+		this.metadata.refresh_rb_token();
 	}
 	
 	/**
 	 * Update method: Update the edit tokens of this object.
-	 *  @param session_cookie Cookie with which update should take place
 	 */
-	public void refresh_edit_token(String session_cookie) throws Exception{
-		this.edit_token = api_retrieve.process_edit_token(
-				this.metadata.pid, session_cookie);
+	public void refresh_edit_token() throws Exception{
+		this.edit_token = api_retrieve.process_edit_token(this.metadata.pid);
 	}
 	
 }

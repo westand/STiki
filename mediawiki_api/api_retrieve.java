@@ -125,7 +125,7 @@ public class api_retrieve{
 	public static metadata process_basic_rid(long rid, db_geolocation db_geo) 
 			throws Exception{
 		api_xml_basic_rid handler = new api_xml_basic_rid(db_geo);
-		do_parse_work(new URL(url_basic_rid(rid)), null, handler);
+		do_parse_work(new URL(url_basic_rid(rid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -134,47 +134,17 @@ public class api_retrieve{
 	 * not handle the GEOLOCATION portion, and sets the COUNTRY field
 	 * of the returned metadata object to the empty string.
 	 * @param rid Revision-ID (RID) of the edit of interest
-	 * @param session_cookie Cookie unique to fetching user (for RB token)
 	 * @return Metadata of edit 'rid', nor null if it could not be found.
 	 */
 	public static metadata process_basic_rid(long rid) throws Exception{
 		api_xml_basic_rid handler = new api_xml_basic_rid(null);
-		do_parse_work(new URL(url_basic_rid(rid)), null, handler);
-		return(handler.get_result()); // Return result from parser
-	}
-	
-	/**
-	 * Given an RID, retrieve basic edit metadata.
-	 * @param rid Revision-ID (RID) of the edit of interest
-	 * @param session_cookie Cookie unique to fetching user (for RB token)
-	 * @param db_geo DB-handler so edit source can be determined
-	 * @return Metadata of edit 'rid', nor null if it could not be found.
-	 */
-	public static metadata process_basic_rid(long rid, String session_cookie, 
-			db_geolocation db_geo) throws Exception{
-		api_xml_basic_rid handler = new api_xml_basic_rid(db_geo);
-		do_parse_work(new URL(url_basic_rid(rid)), session_cookie, handler);
-		return(handler.get_result()); // Return result from parser
-	}
-	
-	/**
-	 * Given an RID, retrieve basic edit metadata. Note this version does
-	 * not handle the GEOLOCATION portion, and sets the COUNTRY field
-	 * of the returned metadata object to the empty string.
-	 * @param rid Revision-ID (RID) of the edit of interest
-	 * @param session_cookie Cookie unique to fetching user (for RB token)
-	 * @return Metadata of edit 'rid', nor null if it could not be found.
-	 */
-	public static metadata process_basic_rid(long rid, String session_cookie) 
-			throws Exception{
-		api_xml_basic_rid handler = new api_xml_basic_rid(null);
-		do_parse_work(new URL(url_basic_rid(rid)), session_cookie, handler);
+		do_parse_work(new URL(url_basic_rid(rid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
 	/**
 	 * Given a LIST of RIDs, retrieve their edit metadata. This is a more
-	 * effecient version than if one were to call the above 
+	 * efficient version than if one were to call the above 
 	 * [process_basic_rid()] method multiple times.
 	 * @param rid_list List of RIDs whose metadata is desired
 	 * @param db_geo DB-handler so edit source can be determined
@@ -185,7 +155,7 @@ public class api_retrieve{
 	public static List<metadata> process_multiple_rids(List<Long> rid_list, 
 			db_geolocation db_geo) throws Exception{
 		api_xml_multiple_rids handler = new api_xml_multiple_rids(db_geo);
-		do_parse_work(new URL(url_multiple_rids(rid_list)), null, handler);
+		do_parse_work(new URL(url_multiple_rids(rid_list)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -203,7 +173,7 @@ public class api_retrieve{
 		
 		api_xml_find_off handler = new api_xml_find_off(uc_offender);
 		String offender_url = url_offender_search(pid, flag_rid, search_depth);
-		do_parse_work(new URL(offender_url), null, handler);
+		do_parse_work(new URL(offender_url), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -214,7 +184,7 @@ public class api_retrieve{
 	 */
 	public static Set<String> process_user_perm(String user) throws Exception{
 		api_xml_user_perm handler = new api_xml_user_perm(user);
-		do_parse_work(new URL(url_user_perm(user)), null, handler);
+		do_parse_work(new URL(url_user_perm(user)), handler);
 		return(handler.get_result()); // Return result from object
 	}
 	
@@ -225,7 +195,7 @@ public class api_retrieve{
 	 */
 	public static long process_user_first_edit_ts(String user) throws Exception{
 		api_xml_user_first handler = new api_xml_user_first();
-		do_parse_work(new URL(url_user_first_edit(user)), null, handler);
+		do_parse_work(new URL(url_user_first_edit(user)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -239,7 +209,7 @@ public class api_retrieve{
 	public static long process_prior_page_edit_ts(long pid, long rid) 
 			throws Exception{
 		api_xml_page_prior handler = new api_xml_page_prior();
-		do_parse_work(new URL(url_prior_page_edit(pid, rid)), null, handler);
+		do_parse_work(new URL(url_prior_page_edit(pid, rid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 
@@ -254,7 +224,7 @@ public class api_retrieve{
 			throws Exception{
 			// Note the same XML-handler is used as in the "prior TS" case.
 		api_xml_page_prior handler = new api_xml_page_prior();
-		do_parse_work(new URL(url_newer_page_edit(pid, rid)), null, handler);
+		do_parse_work(new URL(url_newer_page_edit(pid, rid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 
@@ -272,7 +242,7 @@ public class api_retrieve{
 	 */
 	public static int process_size_change(long pid, long rid) throws Exception{
 		api_xml_size_change handler = new api_xml_size_change();
-		do_parse_work(new URL(url_size_change(pid, rid)), null, handler);
+		do_parse_work(new URL(url_size_change(pid, rid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -283,7 +253,7 @@ public class api_retrieve{
 	 */
 	public static String process_diff_prev(long rid) throws Exception{
 		api_xml_diff_text handler = new api_xml_diff_text();
-		do_parse_work(new URL(url_diff_prev(rid)), null, handler);
+		do_parse_work(new URL(url_diff_prev(rid)), handler);
 		return(handler.get_result()); // Return result from parser	
 	}
 	
@@ -294,7 +264,7 @@ public class api_retrieve{
 	 */
 	public static String process_diff_current(long rid) throws Exception{		
 		api_xml_diff_text handler = new api_xml_diff_text();
-		do_parse_work(new URL(url_diff_current(rid)), null, handler);
+		do_parse_work(new URL(url_diff_current(rid)), handler);
 		return(handler.get_result()); // Return result from parser	
 	}
 	
@@ -307,7 +277,7 @@ public class api_retrieve{
 	public static Map<Long,Long> process_latest_page(
 			Set<Long> pid_set) throws Exception{
 		api_xml_latest_page handler = new api_xml_latest_page();
-		do_parse_work(new URL(url_latest_page(pid_set)), null, handler);
+		do_parse_work(new URL(url_latest_page(pid_set)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -325,7 +295,7 @@ public class api_retrieve{
 		
 		Set<Long> pid_set = Collections.singleton(pid);
 		api_xml_latest_page handler = new api_xml_latest_page();
-		do_parse_work(new URL(url_latest_page(pid_set)), null, handler);
+		do_parse_work(new URL(url_latest_page(pid_set)), handler);
 		return(handler.get_result().values().iterator().next());
 	}
 	
@@ -334,17 +304,13 @@ public class api_retrieve{
 	 * (which is session specific to the user logged-in), as well as (2) the 
 	 * timestamp at which the token was obtained (to detect edit conflicts).
 	 * @param pid Page-ID (article) on which token should be obtained.
-	 * @param session_cookie User-specific list of semicolon separated values
-	 * of the form "key=value", which are a cookie on MediaWiki requests an
-	 * encode user-login data. Cookies are obtained at log-in. If a user is
-	 * editing anonymously, either the empty string or null may be passed.
 	 * @return Pair whose first element is the edit token, and whose second
 	 * element is the time the token was obtained (in YYYYMMDDHHMMSS format). 
 	 */
-	public static pair<String,String> process_edit_token(long pid, 
-			String session_cookie) throws Exception{
+	public static pair<String,String> process_edit_token(long pid) 
+			throws Exception{
 		api_xml_edit_token handler = new api_xml_edit_token();
-		do_parse_work(new URL(url_edit_token(pid)), session_cookie, handler);
+		do_parse_work(new URL(url_edit_token(pid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -353,10 +319,10 @@ public class api_retrieve{
 	 * to the methods which share this name, EXCEPT this version expects
 	 * the page TITLE rather than an identifying PID.
 	 */
-	public static pair<String,String> process_edit_token(String page, 
-			String session_cookie) throws Exception{
+	public static pair<String,String> process_edit_token(String page) 
+			throws Exception{
 		api_xml_edit_token handler = new api_xml_edit_token();
-		do_parse_work(new URL(url_edit_token(page)), session_cookie, handler);
+		do_parse_work(new URL(url_edit_token(page)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -367,7 +333,7 @@ public class api_retrieve{
 	 */
 	public static String process_page_content(String title) throws Exception{
 		api_xml_page_content handler = new api_xml_page_content();
-		do_parse_work(new URL(url_page_content(title)), null, handler);
+		do_parse_work(new URL(url_page_content(title)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -380,7 +346,7 @@ public class api_retrieve{
 	public static String process_page_content(long rid) throws Exception{
 			// Note that handler for current content can be re-used
 		api_xml_page_content handler = new api_xml_page_content();
-		do_parse_work(new URL(url_page_content(rid)), null, handler);
+		do_parse_work(new URL(url_page_content(rid)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -393,7 +359,7 @@ public class api_retrieve{
 	public static boolean process_block_status(String user, boolean is_ip) 
 			throws Exception{
 		api_xml_block_status handler = new api_xml_block_status();
-		do_parse_work(new URL(url_block_status(user, is_ip)), null, handler);
+		do_parse_work(new URL(url_block_status(user, is_ip)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -405,7 +371,7 @@ public class api_retrieve{
 	 */
 	public static boolean process_page_flagged(long pid) throws Exception{
 		api_xml_page_flagged handler = new api_xml_page_flagged();
-		do_parse_work(new URL(url_page_flagged(pid)), null, handler);
+		do_parse_work(new URL(url_page_flagged(pid)), handler);
 		return(handler.get_result());
 	}
 	
@@ -417,7 +383,7 @@ public class api_retrieve{
 	 */
 	public static boolean process_page_protected(long pid) throws Exception{
 		api_xml_page_protected handler = new api_xml_page_protected();
-		do_parse_work(new URL(url_page_protected(pid)), null, handler);
+		do_parse_work(new URL(url_page_protected(pid)), handler);
 		return(handler.get_result());
 	}
 	
@@ -431,7 +397,7 @@ public class api_retrieve{
 	public static boolean process_autoconfirmed_status(String user) 
 			throws Exception{
 		api_xml_autoconfirmed handler = new api_xml_autoconfirmed(user);
-		do_parse_work(new URL(url_autoconfirmed(user)), null, handler);
+		do_parse_work(new URL(url_autoconfirmed(user)), handler);
 		return(handler.get_result());
 	}
 	
@@ -439,15 +405,14 @@ public class api_retrieve{
 	 * Get metadata for the last [n] edits made to an article
 	 * @param pid Unique ID which identifies a particular article
 	 * @param n Depth-of-search into article history
-	 * @param cookie Unique cookie associated with editing user
 	 * @param db_geo DB-handler so edit source can be determined
 	 * @return List of up to 'n' metadata objects, from most recent to
 	 * least recent, from the history of article 'pid'
 	 */
 	public static List<metadata> process_page_hist_meta(long pid, int n, 
-			String cookie, db_geolocation db_geo) throws Exception{
+			db_geolocation db_geo) throws Exception{
 		api_xml_multiple_rids handler = new api_xml_multiple_rids(db_geo);
-		do_parse_work(new URL(url_last_n_page_meta(pid, n)), cookie, handler);
+		do_parse_work(new URL(url_last_n_page_meta(pid, n)), handler);
 		return(handler.get_result());
 	}
 	
@@ -456,15 +421,14 @@ public class api_retrieve{
 	 * @param pid Unique ID identifying the article of interest
 	 * @param rid RID (on PID) at which to begin enumerating edits (inclusive)
 	 * @param n Maximum number of future edits to return
-	 * @param cookie Unique cookie associated with editing user
 	 * @param db_geo DB-handler so edit source can be determined
 	 * @return List of up to 'n' metadata objects, from least recent to 
 	 * most recent, beginning at 'rid', from the history of article 'pid'
 	 */
 	public static List<metadata> process_page_next_meta(long pid, long rid, 
-			int n, String cookie, db_geolocation db_geo) throws Exception{
+			int n, db_geolocation db_geo) throws Exception{
 		api_xml_multiple_rids handler = new api_xml_multiple_rids(db_geo);
-		do_parse_work(new URL(url_next_n_page_meta(pid, rid, n)), cookie, handler);
+		do_parse_work(new URL(url_next_n_page_meta(pid, rid, n)), handler);
 		return(handler.get_result());
 	}
 	
@@ -472,15 +436,14 @@ public class api_retrieve{
 	 * Get metadata for the last [n] edits made to an article
 	 * @param pid Unique ID which identifies a particular article
 	 * @param n Depth-of-search into article history
-	 * @param cookie Unique cookie associated with editing user
 	 * @param client Client DB connection (for geo-location purposes)
 	 * @return List of up to 'n' metadata objects, from most recent to
 	 * least recent, from the history of article 'pid'
 	 */
 	public static List<metadata> process_page_hist_meta(long pid, int n, 
-			String cookie, client_interface client) throws Exception{
+			client_interface client) throws Exception{
 		api_xml_multiple_rids handler = new api_xml_multiple_rids(client);
-		do_parse_work(new URL(url_last_n_page_meta(pid, n)), cookie, handler);
+		do_parse_work(new URL(url_last_n_page_meta(pid, n)), handler);
 		return(handler.get_result());
 	}
 	
@@ -491,7 +454,7 @@ public class api_retrieve{
 	 */
 	public static boolean process_badrevid(long rid) throws Exception{
 		api_xml_badrevid handler = new api_xml_badrevid();
-		do_parse_work(new URL(url_basic_rid(rid)), null, handler);
+		do_parse_work(new URL(url_basic_rid(rid)), handler);
 			// This could be handled with a slightly more minimal URL
 			// generator, but for now, sticking with code-reuse
 		return(handler.get_result()); // Return result from parser
@@ -504,7 +467,7 @@ public class api_retrieve{
 	 */
 	public static boolean process_page_missing(long pid) throws Exception{
 		api_xml_page_missing handler = new api_xml_page_missing();
-		do_parse_work(new URL(url_page_protected(pid)), null, handler);
+		do_parse_work(new URL(url_page_protected(pid)), handler);
 			// This could be handled with a slightly more minimal URL
 			// generator, but for now, sticking with code-reuse
 		return(handler.get_result());
@@ -521,7 +484,7 @@ public class api_retrieve{
 	public static Set<String> process_xlinks(long pid, int offset) 
 			throws Exception{
 		api_xml_xlink handler = new api_xml_xlink(pid);
-		do_parse_work(new URL(url_xlink(pid, offset)), null, handler);
+		do_parse_work(new URL(url_xlink(pid, offset)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -536,7 +499,7 @@ public class api_retrieve{
 	public static List<pair<Long,String>> process_block_hist(String user) 
 			throws Exception{
 		api_xml_block_hist handler = new api_xml_block_hist();
-		do_parse_work(new URL(url_block_hist(user)), null, handler);
+		do_parse_work(new URL(url_block_hist(user)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -549,7 +512,7 @@ public class api_retrieve{
 	public static Map<String,Long> process_pages_touched(Set<String> pages) 
 			throws Exception{
 		api_xml_page_touched handler = new api_xml_page_touched();
-		do_parse_work(new URL(url_page_touched(pages)), null, handler);
+		do_parse_work(new URL(url_page_touched(pages)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -565,7 +528,7 @@ public class api_retrieve{
 	public static List<pair<Long,Long>> process_joint_contribs(
 			List<String> users, String timestamp) throws Exception{
 		api_xml_joint_contribs handler = new api_xml_joint_contribs(users);
-		do_parse_work(new URL(url_joint_contribs(users, timestamp)), null, handler);
+		do_parse_work(new URL(url_joint_contribs(users, timestamp)), handler);
 		return(handler.get_result()); // Return result from parser
 	}	
 	
@@ -603,7 +566,7 @@ public class api_retrieve{
 				new api_xml_user_edits_date(user, ns, 
 						start_num, break_num, batch_size);
 		do_parse_work(new URL(url_user_edits_date(
-				user, ns, ts_prev, continue_key, batch_size)), null, handler);
+				user, ns, ts_prev, continue_key, batch_size)), handler);
 		return(handler.get_result()); // Return result from parser
 	} 
 	
@@ -617,7 +580,7 @@ public class api_retrieve{
 	 */
 	public static long process_user_edits(String user) throws Exception{
 		api_xml_user_edits_ever handler = new api_xml_user_edits_ever();
-		do_parse_work(new URL(url_user_edits_ever(user)), null, handler);
+		do_parse_work(new URL(url_user_edits_ever(user)), handler);
 		return(handler.get_result()); // Return result from parser
 	} 
 	
@@ -630,7 +593,7 @@ public class api_retrieve{
 	public static Set<String> process_pages_missing(Set<String> page_list) 
 			throws Exception{
 		api_xml_pages_missing handler = new api_xml_pages_missing();
-		do_parse_work(new URL(url_pages_missing(page_list)), null, handler);
+		do_parse_work(new URL(url_pages_missing(page_list)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -655,7 +618,7 @@ public class api_retrieve{
 		api_xml_cat_members handler = 
 				new api_xml_cat_members(category, recursive, cats_traversed);
 		do_parse_work(new URL(url_cat_members(
-				category, continue_key)), null, handler);
+				category, continue_key)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -668,8 +631,6 @@ public class api_retrieve{
 	 * @param start_time If a previous query exceeded the return limit, 
 	 * this field can be used to continue that query from a particular
 	 * timestamp. To start a new query, NULL should simply be provided
-	 * @param cookie Login cookie; this is validated to show that the user
-	 * has enough permissions to make this protected call
 	 * @return A list of deleted revisions by 'user'. The list elements are 
 	 * pairs, whose first element is the revision metadata object, and the 
 	 * second element is revision content in String form (if content=false, 
@@ -677,12 +638,11 @@ public class api_retrieve{
 	 * regarding list order.
 	 */
 	public static List<pair<metadata, String>> process_deleted_revs(String user, 
-			boolean do_content, String start_time, String cookie) 
-			throws Exception{
+			boolean do_content, String start_time) throws Exception{
 		api_xml_deleted_revs handler = new api_xml_deleted_revs(
-				user, do_content, cookie);
+				user, do_content);
 		do_parse_work(new URL(url_deleted_revs(
-				user, do_content, start_time)), cookie, handler);
+				user, do_content, start_time)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	 
@@ -701,7 +661,7 @@ public class api_retrieve{
 		api_xml_page_cats handler = 
 				new api_xml_page_cats(page, hidden);
 		do_parse_work(new URL(url_page_cats(
-				page, hidden, continue_key)), null, handler);
+				page, hidden, continue_key)), handler);
 		return(handler.get_result()); // Return result from parser
 	}
 	
@@ -717,7 +677,7 @@ public class api_retrieve{
 		
 		api_xml_size_time handler = new api_xml_size_time();
 		do_parse_work(new URL(url_size_time(
-				page, time, title_encoded)), null, handler);
+				page, time, title_encoded)), handler);
 		return(handler.get_result()); // Return result from parser	
 	}
 	
@@ -727,19 +687,17 @@ public class api_retrieve{
 	/**
 	 * Handle the XML parsing of a document, given a URL and XML-handler.
 	 * @param url URL of the MediaWiki XML that needs to be parsed
-	 * @param cookie String of semicolon-separated pairs of the form 
-	 * "key=value", which are cookie elements sent with the HTTP request.
-	 * If the request doesn't require these session variables, or if the
-	 * user is anonymous, either null or the empty string may be passed.
 	 * @param dh XML handler for data contained in 'url'
 	 */
-	private static void do_parse_work(URL url, String cookie, 
+	private static void do_parse_work(URL url,
 			DefaultHandler handler) throws Exception{
 	
 			// Get connection, insert cookie header data (if applicable)
 		URLConnection conn = url.openConnection();
+		
+		/* REMOVED 2016-01; Cookie handling now implicit
 		if((cookie != null) && (!cookie.equals("")))
-			conn.setRequestProperty("Cookie", cookie);
+			conn.setRequestProperty("Cookie", cookie); */
 
 			// Open up InputStream to URL, method handles retries
 		InputStream in = stream_from_url(conn, api_retrieve.NUM_HTTP_RETRIES);

@@ -208,11 +208,9 @@ public class metadata{
 	/**
 	 * Refresh the RB token associated with an edit (for example, if the
 	 * logged in user changed since the previous fetch).
-	 * @param session_cookie Cookie with which RB token should be fetched
 	 */
-	public void refresh_rb_token(String session_cookie) throws Exception{
-		this.rb_token = api_retrieve.process_basic_rid(
-				this.rid, session_cookie).rb_token;
+	public void refresh_rb_token() throws Exception{
+		this.rb_token = api_retrieve.process_basic_rid(this.rid).rb_token;
 	}
 	
 	/**

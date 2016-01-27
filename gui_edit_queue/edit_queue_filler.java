@@ -76,12 +76,6 @@ public class edit_queue_filler implements Runnable{
 	private String stiki_user;
 	
 	/**
-	 * Session cookie to be passed along with MediaWiki requests so that 
-	 * revert and edit actions will be mapped to 'user'
-	 */
-	private String session_cookie;
-	
-	/**
 	 * Is the 'stiki_user' using the native rollback  functionality to 
 	 * undo edits? (precondition: they have the privileges to do so)
 	 */
@@ -126,7 +120,6 @@ public class edit_queue_filler implements Runnable{
 		
 			// Initialize all queue-determinant fields to default criteria
 		this.stiki_user = "";
-		this.session_cookie = "";
 		this.using_native_rb = false;
 		this.queue_in_use = default_queue;
 	}
@@ -158,7 +151,7 @@ public class edit_queue_filler implements Runnable{
 					futures.add(new pair<Future<?>,Long>(
 							threads.submit(new edit_queue_fetcher(
 							parent, rid_pid_pair.fst, rid_pid_pair.snd, 
-							session_cookie, using_native_rb, queue_in_use, 
+							using_native_rb, queue_in_use, 
 							rid_queue_cache)), rid_pid_pair.fst));				
 				} else
 					Thread.sleep(10); // Prevent over-spinning if full queue
@@ -180,18 +173,16 @@ public class edit_queue_filler implements Runnable{
 	 * the correct user. THE CHALLENGE, HOWEVER, IS MAKING SURE THESE CHANGES
 	 * ARE ALSO REFLECTED IN CACHED/ENQUEUED EDITS AS WELL
 	 * @param stiki_user Current STiki user
-	 * @param cookie Session cookie associated with 'stiki_user'
 	 * @param using_native_rb Is the 'stiki_user' using the native rollback
 	 * functionality to undo edits (precondition: they have the privilege)
 	 * @param queue Queue from which next edit should be fetched
 	 */
-	public void new_user_settings(String stiki_user, String cookie, 
+	public void new_user_settings(String stiki_user,
 			boolean using_native_rb, SCORE_SYS queue){
 		
 			// Changing this variables should cause all new fetch-requests
 			// to occur under new parameters. Clear
 		this.stiki_user = stiki_user;
-		this.session_cookie = cookie;
 		this.using_native_rb = using_native_rb;
 		this.queue_in_use = queue;
 

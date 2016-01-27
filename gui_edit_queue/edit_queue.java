@@ -137,7 +137,6 @@ public class edit_queue{
 	 * @param stiki_user STiki user who is obtaining the RID
 	 * @param using_native_rb Is the 'stiki_user' using the native rollback
 	 * functionality to undo edits? (precondition: they have the privilege)
-	 * @param session_cookie Cookie object associated with 'stiki_user'
 	 * @param using_native_rb Is the 'stiki_user' using the native rollback
 	 * functionality to undo edits? (precondition: they have the privilege)
 	 * @param queue Queue from which next edit should be fetched
@@ -146,7 +145,7 @@ public class edit_queue{
 	 * @param reattempt If TRUE, this is a first attempt to get a revision.
 	 * If FALSE, it indicates the failure of the immediately prior attempt.
 	 */
-	public void next_rid(String stiki_user, String session_cookie, 
+	public void next_rid(String stiki_user, 
 			boolean using_native_rb, SCORE_SYS queue, boolean prev, 
 			boolean reattempt){
 		
@@ -156,8 +155,8 @@ public class edit_queue{
 			this.stiki_user = stiki_user;
 			this.using_native_rb = using_native_rb;
 			this.queue_in_use = queue;
-			this.queue_filler.new_user_settings(stiki_user, 
-					session_cookie, using_native_rb, queue);
+			this.queue_filler.new_user_settings(
+					stiki_user, using_native_rb, queue);
 		}	// If not the same base settings as last edit, we need
 			// to inform filler, as queue may need cleared, re-filled.
 		
@@ -183,8 +182,7 @@ public class edit_queue{
 				cur_edit = rid_queue_cache.poll();
 				if(edits_shown.contains(cur_edit.metadata.rid) || 
 						!queue_maintainer.active(cur_edit.metadata.rid, true)){
-					next_rid(stiki_user, session_cookie, 
-							using_native_rb, queue, prev, true);
+					next_rid(stiki_user, using_native_rb, queue, prev, true);
 				} else edits_shown.add(cur_edit.metadata.rid);
 				
 			} // If back button not involved, advance normally queue
@@ -201,20 +199,18 @@ public class edit_queue{
 	 * Refresh the rb-token associated with the current-RID (that last 
 	 * popped off the queue). This is needed, for example, if a user's login
 	 * status changes internally to viewing a single edit.
-	 * @param session_cookie Cookie associated with session (login-specific).
 	 */
-	public void refresh_rb_token(String session_cookie) throws Exception{
-		this.cur_edit.refresh_rb_token(session_cookie);
+	public void refresh_rb_token() throws Exception{
+		this.cur_edit.refresh_rb_token();
 	}
 	
 	/**
 	 * Refresh the edit-token associated with the current-RID (that last 
 	 * popped off the queue). This is needed, for example, if a user's login
 	 * status changes internally to viewing a single edit.
-	 * @param session_cookie Cookie associated with session (login-specific).
 	 */
-	public void refresh_edit_token(String session_cookie) throws Exception{
-		this.cur_edit.refresh_edit_token(session_cookie);
+	public void refresh_edit_token() throws Exception{
+		this.cur_edit.refresh_edit_token();
 	}
 	
 	/**

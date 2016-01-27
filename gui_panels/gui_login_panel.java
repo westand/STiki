@@ -100,13 +100,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	
 	
 	// **************************** PRIVATE FIELDS ***************************
-
-	/**
-	 * The "cookie" associated with the currently logged in user, containing
-	 * cryptographic data necessary to associate edits to a user. This may be
-	 * null or the empty string for users editing anonymously.
-	 */
-	private String session_cookie;
 	
 	/**
 	 * The user-name or IP address of the editor using the STiki-frontend.
@@ -290,16 +283,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	 */
 	public boolean is_state_stable(){
 		return (this.is_state_stable);
-	}
-	
-	/**
-	 * Return the session cookie associated with the current login.
-	 * @return Session cookie associated with the current login. In the case
-	 * no user is logged in (i.e., anonymous editing), this method will
-	 * return the empty string.
-	 */
-	public String get_session_cookie(){
-		return (this.session_cookie);
 	}
 	
 	/**
@@ -560,7 +543,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 			// Reset session-variables.
 		this.is_state_stable = true;
 		this.state_changed = true;
-		this.session_cookie = null;
 		this.editing_user = this.get_machine_ip();
 		this.editor_has_native_rb = false;
 		
@@ -614,8 +596,8 @@ public class gui_login_panel extends JPanel implements ActionListener{
 			return;
 		
 			// Having passed reqs; proceed with login
-		this.session_cookie = api_post.process_login(user, pass);
-		if(this.session_cookie == null) // if login fails
+		boolean login_success = api_post.process_login(user, pass);
+		if(!login_success) // if login fails
 			label_status.setText("Log-in Failed");
 		else{
 				// We have a new editing user
@@ -670,7 +652,6 @@ public class gui_login_panel extends JPanel implements ActionListener{
 		
 			// Terminate the Wikipedia session, blank local session variables
 		api_post.process_logout();
-		this.session_cookie = null;
 		this.is_state_stable = false;
 		
 			// Enable log-in fields

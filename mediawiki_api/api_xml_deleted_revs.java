@@ -30,12 +30,6 @@ public class api_xml_deleted_revs extends DefaultHandler{
 	private boolean do_content;
 	
 	/**
-	 * Login cookie of calling user; providing evidence the user has sufficent
-	 * permissions to make this protected call.
-	 */
-	private String cookie;
-	
-	/**
 	 * Output list of deleted revisions and metadata.
 	 */
 	private List<pair<metadata, String>> deleted;
@@ -60,10 +54,9 @@ public class api_xml_deleted_revs extends DefaultHandler{
 	/**
 	 * Construct a [api_xml_deleted_revs] -- intializing the return set.
 	 */
-	public api_xml_deleted_revs(String user, boolean do_content, String cookie){
+	public api_xml_deleted_revs(String user, boolean do_content){
 		this.user = user;
 		this.do_content = do_content;
-		this.cookie = cookie;
 		this.deleted = new ArrayList<pair<metadata, String>>();
 		reset_rev_level();
 		reset_page_level();
@@ -89,7 +82,7 @@ public class api_xml_deleted_revs extends DefaultHandler{
 		} else if(qName.equals("deletedrevs")){
 			if(attributes.getValue("drstart") != null){
 				try{deleted.addAll(api_retrieve.process_deleted_revs(
-							user, do_content, attributes.getValue("drstart"), cookie));
+							user, do_content, attributes.getValue("drstart")));
 				} catch(Exception e){
 					System.out.println("Failed to parse deleted RID: " + rid);
 					e.printStackTrace();

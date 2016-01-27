@@ -85,11 +85,6 @@ public class gui_revert_and_warn implements Runnable{
 	 * Revision which should be left with the reversion-action. 
 	 */
 	private String revert_comment;
-	
-	/**
-	 * Cookie headers which should be included when making the POST.
-	 */
-	private String cookie;
 		
 	/**
 	 * Whether or not the editing user has the native rollback permission.
@@ -140,7 +135,6 @@ public class gui_revert_and_warn implements Runnable{
 	 * @param fb_type Type of reversion being performed (guilty vs. AGF)
 	 * @param edit_pkg Wrapper around RID(s) to be reverted
 	 * @param revert_comment Edit comment to be left with reversion action
-	 * @param cookie Cookie headers to include when POST-ing (user-mapping)
 	 * @param user_has_native_rb If editing user has native rollback permission
 	 * @param rollback Whether or not rollback is being used to revert
 	 * @param watchlist_opt How edits should be watchlisted
@@ -151,7 +145,7 @@ public class gui_revert_and_warn implements Runnable{
 	 * @param gui_revert_panel GUI object displaying revert/warning result
 	 */
 	public gui_revert_and_warn(FB_TYPE fb_type, gui_display_pkg edit_pkg, 
-			String revert_comment, String cookie, boolean user_has_native_rb, 
+			String revert_comment, boolean user_has_native_rb, 
 			boolean rollback, STIKI_WATCHLIST_OPTS watchlist_opt, boolean warn, 
 			String usr_talk_msg, gui_revert_panel gui_revert_panel){
 		
@@ -159,7 +153,6 @@ public class gui_revert_and_warn implements Runnable{
 		this.edit_pkg = edit_pkg;
 		this.metadata = edit_pkg.page_hist.get(0); // convenience
 		this.revert_comment = revert_comment;
-		this.cookie = cookie;
 		this.user_has_native_rb = user_has_native_rb;
 		this.watchlist_opt = watchlist_opt;
 		this.warn = warn;
@@ -186,9 +179,11 @@ public class gui_revert_and_warn implements Runnable{
 					fb_type.equals(FB_TYPE.GUILTY_4IM))){
 				
 					// Only "guilty" edits should make use of native RB
-				InputStream in = api_post.edit_rollback(metadata.title, 
-						metadata.user, revert_comment,
-						metadata.rb_token, cookie, 
+				InputStream in = api_post.edit_rollback(
+						metadata.title, 
+						metadata.user, 
+						revert_comment,
+						metadata.rb_token, 
 						api_post.convert_wl(watchlist_opt, false), true);
 			
 				long earliest_rb_undone = api_post.rollback_response(in);
@@ -222,8 +217,7 @@ public class gui_revert_and_warn implements Runnable{
 					minor = true;
 				
 				int sw_rb_code = gui_soft_rollback.software_rollback(
-						edit_pkg, revert_comment, minor, cookie, 
-						watchlist_opt, true);
+						edit_pkg, revert_comment, minor, watchlist_opt, true);
 				
 				if(sw_rb_code == -2){
 					revert_outcome = EDIT_OUTCOME.ASSERT_FAIL;
@@ -337,7 +331,7 @@ public class gui_revert_and_warn implements Runnable{
 			// We now know a warning will likely be placed; need edit token
 			// Can re-use one from the main article if we have it(?)
 		if(edit_pkg.get_token() == null) 
-			edit_pkg.refresh_edit_token(this.cookie);
+			edit_pkg.refresh_edit_token();
 		
 			// Determine what vandalism warnings were issued in the current
 			// month -- we plan to issue the next most severe
@@ -357,7 +351,7 @@ public class gui_revert_and_warn implements Runnable{
 					!metadata.user_is_ip, imm_non_van_warn);
 			api_post.edit_append_text(AIV_PAGE, aiv_comment(queue_type, 
 					metadata.user, metadata.rid, !metadata.user_is_ip), aiv_msg, 
-					false, this.edit_pkg.get_token(), this.cookie, true, 
+					false, this.edit_pkg.get_token(), true, 
 					EDIT_WATCHLIST.NOCHANGE, true); // Don't watchlist AIV
 			
 			if(imm_non_van_warn)
@@ -381,7 +375,7 @@ public class gui_revert_and_warn implements Runnable{
 				// We assume current month/year is last on page, so it
 				// is always safe to append content.
 			api_post.edit_append_text(talk_page, warning_comment(queue_type), 
-					warning, false, this.edit_pkg.get_token(), this.cookie, 
+					warning, false, this.edit_pkg.get_token(),
 					true, api_post.convert_wl(watchlist_opt, true), true);
 			
 				// Output which warning level was issued
@@ -735,7 +729,7 @@ public class gui_revert_and_warn implements Runnable{
 			throws Exception{
 		String talkpage = "User_talk:" + this.metadata.user;
 		api_post.edit_append_text(talkpage, comment, message, false, 
-				this.edit_pkg.get_token(), this.cookie, true, 
+				this.edit_pkg.get_token(), true, 
 				api_post.convert_wl(watchlist_opt, true), true);
 	}
 	
@@ -748,9 +742,8 @@ public class gui_revert_and_warn implements Runnable{
 			System.err.println("Bad token when trying to RB RID:" + metadata.rid);
 			System.err.println("Token was: " + metadata.rb_token);
 			System.err.println("Token obtained at: " + edit_pkg.get_token().snd);
-			System.err.println("Session cookie was: " + cookie);
 			System.err.println("Refetching token obtained: " + 
-					api_retrieve.process_basic_rid(metadata.rid, cookie).rb_token);
+					api_retrieve.process_basic_rid(metadata.rid).rb_token);
 			System.err.println();
 		} catch(Exception e){};
 	}
