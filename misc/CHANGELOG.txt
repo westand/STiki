@@ -12,7 +12,9 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2016-XX-XX
+  * 2016-02-12 - EMERGENCY RELEASE
+  		# Addition of a deprecation message to API login procedure fouled our
+  		  parsing, breaking login functionality. Fixed and updated required.
   		# Cleaned up code transitioning to implicitly-managed CookieManager
   
   * 2016-01-22 - EMERGENCY RELEASE

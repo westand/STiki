@@ -48,11 +48,11 @@ public class api_xml_login extends DefaultHandler{
 			return; // Only interested in one tag, return if other seen
 			
 		String result = attributes.getValue("result");
-		if(result.toUpperCase().equals("NEEDTOKEN")){
+		if(result != null && result.toUpperCase().equals("NEEDTOKEN")){
 			this.string_result = attributes.getValue("token");
 		} // Login first phase: retrieve the edit token for credentials
 		
-		else if(result.toUpperCase().equals("SUCCESS")){
+		else if(result != null && result.toUpperCase().equals("SUCCESS")){
 			
 			this.string_result = "SUCCESS"; // new 2016-01
 		    
