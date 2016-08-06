@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+
 /**
  * Andrew G. West - gui_reverted_panel.java - This class displays the 
  * "last reverted" panel -- which contains information about the last 

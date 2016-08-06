@@ -12,12 +12,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.plaf.metal.MetalBorders;
 
 import core_objects.stiki_utils.QUEUE_TYPE;
 
@@ -135,6 +137,10 @@ public class gui_button_panel extends JPanel implements
 		nullify_space_press(button_back);
 	
 			// Make the "back" and "4im" buttons as tight as possible
+		button_back.setBorder(null); // buttons have default border; kill it
+		button_back.setBorder(BorderFactory.createCompoundBorder(
+		        BorderFactory.createEmptyBorder(0, 0, 0, 0), 
+		        new MetalBorders.ButtonBorder()));
 		button_back.setMargin(new Insets(0, 0, 0, 0));
 		button_back.setMaximumSize(button_back.getPreferredSize());
 		button_back.setEnabled(false); // Initially un-usable
@@ -148,14 +154,20 @@ public class gui_button_panel extends JPanel implements
 		guilty_subpanel.add(button_guilty);
 		guilty_subpanel.add(button_4im);
 		
-			// We assume the 'agf' button to be the largest of
-			// the classification buttons. Taking its preferred size, 
-			// we size all other buttons/panels equivalently
-			//
-			// Observe we also set the [button_guilty] preferred size, so it
-			// consumes available space in its sub-sub-panel
+			// Depending on whether we are using Mac or Windows, the 
+			// 'AGF' button may be the widest compontent, or it may
+			// be the "guilty subpanel" since Apple places a transparent
+			// border around buttons it is impossible to remove without
+			// destroying the look and feel. 
+			// 
+			// We size all other buttons/panels according to the widest 
+			// component. Observe we also set the [button_guilty] preferred 
+			// size, so it consumes available space in its sub-sub-panel
 			// 
 		int pref_width = button_agf.getPreferredSize().width;
+		pref_width = Math.max(guilty_subpanel.getPreferredSize().width, 
+				pref_width);
+		
 		guilty_subpanel.setPreferredSize(new Dimension(
 				pref_width, guilty_subpanel.getPreferredSize().height));
 		button_guilty.setPreferredSize(new Dimension(

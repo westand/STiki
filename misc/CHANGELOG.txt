@@ -12,6 +12,11 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2016-XX-XX 
+  		# First attempt at solving MacOS GUI layout issues. Seemed to stem
+  			from the fact MacOS enforces a border on JButtons (T#054).
+  		# Minor change to make login error messages more descriptive
+  
   * 2016-02-12 - EMERGENCY RELEASE
   		# Addition of a deprecation message to API login procedure fouled our
   		  parsing, breaking login functionality. Fixed and updated required.

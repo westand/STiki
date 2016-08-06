@@ -116,9 +116,9 @@ public class api_post{
 		api_xml_login cookie_handler = new api_xml_login();
 		do_parse_work(con_cookie.getInputStream(), cookie_handler);
 		
-		if(cookie_handler.get_result().equalsIgnoreCase("SUCCESS"))
+		if(cookie_handler.get_result().equalsIgnoreCase("SUCCESS")) 
 			return(true);
-		else return(false);
+		else return(false); // "FAILED" is a common failure code
 	}
 	
 	/**

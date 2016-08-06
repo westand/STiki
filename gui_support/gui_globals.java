@@ -4,6 +4,7 @@ import gui_menus.gui_text_menu;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -49,8 +50,9 @@ public class gui_globals{
 	
 	/**
 	 * Fixed width assigned to the left-sidebar.
+	 * Changes 225->235 JUL-2016 to try to beautify Apple/Mac presentation
 	 */
-	public static final int LEFT_SIDEBAR_WIDTH = 225;
+	public static final int LEFT_SIDEBAR_WIDTH = 235;
 	
 	/**
 	 * Border, in pixels, which should separate major component panels.
@@ -445,14 +447,18 @@ public class gui_globals{
     public static JButton create_link(String text, boolean red_color, 
     		ActionListener listener){
     	
+    		// Note Mac and Windows both respect the empty border consistently
     	JButton button = new JButton(text);
     	button.setFont(gui_globals.get_link_font(false, red_color));
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setAlignmentX(JButton.LEFT_ALIGNMENT);
+        button.setBorder(null); // buttons have default border; kill it
+        button.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setBackground(Color.LIGHT_GRAY);
         button.addActionListener(listener);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setMargin(new Insets(0, 0, 0, 0));
         return(button);
     }
@@ -464,15 +470,19 @@ public class gui_globals{
     public static JButton create_small_link(String text, boolean red_color,
     		ActionListener listener){
     	
+    		// Note Mac and Windows both respect the empty border consistently
     	JButton button = new JButton(text);
     	button.setFont(gui_globals.get_link_font(true, red_color));
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setAlignmentX(JButton.LEFT_ALIGNMENT);
+        button.setBorder(null); // buttons have default border; kill it
+        button.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setBackground(Color.LIGHT_GRAY);
         button.addActionListener(listener);
-        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setMargin(new Insets(0, 0, 0, 0)); // top-left-bottom-right
         return(button);
     }
     

@@ -67,7 +67,11 @@ public class api_xml_login extends DefaultHandler{
 			this.string_result += pfx + "Session=";
 			this.string_result += attributes.getValue("sessionid");*/
 			
-		} // Login second phase: determine if login successful
+		}  else if(result != null){ // Login second phase
+		
+			this.string_result = result.toUpperCase();
+			
+		} // Catch all for everything else
 	}
 	
 	/**
