@@ -34,15 +34,16 @@ import core_objects.pair;
  * 		[7]:  "edit full text" -- Edit a Wikipedia page, by providing the
  * 			  complete replacement text for the page.
  *      [8]:  "review rid" -- per the PendingChanges/FlaggedRevs programs
+ *      [9]:  "thank" -- Thank an editor for a particular RID
  * 
  * 	POST-ing is a two-way street. In addition to sending the data, the server
  * 	also has an (XML) response. We build handlers to parse these responses:
  * 
- * 		[9]:  "login" -- For cookie building pertaining to login.
- * 		[10]  "edit was made" -- Given the InputStream resulting from an
+ * 		[10]:  "login" -- For cookie building pertaining to login.
+ * 		[11]  "edit was made" -- Given the InputStream resulting from an
  * 		      edit post. Was the edit actually made? (editing conflicts,
  * 			  for instance, could cause such an action to fail).
- * 		[11]: "rollback was made" -- Given the InputStream resulting from
+ * 		[12]: "rollback was made" -- Given the InputStream resulting from
  * 			  an edit post -- Did the rollback succeed?
  */
 public class api_post{
@@ -312,6 +313,24 @@ public class api_post{
 		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		if(comment != null && comment.length() > 0)
 			post_data += "&comment=" + URLEncoder.encode(comment, "UTF-8");
+		post_data += "&format=xml";
+		return(api_post.post(post_data).getInputStream());
+	}
+	
+	/**
+	 * Thank an editor for a particular revision
+	 * @param rid Revision ID to receive thanks
+	 * @param source String describing source, i.e., "stiki"
+	 * @param edit_token CSRF token associated with STiki user
+	 * @return InputStream over server-response to the edit POST
+	 */
+	public static InputStream thank_rid(int rid, String source, 
+			pair<String,String> edit_token) throws Exception{
+
+		String post_data = "action=thank";
+		post_data += "&rev=" + rid;
+		post_data += "&source=" + source;
+		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		post_data += "&format=xml";
 		return(api_post.post(post_data).getInputStream());
 	}
