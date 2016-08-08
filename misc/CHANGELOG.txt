@@ -13,6 +13,7 @@
   conveniently altered for small changes:
   
   * 2016-XX-XX 
+  		# Implemented API "thank" functionality (T#055).
   		# First attempt at solving MacOS GUI layout issues. Seemed to stem
   			from the fact MacOS enforces a border on JButtons (T#054).
   		# Minor change to make login error messages more descriptive

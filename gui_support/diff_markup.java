@@ -33,7 +33,8 @@ public class diff_markup{
 	public static String DEF_COL_DIFF_CONT = "#eeeeee";
 	public static String DEF_COL_DIFF_DEL = "#ffffaa";
 	public static String DEF_COL_DIFF_ADD = "#ccffcc";
-	public static String DEF_COL_DIFF_NOTE = "#800080";
+	public static String DEF_COL_DIFF_NOTE1 = "#800080";
+	public static String DEF_COL_DIFF_NOTE2 = "#008000";
 	public static String DEF_COL_DIFF_TEXT = "#000000";
 	
 		// Some color constants w.r.t. diff rendering
@@ -47,8 +48,10 @@ public class diff_markup{
 			gui_settings.SETTINGS_STR.color_diff_del, DEF_COL_DIFF_DEL);
 	public static String COLOR_DIFF_ADD = gui_settings.get_str_def(
 			gui_settings.SETTINGS_STR.color_diff_add, DEF_COL_DIFF_ADD);
-	public static String COLOR_DIFF_NOTE =  gui_settings.get_str_def(
-			gui_settings.SETTINGS_STR.color_diff_note, DEF_COL_DIFF_NOTE);
+	public static String COLOR_DIFF_NOTE1 =  gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_note1, DEF_COL_DIFF_NOTE1);
+	public static String COLOR_DIFF_NOTE2 =  gui_settings.get_str_def(
+			gui_settings.SETTINGS_STR.color_diff_note2, DEF_COL_DIFF_NOTE2);
 	public static String COLOR_DIFF_TEXT =  gui_settings.get_str_def(
 			gui_settings.SETTINGS_STR.color_diff_text, DEF_COL_DIFF_TEXT);
 	
@@ -70,7 +73,7 @@ public class diff_markup{
 		System.out.println(add_hyperlinks(html)); */
 		
 		String html = api_retrieve.process_diff_prev(495022990);
-		System.out.println(beautify_markup(html, "Title", "", true));
+		System.out.println(beautify_markup(html, "Title", "", "", true));
 	}
 	
 	
@@ -81,21 +84,24 @@ public class diff_markup{
 	 * version which is more appropriate for local, JEditorPane use.
 	 * @param raw_html Raw-diff HTML per the MediaWiki API
 	 * @param page_title Title of the Wiki-article whose diff is in 'raw_html'
-	 * @param note Note to appear in diff, just below the title. This is
+	 * @param note1 Note to appear in diff, just below the title. This is
 	 * optional, pass in an empty String if no "note" is desired.
+	 * @param note2 Additional note option; different color than note #1
 	 * @param links TRUE if Xlinks should be click-able; false, otherwise
 	 * @return Beautified version of the input text
 	 */
 	public static String beautify_markup(String raw_html, String page_title, 
-			String note, boolean links){
+			String note1, String note2, boolean links){
 		
 			// Write header/title/footer around diff-table to complete HTML
 		String html = "<html><body bgcolor=" + COLOR_DIFF_BG + ">";
 		html += "<font color=" + COLOR_DIFF_TEXT + ">";
 		html += "<center><br><b><u><font color=" + COLOR_DIFF_TEXT + ">";
 		html += page_title + "</font></u></b>";
-		if(note.length() > 0)
-			html += "<br><font color=" + COLOR_DIFF_NOTE + ">" + note + "</font>";
+		if(note1.length() > 0)
+			html += "<br><font color=" + COLOR_DIFF_NOTE1 + ">" + note1 + "</font>";
+		if(note2.length() > 0)
+			html += "<br><font color=" + COLOR_DIFF_NOTE2 + ">" + note2 + "</font>";
 		html += "<br><br>";
 		html += "<table border=\"0\" cellspacing=\"5\">";
 		html += raw_html + "</center></table></font></body></html>";
@@ -119,7 +125,8 @@ public class diff_markup{
 		COLOR_DIFF_CONT = DEF_COL_DIFF_CONT;
 		COLOR_DIFF_DEL = DEF_COL_DIFF_DEL;
 		COLOR_DIFF_ADD  = DEF_COL_DIFF_ADD;
-		COLOR_DIFF_NOTE = DEF_COL_DIFF_NOTE;
+		COLOR_DIFF_NOTE1 = DEF_COL_DIFF_NOTE1;
+		COLOR_DIFF_NOTE2 = DEF_COL_DIFF_NOTE2;
 		COLOR_DIFF_TEXT = DEF_COL_DIFF_TEXT;
 	}
 	

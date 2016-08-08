@@ -55,11 +55,13 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		private JMenuItem browser_color_cont;
 		private JMenuItem browser_color_add;
 		private JMenuItem browser_color_del;
-		private JMenuItem browser_color_note;
+		private JMenuItem browser_color_note1;
+		private JMenuItem browser_color_note2;
 		private JMenuItem browser_color_reset;
 	private JCheckBoxMenuItem xlink_cb;
 	private JCheckBoxMenuItem dttr_cb;
 	private JCheckBoxMenuItem agf_comment_cb;
+	private JCheckBoxMenuItem title_csd_cb;
 	private JCheckBoxMenuItem aiv_popup_cb;
 	
 
@@ -88,6 +90,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		this.add(xlink_cb);
 		this.add(dttr_cb);
 		this.add(agf_comment_cb);
+		this.add(title_csd_cb);
 		this.add(aiv_popup_cb);
 		
 			// Set default menu selections (per persistent settings)
@@ -104,6 +107,8 @@ public class gui_menu_options extends JMenu implements ActionListener{
 				gui_settings.SETTINGS_BOOL.options_dttr, true));
 		this.set_agf_comment_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_agf_comment, true));
+		this.set_title_csd_policy(gui_settings.get_bool_def(
+				gui_settings.SETTINGS_BOOL.options_title_csd, true));
 		this.set_aiv_popup_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_aiv_popup, false));
 	}
@@ -127,6 +132,10 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		
 			// Do nothing
 			
+		} else if(event.getSource().equals(title_csd_cb)){
+			
+			// Do nothing
+				
 		} else if(event.getSource().equals(aiv_popup_cb)){
 			
 			// Do nothing
@@ -214,11 +223,17 @@ public class gui_menu_options extends JMenu implements ActionListener{
 					browser_color_del.setIcon(new gui_color_icon(
 							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_DEL)));
 			
-				} else if(event.getSource().equals(browser_color_note)){
-					diff_markup.COLOR_DIFF_NOTE = gui_colorpicker.
-							dialog_response(parent, diff_markup.COLOR_DIFF_NOTE);
-					browser_color_note.setIcon(new gui_color_icon(
-							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE)));
+				} else if(event.getSource().equals(browser_color_note1)){
+					diff_markup.COLOR_DIFF_NOTE1 = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_NOTE1);
+					browser_color_note1.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE1)));
+					
+				} else if(event.getSource().equals(browser_color_note2)){
+					diff_markup.COLOR_DIFF_NOTE2 = gui_colorpicker.
+							dialog_response(parent, diff_markup.COLOR_DIFF_NOTE2);
+					browser_color_note2.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE2)));
 					
 				} else if(event.getSource().equals(browser_color_reset)){
 					
@@ -236,8 +251,10 @@ public class gui_menu_options extends JMenu implements ActionListener{
 							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_ADD)));
 					browser_color_del.setIcon(new gui_color_icon(
 							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_DEL)));
-					browser_color_note.setIcon(new gui_color_icon(
-							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE)));
+					browser_color_note1.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE1)));
+					browser_color_note2.setIcon(new gui_color_icon(
+							gui_globals.hex_to_rgb(diff_markup.COLOR_DIFF_NOTE2)));
 				}
 			
 			} catch(Exception e){};
@@ -325,6 +342,23 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	public boolean get_agf_comment_policy(){
 		return(agf_comment_cb.isSelected());
 	}
+
+	/**
+	 * Set the "Check for CSD" policy in the menu
+	 * @param enable TRUE if STiki will check to see if diff pages are
+	 * currently a CSD; false otherwise. 
+	 */
+	public void set_title_csd_policy(boolean enable){
+		title_csd_cb.setSelected(enable);
+	}
+	
+	/**
+	 * Return whether the "Check for CSD" checkbox is selected.
+	 * @return whether the "Check for CSD" checkbox is selected
+	 */
+	public boolean get_title_csd_policy(){
+		return(title_csd_cb.isSelected());
+	}
 	
 	/**
 	 * Set the AIV popup policy in the menu
@@ -400,9 +434,12 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		submenu_browser_colors.add(browser_color_words = create_icon_item(
 				"Changed text", new gui_color_icon(gui_globals.hex_to_rgb(
 				diff_markup.COLOR_DIFF_WORDS)),KeyEvent.VK_C));
-		submenu_browser_colors.add(browser_color_note = create_icon_item(
-				"Note text", new gui_color_icon(gui_globals.hex_to_rgb(
-				diff_markup.COLOR_DIFF_NOTE)),KeyEvent.VK_N));
+		submenu_browser_colors.add(browser_color_note1 = create_icon_item(
+				"Note text #1", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_NOTE1)),KeyEvent.VK_1));
+		submenu_browser_colors.add(browser_color_note2 = create_icon_item(
+				"Note text #2", new gui_color_icon(gui_globals.hex_to_rgb(
+				diff_markup.COLOR_DIFF_NOTE2)),KeyEvent.VK_2));
 		submenu_browser_colors.add(browser_color_cont = create_icon_item(
 				"Context block BG", new gui_color_icon(gui_globals.hex_to_rgb(
 				diff_markup.COLOR_DIFF_CONT)),KeyEvent.VK_N));
@@ -415,9 +452,10 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		submenu_browser_colors.add(browser_color_reset = create_icon_item(
 				"Reset defaults", null, KeyEvent.VK_T));
 		
-		xlink_cb = create_cb_item("Activate Ext-Links", KeyEvent.VK_X);
+		xlink_cb = create_cb_item("Activate ext-links", KeyEvent.VK_X);
 		dttr_cb = create_cb_item("Warn if reverting regular", KeyEvent.VK_W);
 		agf_comment_cb = create_cb_item("Message AGF reverted users", KeyEvent.VK_A);
+		title_csd_cb = create_cb_item("CSD check on articles", KeyEvent.VK_S);
 		aiv_popup_cb = create_cb_item("Explicit notify on AIV post", KeyEvent.VK_V);
 	}
 	

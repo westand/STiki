@@ -17,6 +17,7 @@ import core_objects.stiki_utils.SCORE_SYS;
 import executables.stiki_frontend_driver;
 import gui_support.diff_markup;
 import gui_support.diff_whitespace;
+import gui_support.gui_settings;
 
 /**
  * Andrew G. West - gui_display_pkg.java - This encapsulates all the items
@@ -207,10 +208,10 @@ public class gui_display_pkg{
 				// And manipulate the diff-content as needed
 			String diff = api_retrieve.process_diff_prev(rid);
 			String content = diff_markup.beautify_markup(
-					diff, md.title, "", false); 
+					diff, md.title, "", "", false); 
 			content = diff_whitespace.whitespace_diff_html(content);
 			String con_link = diff_markup.beautify_markup(
-					diff, md.title, "", true); 
+					diff, md.title, "", "", true); 
 			con_link = diff_whitespace.whitespace_diff_html(con_link);	
 			
 			List<metadata> meta_list = new ArrayList<metadata>(1);
@@ -277,18 +278,30 @@ public class gui_display_pkg{
 				return(null);
 			} // If page-hist only has one author, RB will fail
 			
-			String note = "";
+			String note1 = "";
 			if(edits_to_rb > 1){
-				note = "Below is displayed a combined diff for " + 
+				note1 = "Below is displayed a combined diff for " + 
 						(edits_to_rb) + " edits by the same user<BR>" +
 						"The edit properties box shows information " +
 						"for the most recent of these edits<BR>" +
 						"If instructed, STiki will revert ";
 				if(edits_to_rb == 2)
-					note += "both edits";
-				else note += "all " + (edits_to_rb) + " edits";
+					note1 += "both edits";
+				else note1 += "all " + (edits_to_rb) + " edits";
 			} // If our diff presentation spans multiple edits, we need
 			  // to make visual note of this (just below title)
+
+			String note2 = "";
+			if(gui_settings.get_bool_def(
+					gui_settings.SETTINGS_BOOL.options_title_csd, false)){				
+				Set<String> cats = api_retrieve.process_page_cats(
+						meta.title, true, null);
+				boolean title_csd = cats.contains(
+						"Category:Candidates for speedy deletion");
+				if(title_csd){
+					note2 = "Article is CSD";
+				} // If CSD; make visual note atop diff
+			} // Check to see if title is CSD (per menu option)
 			
 				// And manipulate the diff-content as needed
 				// On the API call, note that we already know at least part
@@ -296,10 +309,10 @@ public class gui_display_pkg{
 			String diff = api_retrieve.process_diff_current(rid_to_diff);
 			
 			String content = diff_markup.beautify_markup(
-					diff, page_hist.get(0).title, note, false); 
+					diff, page_hist.get(0).title, note1, note2, false); 
 			content = diff_whitespace.whitespace_diff_html(content);
 			String con_link = diff_markup.beautify_markup(
-					diff, page_hist.get(0).title, note, true); 
+					diff, page_hist.get(0).title, note1, note2, true); 
 			con_link = diff_whitespace.whitespace_diff_html(con_link);
 			
 			Set<String> perms;
@@ -328,8 +341,8 @@ public class gui_display_pkg{
 
 			return(new gui_display_pkg(page_hist, edit_token, diff, content, 
 					con_link, source_queue, edits_to_rb, perms, 
-					user_has_talkpage, user_has_userpage, title_has_talkpage, 
-					edit_count));
+					user_has_talkpage, user_has_userpage, 
+					title_has_talkpage, edit_count));
 			
 		} catch(CommunicationsException e){
 			parent.reset_connection(false);

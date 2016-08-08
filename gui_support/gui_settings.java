@@ -48,7 +48,8 @@ public class gui_settings extends Properties{
 		color_diff_cont,		// Color of diff's "context blocks"
 		color_diff_add,			// Color of diff's "added blocks"
 		color_diff_del,			// Color of diff's "deleted blocks"
-		color_diff_note,		// Color of diff's "note to users" (RB)
+		color_diff_note1,		// Color of diff's "note to users" (RB)
+		color_diff_note2,		// Color of diff's "note to users" (CSD)
 		color_diff_text};		// Color of diff's base text
 		
 	/**
@@ -74,6 +75,7 @@ public class gui_settings extends Properties{
 		options_hyperlinks,		// Whether URLs are hyperlinked in diffs
 		options_dttr,			// Whether to warn if "templating a regular"
 		options_agf_comment,    // Whether to message AGF-reverted users
+		options_title_csd,		// Whether to check if a title is CSD
 		options_aiv_popup,		// Whether to pop-up notify on AIV post
 		filter_privileged,      // Show edits by privileged editors?
 		filter_numerical};      // Show small numerical edits?
@@ -281,6 +283,9 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_BOOL.options_agf_comment.toString(),
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_agf_comment_policy()));
+		props.setProperty(SETTINGS_BOOL.options_title_csd.toString(), 
+				String.valueOf(parent.menu_bar.
+				get_options_menu().get_title_csd_policy()));
 		props.setProperty(SETTINGS_BOOL.options_aiv_popup.toString(),
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_aiv_popup_policy()));
@@ -306,8 +311,10 @@ public class gui_settings extends Properties{
 				diff_markup.COLOR_DIFF_ADD);
 		props.setProperty(SETTINGS_STR.color_diff_del.toString(), 
 				diff_markup.COLOR_DIFF_DEL);
-		props.setProperty(SETTINGS_STR.color_diff_note.toString(), 
-				diff_markup.COLOR_DIFF_NOTE);
+		props.setProperty(SETTINGS_STR.color_diff_note1.toString(), 
+				diff_markup.COLOR_DIFF_NOTE1);
+		props.setProperty(SETTINGS_STR.color_diff_note2.toString(), 
+				diff_markup.COLOR_DIFF_NOTE2);
 		props.setProperty(SETTINGS_STR.color_diff_text.toString(), 
 				diff_markup.COLOR_DIFF_TEXT);
 		
