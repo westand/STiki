@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import core_objects.stiki_utils;
 import gui_edit_queue.gui_display_pkg;
 import gui_support.gui_globals;
+import gui_support.gui_settings;
 
 /**
  * Andrew G. West - gui_metadata_panel.java - This class handles the visual
@@ -57,6 +58,10 @@ public class gui_metadata_panel extends JPanel implements
 	private JButton link_title_hist;
 	private JButton link_title_talk;
 	private JButton link_rid;
+	
+		// Not a link to Wikipedia as with the above; but formatted
+		// in the same look-and-feel; Ignore a user's edits for a session
+	private JButton link_user_ignore;
 	
 		// JComponents are grouped vertically into cols; each itself a panel.
 	private JPanel intro_panel;
@@ -98,6 +103,7 @@ public class gui_metadata_panel extends JPanel implements
 		this.link_user_cont = gui_globals.create_link("(Contribs.)", false, this);
 		this.link_user_user = gui_globals.create_link("(User)", false, this);
 		this.link_user_talk = gui_globals.create_link("(Talk)", false, this);
+		this.link_user_ignore = gui_globals.create_link("(Ignore)", false, this);
 		this.link_title = gui_globals.create_link("(Current)", false, this);
 		this.link_title_hist = gui_globals.create_link("(Hist.)", false, this);
 		this.link_title_talk = gui_globals.create_link("(Talk)", false, this);
@@ -110,6 +116,7 @@ public class gui_metadata_panel extends JPanel implements
 		panel_usr.add(this.link_user_cont);
 		panel_usr.add(this.link_user_user);
 		panel_usr.add(this.link_user_talk);
+		panel_usr.add(this.link_user_ignore);
 		panel_usr.add(Box.createHorizontalGlue());
 		JPanel panel_art = new JPanel();
 		panel_art.setLayout(new BoxLayout(panel_art, BoxLayout.X_AXIS));
@@ -173,28 +180,33 @@ public class gui_metadata_panel extends JPanel implements
 			if(event.getSource().equals(this.link_user_cont))
 				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"Special:Contributions/" + this.cur_pkg.metadata.user);
-			if(event.getSource().equals(this.link_user_user))
+			else if(event.getSource().equals(this.link_user_user))
 				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"User:" + this.cur_pkg.metadata.user);
-			if(event.getSource().equals(this.link_user_talk))
+			else if(event.getSource().equals(this.link_user_talk))
 				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"User_talk:" + this.cur_pkg.metadata.user +
 					"?vanarticle=" + this.cur_pkg.metadata.title); // Twinkle
-			if(event.getSource().equals(this.link_title))
+			else if(event.getSource().equals(this.link_title))
 				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?title=" + URLEncoder.encode(
 					this.cur_pkg.metadata.title, "UTF-8"));
-			if(event.getSource().equals(this.link_title_hist))
+			else if(event.getSource().equals(this.link_title_hist))
 				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?title=" + URLEncoder.encode(
 					this.cur_pkg.metadata.title, "UTF-8") + "&action=history");
-			if(event.getSource().equals(this.link_title_talk))
+			else if(event.getSource().equals(this.link_title_talk))
 				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"Talk:" + this.cur_pkg.metadata.title);
-			if(event.getSource().equals(this.link_rid))	
+			else if(event.getSource().equals(this.link_rid))	
 				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?oldid=" + this.cur_pkg.page_hist.get(
 					this.cur_pkg.rb_depth).rid + "&diff=cur");
+			else if(event.getSource().equals(this.link_user_ignore)){
+				gui_settings.ignore_editor(this.cur_pkg.metadata.user);
+				gui_globals.pop_ignore_info(this, this.cur_pkg.metadata.user);
+				link_user_ignore.setFont(gui_globals.get_link_font(false, true));
+			}
 			
 		} catch(Exception e){
 			
@@ -244,6 +256,8 @@ public class gui_metadata_panel extends JPanel implements
 		if(gui_pkg.title_has_talkpage)
 			link_title_talk.setFont(gui_globals.get_link_font(false, false));
 		else link_title_talk.setFont(gui_globals.get_link_font(false, true));
+		
+		link_user_ignore.setFont(gui_globals.get_link_font(false, false));
 		
 		resize(); // Adjust space given to panel containing MD-items
 	}

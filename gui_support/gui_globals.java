@@ -656,4 +656,18 @@ public class gui_globals{
 	 		    "Warning: Reverting a user w/50+ edits",
 	 		    JOptionPane.WARNING_MESSAGE);
 	}
+	
+	/**
+	 * Pop the dialog to be shown after a user is "ignored"
+	 * @param parent Component from which the dialog should be popped 
+	 * @param editor Username of editor who has been ignored
+	 */
+	public static void pop_ignore_info(JComponent parent, String editor){
+		JOptionPane.showMessageDialog(parent,
+				"No more edits from " + editor + " will be shown during\n" +
+				"this STiki session. The ignore list resets at STiki restart.",
+	 		    "Info: Editor has been ignored",
+	 		    JOptionPane.INFORMATION_MESSAGE);
+		
+	}
 }

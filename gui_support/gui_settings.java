@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import core_objects.stiki_utils;
-
 import executables.stiki_frontend_driver;
 import gui_panels.gui_comment_panel.COMMENT_TAB;
 
@@ -89,7 +90,6 @@ public class gui_settings extends Properties{
 	 */
 	private static stiki_frontend_driver parent;
 	
-	
 	/** 
 	 * Here we MANUALLY note which version of the "settings"
 	 * document this is. Not a concern as long as the settings
@@ -99,6 +99,12 @@ public class gui_settings extends Properties{
 	 * checking this parameter, we can create new file versions.
 	 */
 	private static final int SETTINGS_VERSION = 3;
+	
+	/**
+	 * A session variable containing "ignored users"; edits will not be 
+	 * enqueued if they were made by a user in this list.
+	 */
+	private static Set<String> session_ignored_eds = new HashSet<String>();
 	
 	
 	// **************************** PUBLIC METHODS ***************************
@@ -157,6 +163,7 @@ public class gui_settings extends Properties{
 		} 
 	}
 	
+	
 	// ****** PROPERTY ACCESSORS ******
 
 	/**
@@ -202,6 +209,43 @@ public class gui_settings extends Properties{
 			System.out.println("Error in getting persistent setting (bool):");
 			e.printStackTrace();
 		} return(def);
+	}
+
+	
+	// ******** IGNORE LIST ***********
+	
+	/**
+	 * Add an editor to the "ignore" list (good for session). 
+	 * @param editor Username of an editor from which no more edits
+	 * should be displayed from during this STiki session
+	 */
+	public static void ignore_editor(String editor){
+		session_ignored_eds.add(editor);
+	}
+	
+	/**
+	 * Determine if an editor is being ignored for this STiki session.
+	 * @param editor Username of Wikipedia editor
+	 * @return TRUE if 'editor' has been ignored for the duration of
+	 * this STiki session; FALSE otherwise.
+	 */
+	public static boolean editor_is_ignored(String editor){
+		return(session_ignored_eds.contains(editor));
+	}
+	
+	/**
+	 * Remove all names from the "ignored editors" (session) list
+	 */
+	public static void reset_ignore_list(){
+		session_ignored_eds.clear();
+	}
+	
+	/**
+	 * Get the number of edits on the (session) "ignore" list.
+	 * @return number of edits on the (session) "ignore" list
+	 */
+	public static int ignore_list_size(){
+		return(session_ignored_eds.size());
 	}
 	
 	

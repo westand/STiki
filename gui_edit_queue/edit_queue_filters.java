@@ -1,6 +1,7 @@
 package gui_edit_queue;
 
 import executables.stiki_frontend_driver;
+import gui_support.gui_settings;
 
 /**
  * Andrew G. West - edit_queue_filters.java - Centralized logic for 
@@ -32,9 +33,14 @@ public class edit_queue_filters{
 			if(filter_privileged_editor(cur_edit))
 				return(null);
 		}
+		
 		if(!parent.menu_bar.get_filter_menu().get_numerical_status()){	
 			if(filter_minor_numerical(cur_edit))
 				return(null);
+		}
+		
+		if(gui_settings.editor_is_ignored(cur_edit.metadata.user)){
+			return(null);
 		}
 			
 		return(cur_edit);

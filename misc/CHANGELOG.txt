@@ -12,10 +12,18 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2016-XX-XX 
-  		# Implemented API "thank" functionality (T#055).
+  * 2016-XX-XX
+  		# The "ignore" button (adjacent to the "user" line of the "metadata" 
+  			panel) allows a session-long ignore from edits made by a particular
+  			user (e.g., repeated maintenance tasks that are not vandalism). 
+  			The ignore list resets when STiki is restarted (T#053). 
+  		# The fact an article is CSD ("candidate for speedy deletion") can now
+  			be noted atop diffs. Functionality is enabled by default, but 
+  			can be turned off via the "options" menu (T#052)
+  		# Implemented API "thank" functionality (T#055)
   		# First attempt at solving MacOS GUI layout issues. Seemed to stem
-  			from the fact MacOS enforces a border on JButtons (T#054).
+  			from the fact MacOS enforces a border on JButtons (T#054)
+  		# Minor change w.r.t. to height of "watchlist options" drop-down
   		# Minor change to make login error messages more descriptive
   
   * 2016-02-12 - EMERGENCY RELEASE

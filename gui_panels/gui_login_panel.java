@@ -511,10 +511,10 @@ public class gui_login_panel extends JPanel implements ActionListener{
 			// following is a best effort to keep things sane
 		watchlist_combobox.setPreferredSize(
 				new Dimension(watchlist_combobox.getPreferredSize().width, 
-				watchlist_combobox.getFont().getSize()));	
+				(int) (watchlist_combobox.getFont().getSize() * 1.33)));	
 		watchlist_combobox.setMinimumSize(
 				new Dimension(watchlist_combobox.getPreferredSize().width, 
-				watchlist_combobox.getFont().getSize()));	
+				(int) (watchlist_combobox.getFont().getSize() * 1.33)));	
 		
 			// Simple vertical arrangement of label and combo-box
 		JPanel subpanel = new JPanel();

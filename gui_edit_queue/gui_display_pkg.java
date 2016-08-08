@@ -17,7 +17,6 @@ import core_objects.stiki_utils.SCORE_SYS;
 import executables.stiki_frontend_driver;
 import gui_support.diff_markup;
 import gui_support.diff_whitespace;
-import gui_support.gui_settings;
 
 /**
  * Andrew G. West - gui_display_pkg.java - This encapsulates all the items
@@ -292,8 +291,7 @@ public class gui_display_pkg{
 			  // to make visual note of this (just below title)
 
 			String note2 = "";
-			if(gui_settings.get_bool_def(
-					gui_settings.SETTINGS_BOOL.options_title_csd, false)){				
+			if(parent.menu_bar.get_options_menu().get_title_csd_policy()){				
 				Set<String> cats = api_retrieve.process_page_cats(
 						meta.title, true, null);
 				boolean title_csd = cats.contains(
