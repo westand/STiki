@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import mediawiki_api.api_post;
 import core_objects.stiki_utils;
 import gui_edit_queue.gui_display_pkg;
 import gui_support.gui_globals;
@@ -57,11 +58,12 @@ public class gui_metadata_panel extends JPanel implements
 	private JButton link_title;
 	private JButton link_title_hist;
 	private JButton link_title_talk;
-	private JButton link_rid;
+	private JButton link_rid_diff;
 	
 		// Not a link to Wikipedia as with the above; but formatted
-		// in the same look-and-feel; Ignore a user's edits for a session
+		// in the same look-and-feel. These are "actions"
 	private JButton link_user_ignore;
+	private JButton link_rid_thank;
 	
 		// JComponents are grouped vertically into cols; each itself a panel.
 	private JPanel intro_panel;
@@ -100,14 +102,15 @@ public class gui_metadata_panel extends JPanel implements
 		data_panel.add(this.data_timestamp = gui_globals.create_data_field(""));
 		
 			// Intialize the Wikipedia-links for more information
-		this.link_user_cont = gui_globals.create_link("(Contribs.)", false, this);
-		this.link_user_user = gui_globals.create_link("(User)", false, this);
-		this.link_user_talk = gui_globals.create_link("(Talk)", false, this);
-		this.link_user_ignore = gui_globals.create_link("(Ignore)", false, this);
-		this.link_title = gui_globals.create_link("(Current)", false, this);
-		this.link_title_hist = gui_globals.create_link("(Hist.)", false, this);
-		this.link_title_talk = gui_globals.create_link("(Talk)", false, this);
-		this.link_rid = gui_globals.create_link("(Wiki-DIFF)", false, this);
+		this.link_user_cont = gui_globals.create_link("(contribs.)", false, this);
+		this.link_user_user = gui_globals.create_link("(user)", false, this);
+		this.link_user_talk = gui_globals.create_link("(talk)", false, this);
+		this.link_user_ignore = gui_globals.create_link("(ignore)", false, this);
+		this.link_title = gui_globals.create_link("(current)", false, this);
+		this.link_title_hist = gui_globals.create_link("(hist.)", false, this);
+		this.link_title_talk = gui_globals.create_link("(talk)", false, this);
+		this.link_rid_diff = gui_globals.create_link("(wiki-diff)", false, this); 
+		this.link_rid_thank = gui_globals.create_link("(thank)", false, this); 
 		
 			// Arrange links in a simple horizontal fashion
 		JPanel panel_usr = new JPanel();
@@ -128,7 +131,8 @@ public class gui_metadata_panel extends JPanel implements
 		JPanel panel_rev = new JPanel();
 		panel_rev.setLayout(new BoxLayout(panel_rev, BoxLayout.X_AXIS));
 		panel_rev.add(Box.createHorizontalStrut(gui_globals.INTRO_LABEL_SPACER));
-		panel_rev.add(this.link_rid);
+		panel_rev.add(this.link_rid_diff);
+		panel_rev.add(this.link_rid_thank);
 		panel_rev.add(Box.createHorizontalGlue());
 
 			// Stack the horizontal link-panels vertically
@@ -198,14 +202,18 @@ public class gui_metadata_panel extends JPanel implements
 			else if(event.getSource().equals(this.link_title_talk))
 				gui_globals.open_url(this, "https://en.wikipedia.org/wiki/" +
 					"Talk:" + this.cur_pkg.metadata.title);
-			else if(event.getSource().equals(this.link_rid))	
+			else if(event.getSource().equals(this.link_rid_diff))	
 				gui_globals.open_url(this, "https://en.wikipedia.org/w/" +
 					"index.php?oldid=" + this.cur_pkg.page_hist.get(
 					this.cur_pkg.rb_depth).rid + "&diff=cur");
 			else if(event.getSource().equals(this.link_user_ignore)){
 				gui_settings.ignore_editor(this.cur_pkg.metadata.user);
-				gui_globals.pop_ignore_info(this, this.cur_pkg.metadata.user);
+				// gui_globals.pop_ignore_info(this, this.cur_pkg.metadata.user);
 				link_user_ignore.setFont(gui_globals.get_link_font(false, true));
+			} else if(event.getSource().equals(this.link_rid_thank)){
+				api_post.thank_rid(this.cur_pkg.metadata.rid, 
+						"stiki", cur_pkg.get_token());
+				link_rid_thank.setFont(gui_globals.get_link_font(false, true));
 			}
 			
 		} catch(Exception e){
@@ -258,6 +266,7 @@ public class gui_metadata_panel extends JPanel implements
 		else link_title_talk.setFont(gui_globals.get_link_font(false, true));
 		
 		link_user_ignore.setFont(gui_globals.get_link_font(false, false));
+		link_rid_thank.setFont(gui_globals.get_link_font(false, false));
 		
 		resize(); // Adjust space given to panel containing MD-items
 	}

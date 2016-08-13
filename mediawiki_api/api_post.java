@@ -324,7 +324,7 @@ public class api_post{
 	 * @param edit_token CSRF token associated with STiki user
 	 * @return InputStream over server-response to the edit POST
 	 */
-	public static InputStream thank_rid(int rid, String source, 
+	public static InputStream thank_rid(long rid, String source, 
 			pair<String,String> edit_token) throws Exception{
 
 		String post_data = "action=thank";
