@@ -526,7 +526,18 @@ public class stiki_utils{
 			// IN 0.00 -> OUT 0.50
 		return(1.0 - ((1.0) / (1.0 + Math.exp(value))));	
 	}
-			
+	
+	/**
+	 * Determine whether a provided string is in IPv4 or IPv6 format.
+	 * @param addy String to test for IP address matching
+	 * @return TRUE if 'addy' is a well-formed IPv4 or IPv6 address.
+	 * FALSE otherwise.
+	 */
+	public static boolean is_v4_v6_ip(String addy){
+		return(addy.matches("(\\d)+\\.(\\d)+\\.(\\d)+\\.(\\d)+") || 
+				addy.matches("^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$"));
+	}
+	
 
 	// ***** TIME-CENTRIC METHODS *****
 

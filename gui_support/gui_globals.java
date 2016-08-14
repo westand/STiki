@@ -668,6 +668,17 @@ public class gui_globals{
 				"this STiki session. The ignore list resets at STiki restart.",
 	 		    "Info: Editor has been ignored",
 	 		    JOptionPane.INFORMATION_MESSAGE);
-		
 	}
+	
+	/**
+	 * Pop the dialog if one tries to "thank" an unregistered editor
+	 * @param parent Component from which the dialog should be popped 
+	 */
+	public static void pop_thank_unregy_info(JComponent parent){
+		JOptionPane.showMessageDialog(parent,
+				"One cannot \"thank\" unregistered editors",
+	 		    "Info: Can't thank unregistered editors",
+	 		    JOptionPane.WARNING_MESSAGE);	
+	}
+	
 }

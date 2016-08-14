@@ -105,7 +105,7 @@ public class gui_metadata_panel extends JPanel implements
 		this.link_user_cont = gui_globals.create_link("(contribs.)", false, this);
 		this.link_user_user = gui_globals.create_link("(user)", false, this);
 		this.link_user_talk = gui_globals.create_link("(talk)", false, this);
-		this.link_user_ignore = gui_globals.create_link("(ignore)", false, this);
+		this.link_user_ignore = gui_globals.create_link("(ignore) ", false, this);
 		this.link_title = gui_globals.create_link("(current)", false, this);
 		this.link_title_hist = gui_globals.create_link("(hist.)", false, this);
 		this.link_title_talk = gui_globals.create_link("(talk)", false, this);
@@ -208,15 +208,19 @@ public class gui_metadata_panel extends JPanel implements
 					this.cur_pkg.rb_depth).rid + "&diff=cur");
 			else if(event.getSource().equals(this.link_user_ignore)){
 				gui_settings.ignore_editor(this.cur_pkg.metadata.user);
-				// gui_globals.pop_ignore_info(this, this.cur_pkg.metadata.user);
+				// gui_globals.pop_ignore_info(this, this.cur_pkg.metadata.user);				
+				//link_user_ignore.setText("(ignored)");
 				link_user_ignore.setFont(gui_globals.get_link_font(false, true));
+				link_user_ignore.setText("(ignored)");
 			} else if(event.getSource().equals(this.link_rid_thank)){
 				cur_pkg.refresh_edit_token(); // unclear why needed
 				api_post.THANKS_OUTCOME to = api_post.thank_rid(
 						this.cur_pkg.metadata.rid, 
 						"stiki", cur_pkg.get_token());
-				if(to.equals(api_post.THANKS_OUTCOME.SUCCESS))
+				if(to.equals(api_post.THANKS_OUTCOME.SUCCESS)){
 					link_rid_thank.setFont(gui_globals.get_link_font(false, true));
+					link_rid_thank.setText("(thanked)");
+				} // thanking does have some error conditions
 			}
 			
 		} catch(Exception e){
@@ -269,7 +273,14 @@ public class gui_metadata_panel extends JPanel implements
 		else link_title_talk.setFont(gui_globals.get_link_font(false, true));
 		
 		link_user_ignore.setFont(gui_globals.get_link_font(false, false));
-		link_rid_thank.setFont(gui_globals.get_link_font(false, false));
+		link_user_ignore.setText("(ignore)");
+		if(!cur_pkg.metadata.user_is_ipv4_or_ipv6){
+			link_rid_thank.setFont(gui_globals.get_link_font(false, false));
+			link_rid_thank.setText("(thank)");
+		} else{  
+			link_rid_thank.setFont(gui_globals.get_link_font(false, false));
+			link_rid_thank.setText("");
+		} // IP users can't be thanked; don't give STiki users the option
 		
 		resize(); // Adjust space given to panel containing MD-items
 	}

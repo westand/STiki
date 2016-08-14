@@ -191,7 +191,7 @@ public class gui_display_pkg{
 		try{	// MediaWiki API all the necessary data
 			metadata md = api_retrieve.process_basic_rid(rid);
 			Set<String> perms;
-			if(!md.user_is_ip) // IPs have no permissions
+			if(!md.user_is_ipv4_or_ipv6) // IPs have no permissions
 				perms = api_retrieve.process_user_perm(md.user);
 			else perms = new HashSet<String>(0);
 			
@@ -314,7 +314,7 @@ public class gui_display_pkg{
 			con_link = diff_whitespace.whitespace_diff_html(con_link);
 			
 			Set<String> perms;
-			if(!meta.user_is_ip) // IPs have no permissions
+			if(!meta.user_is_ipv4_or_ipv6) // IPs have no permissions
 				perms = api_retrieve.process_user_perm(meta.user);
 			else perms = new HashSet<String>(0);
 			
@@ -329,7 +329,7 @@ public class gui_display_pkg{
 			boolean title_has_talkpage = !titles_missing.contains("Talk:" + meta.title);
 			
 			Integer edit_count = null;
-			if(meta.user_is_ip)
+			if(meta.user_is_ipv4_or_ipv6)
 				edit_count = -1;
 			else if(parent.menu_bar.get_options_menu().get_dttr_policy()){
 				edit_count = (int) api_retrieve.process_user_edits(meta.user);
@@ -410,7 +410,7 @@ public class gui_display_pkg{
 	 */
 	public int get_user_edit_count() throws Exception{
 		if(this.user_edit_count == null){
-			if(this.metadata.user_is_ip)
+			if(this.metadata.user_is_ipv4_or_ipv6)
 				return(-1);
 			else{
 				this.user_edit_count = (int) api_retrieve.process_user_edits(

@@ -24,7 +24,8 @@
   			action success. "Thanking" is tied to specific revision-ids,
   			justifying this placement. It was not made an explicit classification
   			button and tied to the "innocent" outcome as such a promotion seems
-  			like mission-creep for an anti-vandalism tool (T#055).
+  			like mission-creep for an anti-vandalism tool. Recall that only
+  			registered users can be thanked (T#055).
   		# The fact an article is CSD ("candidate for speedy deletion") can now
   			be noted atop diffs, similar to how the "this will rollback 'n' edits"
   			note appears. This functionality is enabled by default, but can be 

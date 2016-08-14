@@ -179,6 +179,8 @@ public class gui_revert_and_warn implements Runnable{
 					fb_type.equals(FB_TYPE.GUILTY_4IM))){
 				
 					// Only "guilty" edits should make use of native RB
+				if(metadata.rb_token == null)
+					metadata.refresh_rb_token(); // 2016-08: Session issues
 				InputStream in = api_post.edit_rollback(
 						metadata.title, 
 						metadata.user, 
@@ -304,12 +306,12 @@ public class gui_revert_and_warn implements Runnable{
 			// If old vandalism BY AN IP, do not warn_offender
 			// Always warn for edits made by registered users
 		long time_elapsed = (stiki_utils.cur_unix_time() - metadata.timestamp);
-		if(time_elapsed > WARN_WINDOW_SECS && metadata.user_is_ip)
+		if(time_elapsed > WARN_WINDOW_SECS && metadata.user_is_ipv4_or_ipv6)
 			return(WARNING.NO_EDIT_TOO_OLD); 
 		
 			// If blocked already, do not warn offender
 		if(api_retrieve.process_block_status(
-				metadata.user, metadata.user_is_ip))
+				metadata.user, metadata.user_is_ipv4_or_ipv6))
 			return(WARNING.NO_USER_BLOCK);
 		
 		String sec_content = "";
@@ -348,10 +350,10 @@ public class gui_revert_and_warn implements Runnable{
 				return(WARNING.NO_AIV_TIMING);
 			
 			String aiv_msg = aiv_text(queue_type, metadata.user, metadata.rid,
-					!metadata.user_is_ip, imm_non_van_warn);
+					!metadata.user_is_ipv4_or_ipv6, imm_non_van_warn);
 			api_post.edit_append_text(AIV_PAGE, aiv_comment(queue_type, 
-					metadata.user, metadata.rid, !metadata.user_is_ip), aiv_msg, 
-					false, this.edit_pkg.get_token(), true, 
+					metadata.user, metadata.rid, !metadata.user_is_ipv4_or_ipv6), 
+					aiv_msg, false, this.edit_pkg.get_token(), true, 
 					EDIT_WATCHLIST.NOCHANGE, true); // Don't watchlist AIV
 			
 			if(imm_non_van_warn)
@@ -365,7 +367,7 @@ public class gui_revert_and_warn implements Runnable{
 				warning_level = -4; // cheat code for "4im" warnings
 			
 			String warning = warning_template(queue_type, 
-					warning_level, metadata.title, metadata.user_is_ip);
+					warning_level, metadata.title, metadata.user_is_ipv4_or_ipv6);
 			if(sec_content.equals("")){
 				warning = "\n== " + date_header + " ==\n" + warning;
 			} else{ // If header doesn't exist, need to make one

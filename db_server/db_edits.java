@@ -61,7 +61,7 @@ public class db_edits{
 		pstmt_insert.setInt(4, edit_metadata.namespace);
 		pstmt_insert.setString(5, escape_string.escape(edit_metadata.title));
 		pstmt_insert.setString(6, escape_string.escape(edit_metadata.user));
-		pstmt_insert.setBoolean(7, edit_metadata.user_is_ip);
+		pstmt_insert.setBoolean(7, edit_metadata.user_is_ipv4_or_ipv6);
 		pstmt_insert.setString(8, escape_string.escape(edit_metadata.comment));
 		pstmt_insert.setString(9, edit_metadata.country);
 		pstmt_insert.setBoolean(10, edit_metadata.get_is_rb());

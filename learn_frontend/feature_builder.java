@@ -60,7 +60,7 @@ public class feature_builder{
 		
 			// Handle geo-location based features
 		float tod; int dow; double rep_country;
-		if(md.user_is_ip){
+		if(md.user_is_ipv4){
 			double gmt_offset = db_geo.get_gmt_offset(
 					stiki_utils.ip_to_long(md.user));
 			if(Double.isNaN(gmt_offset))
@@ -97,9 +97,9 @@ public class feature_builder{
 					lang_feats.get_removed_blocks(), db_links);
 		} // Collect data concerning any external-hyperlinks added.
 		
-		return (new feature_set(false, md.rid, md.user_is_ip, rep_user, 
-				rep_article, tod, dow, ts_r, ts_lp, ts_rbu, comm_length, 
-				size_change, rep_country, nlp_dirty, nlp_char_rep, 
+		return (new feature_set(false, md.rid, md.user_is_ipv4_or_ipv6, 
+				rep_user, rep_article, tod, dow, ts_r, ts_lp, ts_rbu, 
+				comm_length, size_change, rep_country, nlp_dirty, nlp_char_rep, 
 				nlp_ucase, nlp_alpha));
 	}
 	

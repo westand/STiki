@@ -52,9 +52,15 @@ public class metadata{
 	public final String user;
 
 	/**
-	 * An indication if string 'user' is an IP address.
+	 * An indication if string 'user' is an IPv4 address. Some older 
+	 * functions are unable to handle v6 addresses.
 	 */
-	public final boolean user_is_ip;
+	public final boolean user_is_ipv4;
+	
+	/**
+	 * An indication if string 'user' is an IP address (v4 or v6).
+	 */
+	public final boolean user_is_ipv4_or_ipv6;
 	
 	/**
 	 * Revision comment left by 'user'.
@@ -124,11 +130,12 @@ public class metadata{
 			// User parse; determine if registered or anonymous (IP address).
 		this.user = str_user;
 		if(this.user.matches("(\\d)+\\.(\\d)+\\.(\\d)+\\.(\\d)+"))
-			user_is_ip = true;
-		else user_is_ip = false;
+			user_is_ipv4 = true;
+		else user_is_ipv4 = false;
+		user_is_ipv4_or_ipv6 = stiki_utils.is_v4_v6_ip(this.user);
 		
 			// Determine country of origination for anonymous users
-		if(!this.user_is_ip || db_geo == null)
+		if(!this.user_is_ipv4 || db_geo == null)
 			 country = "";
 		else // Only do geolocation-calculation where user is IP address
 			this.country = db_geo.get_country_code(
@@ -168,11 +175,12 @@ public class metadata{
 			// User parse; determine if registered or anonymous (IP address).
 		this.user = str_user;
 		if(this.user.matches("(\\d)+\\.(\\d)+\\.(\\d)+\\.(\\d)+"))
-			user_is_ip = true;
-		else user_is_ip = false;
+			user_is_ipv4 = true;
+		else user_is_ipv4 = false;
+		user_is_ipv4_or_ipv6 = stiki_utils.is_v4_v6_ip(this.user);
 		
 			// Determine country of origination for anonymous users
-		if(!this.user_is_ip || client == null)
+		if(!this.user_is_ipv4 || client == null)
 			 country = "";
 		else // Only do geolocation-calculation where user is IP address
 			this.country = client.geo_country(
@@ -194,7 +202,8 @@ public class metadata{
 		this.namespace = 0;
 		this.title = "";
 		this.user  = "";
-		this.user_is_ip = false;
+		this.user_is_ipv4 = false;
+		this.user_is_ipv4_or_ipv6 = false;
 		this.comment = "";
 		this.rb_token = "";
 		this.country = "";
