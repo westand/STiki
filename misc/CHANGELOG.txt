@@ -12,26 +12,31 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
-  * 2016-XX-XX
-  		# The "ignore" button (adjacent to the "user" line of the "metadata" 
-  			panel) allows a session-long ignore from edits made by a particular
+  * 2016-08-14
+  		# The "ignore" button (adjacent to the "user" line of the "metadata 
+  			panel") enables a session-length ignore of edits made by a particular
   			user (e.g., repeated maintenance tasks that are not vandalism). 
-  			The ignore list resets when STiki is restarted. A link color change
-  			from blue->red indicates action success (T#053). 
+  			The ignore list resets when STiki is restarted. The link will change
+  			from a blue "ignore" to red "ignored" if the action succeeds (T#053). 
   		# Implemented API "thank" functionality. A revision/editor can be
   			"thanked" by using the button adjacent to the "REVISION_ID" line
-  			of the "metadata" panel. A link color change from blue->red indicates
-  			action success. "Thanking" is tied to specific revision-ids,
+  			of the "metadata panel".  "Thanking" is tied to specific revision-ids,
   			justifying this placement. It was not made an explicit classification
   			button and tied to the "innocent" outcome as such a promotion seems
-  			like mission-creep for an anti-vandalism tool. Recall that only
-  			registered users can be thanked (T#055).
+  			like mission-creep for an anti-vandalism tool. The link will change
+  			from a blue "thank" to red "thanked" if the action is successful.
+  			Note that only registered editors can be thanked, and the link will
+  			be hidden for edits made by unregistered users (T#055).
   		# The fact an article is CSD ("candidate for speedy deletion") can now
   			be noted atop diffs, similar to how the "this will rollback 'n' edits"
-  			note appears. This functionality is enabled by default, but can be 
-  			turned off via the "options" menu (T#052).
+  			note already appears. This functionality is enabled by default, 
+  			but can be turned off via the "options" menu (T#052).
   		# First attempt at solving MacOS GUI layout issues. These seemed to stem
   			from the fact MacOS enforces a border on JButtons (T#054).
+  		# A situation was identified where rollback tokens were sometimes 
+  			failing to be acquired. This was in turn causing those rollbacks
+  			to silently fail and block subsequent ones. This probably caused 
+  			some of the "I did work; but made no edits" sessions.
   		# Minor change w.r.t. to height of "watchlist options" drop-down,
   			which seems to have no default minimum height
   		# Minor change to make login error messages more descriptive
