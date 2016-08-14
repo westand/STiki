@@ -14,6 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.helpers.DefaultHandler;
 
 import core_objects.pair;
+import core_objects.stiki_utils;
 
 /**
  * Andrew G. West - api_post.java - Complex API executions (such as logon,
@@ -62,6 +63,11 @@ public class api_post{
 	 * watchlisting behavior at broader granularity.
 	 */
 	public enum EDIT_WATCHLIST{WATCH, UNWATCH, PREFERENCES, NOCHANGE};
+	
+	/**
+	 * Known outcomes of a "thanks" action
+	 */
+	public enum THANKS_OUTCOME{SUCCESS, INVALIDRECIPIENT, OTHER};
 	
 	/**
 	 * The [base_url()] function over which all API POSTS operate is 
@@ -324,7 +330,7 @@ public class api_post{
 	 * @param edit_token CSRF token associated with STiki user
 	 * @return InputStream over server-response to the edit POST
 	 */
-	public static InputStream thank_rid(long rid, String source, 
+	public static THANKS_OUTCOME thank_rid(long rid, String source, 
 			pair<String,String> edit_token) throws Exception{
 
 		String post_data = "action=thank";
@@ -332,7 +338,15 @@ public class api_post{
 		post_data += "&source=" + source;
 		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
 		post_data += "&format=xml";
-		return(api_post.post(post_data).getInputStream());
+		InputStream is = api_post.post(post_data).getInputStream();
+		String result = stiki_utils.capture_stream(is);
+		
+			// A bit crude; but we don't know much about the return XML
+		if(result.contains("success=\"1\""))
+			return(THANKS_OUTCOME.SUCCESS);
+		else if(result.contains("invalidrecipient"))
+			return(THANKS_OUTCOME.INVALIDRECIPIENT);
+		else return(THANKS_OUTCOME.OTHER); // possibly unknown error codes
 	}
 	
 	/**

@@ -211,9 +211,12 @@ public class gui_metadata_panel extends JPanel implements
 				// gui_globals.pop_ignore_info(this, this.cur_pkg.metadata.user);
 				link_user_ignore.setFont(gui_globals.get_link_font(false, true));
 			} else if(event.getSource().equals(this.link_rid_thank)){
-				api_post.thank_rid(this.cur_pkg.metadata.rid, 
+				cur_pkg.refresh_edit_token(); // unclear why needed
+				api_post.THANKS_OUTCOME to = api_post.thank_rid(
+						this.cur_pkg.metadata.rid, 
 						"stiki", cur_pkg.get_token());
-				link_rid_thank.setFont(gui_globals.get_link_font(false, true));
+				if(to.equals(api_post.THANKS_OUTCOME.SUCCESS))
+					link_rid_thank.setFont(gui_globals.get_link_font(false, true));
 			}
 			
 		} catch(Exception e){
@@ -221,7 +224,7 @@ public class gui_metadata_panel extends JPanel implements
 			JOptionPane.showMessageDialog(this,
 	       		      "Error in the metadata interface,\n" +
 	       		      "likely caused by network error \n" + e.getMessage(),
-	       		      "Error: Problem in log-in pane",
+	       		      "Error: Problem in metadata pane",
 	       		      JOptionPane.ERROR_MESSAGE);
 			
 		} // Map action-events (link-clicks) to their handlers
