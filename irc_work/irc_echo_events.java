@@ -5,11 +5,11 @@ import org.schwering.irc.lib.IRCModeParser;
 import org.schwering.irc.lib.IRCUser;
 
 /**
- * Andrew G. West - irc_echo_listener.java - This is a straightforward
+ * Andrew G. West - irc_echo_events.java - This is a straightforward
  * IRCEventListener. All event triggers output to STDOUT, making this
  * an IRC class useful for debugging purposes.
  */
-public class irc_echo_listener implements IRCEventListener{
+public class irc_echo_events implements IRCEventListener{
 	
 	// **************************** PUBLIC METHODS ***************************
 	

@@ -179,8 +179,11 @@ public class gui_revert_and_warn implements Runnable{
 					fb_type.equals(FB_TYPE.GUILTY_4IM))){
 				
 					// Only "guilty" edits should make use of native RB
-				if(metadata.rb_token == null)
-					metadata.refresh_rb_token(); // 2016-08: Session issues
+				if(metadata.rb_token == null){
+					metadata.refresh_rb_token(); 
+					System.err.println("WARN: Had to obtain fresh RB token. "
+							+ "New token is: " + metadata.rb_token);
+				} // 2016-08: Trying to fix session-drop issues
 				InputStream in = api_post.edit_rollback(
 						metadata.title, 
 						metadata.user, 
@@ -218,6 +221,11 @@ public class gui_revert_and_warn implements Runnable{
 						fb_type.equals(FB_TYPE.GUILTY_4IM))
 					minor = true;
 				
+				if(edit_pkg.get_token() == null){
+					edit_pkg.refresh_edit_token();
+					System.err.println("WARN: Had to obtain fresh edit token. "
+							+ "New token is: " + edit_pkg.get_token().fst);
+				} // 2016-08: Trying to fix session-drop issues
 				int sw_rb_code = gui_soft_rollback.software_rollback(
 						edit_pkg, revert_comment, minor, watchlist_opt, true);
 				

@@ -12,6 +12,11 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2016-XX-XX (minor)
+  		# Minor changes and test suite for IRC feeds
+  		# Building in (redundant?) checks to ensure that rollback/edit 
+  			tokens are acquired; still addressing session drop/fail issues
+  
   * 2016-08-14
   		# The "ignore" button (adjacent to the "user" line of the "metadata 
   			panel") enables a session-length ignore of edits made by a particular

@@ -48,7 +48,7 @@ public class irc_listener extends Thread{
 		int p_min = 6667; // Port-range minimum
 		int p_max = 6669; // Port-range maximum
 		String pass = null;
-		String user = "STiki_upenn";
+		String user = "STikiQueuer";
 
 			// Prepare connection, event-handler, and basic-settings
 		con_irc = new IRCConnection(host, p_min, p_max, pass, user, user, user);
