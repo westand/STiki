@@ -83,11 +83,13 @@ public class cluebotng_process implements Runnable{
 			return; // Concerned only with well-formed edits in NS0
 		
 		try{ 	// Work backwards on String; delimiter more predictable
-			String[] cbng_parts = msg.split("#");
+			String[] cbng_parts = msg.split(" # ");
+			if(cbng_parts.length < 4)
+				return; // Incomplete CBNG output (rare)
 			String cbng_outcome = cbng_parts[cbng_parts.length-1].trim();
 			String cbng_comment = cbng_parts[cbng_parts.length-2].trim();
 			String cbng_score = cbng_parts[cbng_parts.length-3].trim();
-			String wiki_portion = cbng_parts[cbng_parts.length-4].trim();
+			String wiki_portion = cbng_parts[0].trim();
 			String username = wiki_portion.split("\\*")[1].trim();
 			
 				// Parse out the RID and PID. Page-ID requires a MW-API call;
@@ -122,6 +124,7 @@ public class cluebotng_process implements Runnable{
 			
 		} catch(Exception e){
 			System.out.println("Error in CBNG parse:");
+			System.out.println("MSG was: " + msg);
 			e.printStackTrace();
 		} // Try-catch the whole process. Failure is no big deal if
 		  // something goes wrong; It's only a single RID.

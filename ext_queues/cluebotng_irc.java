@@ -53,7 +53,7 @@ public class cluebotng_irc extends Thread{
 		int p_min = 6667; // Port-range minimum
 		int p_max = 6669; // Port-range maximum
 		String pass = null;
-		String user = "STikiQueuer";
+		String user = "STikiQueue99";
 
 			// Prepare connection, event-handler, and basic-settings
 		con_irc = new IRCConnection(host, p_min, p_max, pass, user, user, user);
@@ -82,6 +82,14 @@ public class cluebotng_irc extends Thread{
 	 */
 	public long num_edits_processed(){
 		return(irc_listener.num_edits_complete());
+	}
+	
+	/**
+	 * Check on the status of the IRC connection
+	 * @return TRUE if IRC connection is connected; FALSE otherwise
+	 */
+	public boolean is_alive(){
+		return(con_irc.isConnected());
 	}
 	
 	/**

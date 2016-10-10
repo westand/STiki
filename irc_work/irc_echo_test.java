@@ -21,7 +21,7 @@ public class irc_echo_test extends Thread{
 	public static void main(String[] args) throws Exception{
 		ExecutorService pool = Executors.newFixedThreadPool(4);
 		new irc_echo_test(pool);
-		Thread.sleep(50000);
+		Thread.sleep(50000000);
 	}	
 	
 		
@@ -34,18 +34,19 @@ public class irc_echo_test extends Thread{
 	 */
 	public irc_echo_test(ExecutorService threads){
 		
-		String host = "irc.wikimedia.org"; // irc.cluenet.org
+		String host = "irc.cluenet.org"; // irc.cluenet.org = irc.wikimedia.org
 		int p_min = 6667; // Port-range minimum
 		int p_max = 6669; // Port-range maximum
 		String pass = null;
-		String user = "STikiQueuer2";
+		String user = "STikiQueue99";
 
 			// Prepare connection, event-handler, and basic-settings
 		IRCConnection con_irc;
 		con_irc = new IRCConnection(host, p_min, p_max, pass, user, user, user);
-		con_irc.addIRCEventListener(new irc_echo_events()); 
+		con_irc.addIRCEventListener(new irc_echo_events(con_irc)); 
 		con_irc.setDaemon(true);
-		con_irc.setColors(false); 
+		con_irc.setColors(false);
+		con_irc.setPong(true);
 
 		try{ con_irc.connect(); } catch(IOException ioexc){
 			System.out.println("Error establishing RC IRC connection:");
@@ -53,7 +54,7 @@ public class irc_echo_test extends Thread{
 		} // Establish connection to IRC server
 		
 			// With connection established, join channel, fork thread
-		con_irc.doJoin("#en.wikipedia"); // #cluebotng-spam		
+		//con_irc.doJoin("#cluebotng-spam"); // #cluebotng-spam	= en.wikipedia
 		start(); // Start as own thread, so processing can occur
 	}
 

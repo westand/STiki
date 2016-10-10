@@ -1,5 +1,6 @@
 package irc_work;
 
+import org.schwering.irc.lib.IRCConnection;
 import org.schwering.irc.lib.IRCEventListener;
 import org.schwering.irc.lib.IRCModeParser;
 import org.schwering.irc.lib.IRCUser;
@@ -10,6 +11,25 @@ import org.schwering.irc.lib.IRCUser;
  * an IRC class useful for debugging purposes.
  */
 public class irc_echo_events implements IRCEventListener{
+	
+	// **************************** PRIVATE FIELDS ***************************
+	
+	/**
+	 * The IRC connection this EventListener is monitoring
+	 */
+	@SuppressWarnings("unused")
+	private IRCConnection con_irc;
+	
+	// ***************************** CONSTRUCTOR *****************************
+	
+	/**
+	 * Construct a [irc_echo_events] listener class
+	 * @param con_irc Connection being "listened to" by this class
+	 */
+	public irc_echo_events(IRCConnection con_irc){
+		this.con_irc = con_irc;
+	}
+	
 	
 	// **************************** PUBLIC METHODS ***************************
 	
@@ -64,7 +84,7 @@ public class irc_echo_events implements IRCEventListener{
 		print(chan +"> "+ u.getNick() +" parts");
 	}
 	
-	public void onPrivmsg(String chan, IRCUser u, String msg){
+	public void onPrivmsg(String chan, IRCUser u, String msg){			
 		print(chan +"> "+ u.getNick() +": "+ msg);
 	}
 	
@@ -80,7 +100,9 @@ public class irc_echo_events implements IRCEventListener{
 		print(chan +"> "+ u.getNick() +" changes topic into: "+ topic);
 	}
 	
-	public void onPing(String p){}
+	public void onPing(String p){
+		print("Ping: " + p);
+	}
 	
 	public void unknown(String a, String b, String c, String d){
 		print("UNKNOWN: "+ a +" b "+ c +" "+ d);

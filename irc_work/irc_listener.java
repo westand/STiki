@@ -55,6 +55,7 @@ public class irc_listener extends Thread{
 		con_irc.addIRCEventListener(new irc_events(rid_queue)); 
 		con_irc.setDaemon(true);
 		con_irc.setColors(false); 
+		con_irc.setPong(true);
 
 		try{ con_irc.connect(); } catch(IOException ioexc){
 			System.out.println("Error establishing RC IRC connection:");
@@ -68,6 +69,14 @@ public class irc_listener extends Thread{
 	
 	
 	// **************************** PUBLIC METHODS ***************************
+	
+	/**
+	 * Check on the status of the IRC connection
+	 * @return TRUE if IRC connection is connected; FALSE otherwise
+	 */
+	public boolean is_alive(){
+		return(con_irc.isConnected());
+	}
 	
 	/**
 	 * Close the connection to the IRC-server

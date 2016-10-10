@@ -45,7 +45,7 @@ public class stiki_backend_driver{
 	/**
 	 * Number of threads to use for parallel RID processing.
 	 */
-	private static final int NUM_RID_THREADS = 64;
+	private static final int NUM_RID_THREADS = 128;
 	
 	/**
 	 * Learning module/strategy being applied.
@@ -149,11 +149,22 @@ public class stiki_backend_driver{
 				
 			} else{ // If element in P-C queue, pop-and-process
 			
-				if(ts_status_updated + 30 > stiki_utils.cur_unix_time()){
+				if(ts_status_updated + 10 < stiki_utils.cur_unix_time()){
 					update_status_vars(db_status_vars, rid_queue.size(), 
 							tm.num_threads_created(), edits_processed, 
 							cbng_irc.num_edits_processed(), irc_out.isUp());
 					ts_status_updated = stiki_utils.cur_unix_time();
+					
+					if(!cbng_irc.is_alive()){
+						System.out.println("CBNG IRC conn reporting down at " + 
+								stiki_utils.cur_unix_time());
+						cbng_irc = new cluebotng_irc(WORKER_THREADS, qmanager);
+					} if(!irc_rc.is_alive()){
+						System.out.println("RC IRC conn reporting down at " + 
+								stiki_utils.cur_unix_time());
+						irc_rc = new irc_listener(rid_queue);
+					}
+						
 				} // Update status vars on a thirty second interval
 				
 				Thread.sleep(10); // Something to eliminate over-spinning?
