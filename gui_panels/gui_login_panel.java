@@ -589,6 +589,12 @@ public class gui_login_panel extends JPanel implements ActionListener{
 		String user = field_user.getText();
 		String pass = String.valueOf(field_pass.getPassword());
 		
+			// Check block status (because credentials would still work)
+		if(api_retrieve.process_block_status(user, false)){
+			blocked_dialog();
+			return;
+		}	
+		
 			// Check qualification conditions:
 		Set<String> user_perms = api_retrieve.process_user_perm(user);
 		boolean native_rb = api_xml_user_perm.has_rollback(user_perms);
@@ -762,6 +768,16 @@ public class gui_login_panel extends JPanel implements ActionListener{
 				"Error: User lacks STiki permissions",
 				JOptionPane.ERROR_MESSAGE);
 	}
+
+	/**
+	 * The dialog popped when a user is blocked.
+	 */
+	private void blocked_dialog(){
+		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this),
+				"This user is blocked on Wikipedia\n" +
+				"and therefore unable to use STiki.\n\n",
+				"Error: User is blocked",
+				JOptionPane.ERROR_MESSAGE);
+	}
+
 }
-
-

@@ -13,6 +13,7 @@
   conveniently altered for small changes:
   
   * 2016-XX-XX (minor)
+  		# Resolve the "milestone for blocked editor" issue; [[WP:BEANS]] (T#057)
   		# The edit comment for an AIV posting regarding a registered user 
   			will link to that user's contributions, not their talk page
   		# Minor changes and test suite for IRC feeds
