@@ -491,14 +491,18 @@ public class gui_revert_and_warn implements Runnable{
 	private static String aiv_comment(QUEUE_TYPE type, String user, long rid, 
 			boolean registered){
 		
-		String comment = "";
-		if(registered)
-			comment = "Reporting [[User_talk:" + user + "|" + user + "]] " +
-				"for ###, found using [[WP:STiki|STiki]].";
-		else // Just a simple branch based on registration status 
-			comment = "Reporting [[Special:Contributions/" + 
+		String comment = "Reporting [[Special:Contributions/" + 
 				user + "|" + user + "]] " + "for ###, " +
 				"found using [[WP:STiki|STiki]].";
+		
+		//String comment = "";
+		//if(registered)
+		//	comment = "Reporting [[User_talk:" + user + "|" + user + "]] " +
+		//		"for ###, found using [[WP:STiki|STiki]].";
+		//else // Just a simple branch based on registration status 
+		//	comment = "Reporting [[Special:Contributions/" + 
+		//		user + "|" + user + "]] " + "for ###, " +
+		//		"found using [[WP:STiki|STiki]].";
 		
 		if(type.equals(QUEUE_TYPE.VANDALISM))
 			comment = comment.replace("###", "repeated vandalism");

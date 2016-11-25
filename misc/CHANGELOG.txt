@@ -13,6 +13,8 @@
   conveniently altered for small changes:
   
   * 2016-XX-XX (minor)
+  		# The edit comment for an AIV posting regarding a registered user 
+  			will link to that user's contributions, not their talk page
   		# Minor changes and test suite for IRC feeds
   		# Building in (redundant?) checks to ensure that rollback/edit 
   			tokens are acquired; still addressing session drop/fail issues
