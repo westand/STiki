@@ -13,12 +13,14 @@
   conveniently altered for small changes:
   
   * 2016-XX-XX (minor)
-  		# Resolve the "milestone for blocked editor" issue; [[WP:BEANS]] (T#057)
+  		# Resolved the "milestone for blocked editor" issue; [[WP:BEANS]] (T#057)
   		# The edit comment for an AIV posting regarding a registered user 
   			will link to that user's contributions, not their talk page
   		# Minor changes and test suite for IRC feeds
   		# Building in (redundant?) checks to ensure that rollback/edit 
   			tokens are acquired; still addressing session drop/fail issues
+  		# Added minor utility script that allows one to grant explicit access
+  			to users with Unicode chars. in usernames
   
   * 2016-08-14
   		# The "ignore" button (adjacent to the "user" line of the "metadata 

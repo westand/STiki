@@ -631,7 +631,7 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	 */
 	private boolean login_qualified(String uname, boolean has_rb) 
 			throws Exception{
-		
+			
 			// Current qualifications include (user needs just one):
 			// 1. The rollback permission
 			// 2. Edit count > 1000 in article namespace
