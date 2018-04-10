@@ -51,7 +51,8 @@ public class gui_soft_rollback{
 			
 			InputStream in = api_post.edit_revert(meta.rid, meta.title, 
 					revert_comment, minor, edit_pkg.get_token(), 
-					api_post.convert_wl(watchlist_opt, false), assert_user);
+					api_post.convert_wl(watchlist_opt, false), 
+					assert_user, true);
 			
 			EDIT_OUTCOME undo_success = api_post.edit_was_made(in);
 			in.close();
@@ -80,7 +81,7 @@ public class gui_soft_rollback{
 					edit_pkg.page_hist.get(edit_pkg.rb_depth).rid), minor, 
 					edit_pkg.get_token(), false, 
 					api_post.convert_wl(watchlist_opt, false), 
-					assert_user);
+					assert_user, true);
 			
 			EDIT_OUTCOME undo_success = api_post.edit_was_made(in);
 			in.close();

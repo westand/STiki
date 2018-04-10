@@ -36,15 +36,16 @@ import core_objects.stiki_utils;
  * 			  complete replacement text for the page.
  *      [8]:  "review rid" -- per the PendingChanges/FlaggedRevs programs
  *      [9]:  "thank" -- Thank an editor for a particular RID
+ *      [10]: "tag" -- Apply a tag to an edit after it has been made
  * 
  * 	POST-ing is a two-way street. In addition to sending the data, the server
  * 	also has an (XML) response. We build handlers to parse these responses:
  * 
- * 		[10]:  "login" -- For cookie building pertaining to login.
- * 		[11]  "edit was made" -- Given the InputStream resulting from an
+ * 		[11]:  "login" -- For cookie building pertaining to login.
+ * 		[12]  "edit was made" -- Given the InputStream resulting from an
  * 		      edit post. Was the edit actually made? (editing conflicts,
  * 			  for instance, could cause such an action to fail).
- * 		[12]: "rollback was made" -- Given the InputStream resulting from
+ * 		[13]: "rollback was made" -- Given the InputStream resulting from
  * 			  an edit post -- Did the rollback succeed?
  */
 public class api_post{
@@ -68,6 +69,11 @@ public class api_post{
 	 * Known outcomes of a "thanks" action
 	 */
 	public enum THANKS_OUTCOME{SUCCESS, INVALIDRECIPIENT, OTHER};
+	
+	/**
+	 * "Tags" that can be applied to an edit, as per MW1.27+
+	 */
+	public enum TAGS{STiki};
 	
 	/**
 	 * The [base_url()] function over which all API POSTS operate is 
@@ -146,11 +152,13 @@ public class api_post{
 	 * @param token Edit token to edit page 'rid' -- user/session specific
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
+	 * @param tag_as_stiki Whether the "STiki" tag should be applied
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_revert(long rid, String title, 
 			String summary, boolean minor, pair<String,String> edit_token,
-			EDIT_WATCHLIST watchlist,  boolean assert_user) throws Exception{
+			EDIT_WATCHLIST watchlist, boolean assert_user, 
+			boolean tag_as_stiki) throws Exception{
 		
 			// Building post-string is straightforward. Fields known not
 			// to contain special characters are not encoded.
@@ -166,6 +174,8 @@ public class api_post{
 		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
+		if(tag_as_stiki)
+			post_data += "&tags=" + TAGS.STiki.toString();
 		post_data += "&format=xml";
 		return(api_post.post(post_data).getInputStream());
 	}
@@ -179,11 +189,12 @@ public class api_post{
 	 * @param rb_token Rollback token (fetched at RID granularity)
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
+	 * @param tag_as_stiki Whether the "STiki" tag should be applied
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_rollback(String title, String user, 
 			String summary, String rb_token, EDIT_WATCHLIST watchlist, 
-			boolean assert_user) throws Exception{
+			boolean assert_user, boolean tag_as_stiki) throws Exception{
 		
 		String post_data = "action=rollback";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
@@ -193,6 +204,8 @@ public class api_post{
 		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
+		if(tag_as_stiki)
+			post_data += "&tags=" + TAGS.STiki.toString();
 		post_data += "&format=xml";
 		return(api_post.post(post_data).getInputStream());
 	}
@@ -207,12 +220,13 @@ public class api_post{
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
+	 * @param tag_as_stiki Whether the "STiki" tag should be applied
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_append_text(String title, String summary, 
 			String append_text, boolean minor, pair<String,String> edit_token, 
-			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user) 
-					throws Exception{
+			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user, 
+			boolean tag_as_stiki) throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
 		String post_data = "action=edit";
@@ -229,6 +243,8 @@ public class api_post{
 		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
+		if(tag_as_stiki)
+			post_data += "&tags=" + TAGS.STiki.toString();
 		post_data += "&format=xml";
 		return(api_post.post(post_data).getInputStream()); // Do it!
 	}
@@ -243,12 +259,13 @@ public class api_post{
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
+	 * @param tag_as_stiki Whether the "STiki" tag should be applied
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_prepend_text(String title, String summary, 
 			String prepend_text, boolean minor, pair<String,String> edit_token,
-			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user) 
-			throws Exception{
+			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user,
+			boolean tag_as_stiki) throws Exception{
 		
 			// UTF-encode all user-fields so URL format is sound
 		String post_data = "action=edit";
@@ -265,6 +282,8 @@ public class api_post{
 		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
+		if(tag_as_stiki)
+			post_data += "&tags=" + TAGS.STiki.toString();
 		post_data += "&format=xml";
 		return(api_post.post(post_data).getInputStream()); // Do it!
 	}
@@ -279,12 +298,13 @@ public class api_post{
 	 * @param force Respect token timestamp, or force edit committal?
 	 * @param watchlist Watchlist behavior for article edited
 	 * @param assert_user Whether edit should fail if user not logged in
+	 * @param tag_as_stiki Whether the "STiki" tag should be applied
 	 * @return InputStream over server-response to the edit POST
 	 */
 	public static InputStream edit_full_text(String title, String summary,
 			String full_text, boolean minor, pair<String,String> edit_token, 
-			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user) 
-			throws Exception{
+			boolean force, EDIT_WATCHLIST watchlist, boolean assert_user,
+			boolean tag_as_stiki) throws Exception{
 		
 		String post_data = "action=edit";
 		post_data += "&title=" + URLEncoder.encode(title, "UTF-8");
@@ -300,6 +320,8 @@ public class api_post{
 		post_data += "&watchlist=" + watchlist.toString().toLowerCase();
 		if(assert_user)
 			post_data += "&assert=user";
+		if(tag_as_stiki)
+			post_data += "&tags=" + TAGS.STiki.toString();
 		post_data += "&format=xml";
 		return(api_post.post(post_data).getInputStream()); // Do it!	
 	}
@@ -328,7 +350,7 @@ public class api_post{
 	 * @param rid Revision ID to receive thanks
 	 * @param source String describing source, i.e., "stiki"
 	 * @param edit_token CSRF token associated with STiki user
-	 * @return InputStream over server-response to the edit POST
+	 * @return Outcome describing action success or failure
 	 */
 	public static THANKS_OUTCOME thank_rid(long rid, String source, 
 			pair<String,String> edit_token) throws Exception{
@@ -347,6 +369,31 @@ public class api_post{
 		else if(result.contains("invalidrecipient"))
 			return(THANKS_OUTCOME.INVALIDRECIPIENT);
 		else return(THANKS_OUTCOME.OTHER); // possibly unknown error codes
+	}
+	
+	
+	/**
+	 * Tag a prior revision with a particular tag/label
+	 * @param rid Revision ID to tag
+	 * @param tag Tag to apply; must already exist in [[Special:Tags]]
+	 * @param edit_token CSRF token associated with STiki user
+	 * @return Boolean describing whether or not the action was successful
+	 */
+	public static boolean tag_rid(long rid, String tag,
+			pair<String,String> edit_token) throws Exception{
+
+		String post_data = "action=tag";
+		post_data += "&revid=" + rid;
+		post_data += "&add=" + tag;
+		post_data += "&token=" + URLEncoder.encode(edit_token.fst, "UTF-8");
+		post_data += "&format=xml";
+		InputStream is = api_post.post(post_data).getInputStream();
+		String result = stiki_utils.capture_stream(is);
+		
+			// A bit crude; but we don't know much about the return XML
+		if(result.contains("error"))
+			return(false);
+		else return(true);
 	}
 	
 	/**

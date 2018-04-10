@@ -189,7 +189,8 @@ public class gui_revert_and_warn implements Runnable{
 						metadata.user, 
 						revert_comment,
 						metadata.rb_token, 
-						api_post.convert_wl(watchlist_opt, false), true);
+						api_post.convert_wl(watchlist_opt, false), 
+						true, true);
 			
 				long earliest_rb_undone = api_post.rollback_response(in);
 				if(earliest_rb_undone < 0){
@@ -362,7 +363,7 @@ public class gui_revert_and_warn implements Runnable{
 			api_post.edit_append_text(AIV_PAGE, aiv_comment(queue_type, 
 					metadata.user, metadata.rid, !metadata.user_is_ipv4_or_ipv6), 
 					aiv_msg, false, this.edit_pkg.get_token(), true, 
-					EDIT_WATCHLIST.NOCHANGE, true); // Don't watchlist AIV
+					EDIT_WATCHLIST.NOCHANGE, true, true); // Don't watchlist AIV
 			
 			if(imm_non_van_warn)
 				return(WARNING.YES_AIV_4IM);
@@ -386,7 +387,7 @@ public class gui_revert_and_warn implements Runnable{
 				// is always safe to append content.
 			api_post.edit_append_text(talk_page, warning_comment(queue_type), 
 					warning, false, this.edit_pkg.get_token(),
-					true, api_post.convert_wl(watchlist_opt, true), true);
+					true, api_post.convert_wl(watchlist_opt, true), true, true);
 			
 				// Output which warning level was issued
 			if (warning_level == 1) return(WARNING.YES_UW1);
@@ -744,7 +745,7 @@ public class gui_revert_and_warn implements Runnable{
 		String talkpage = "User_talk:" + this.metadata.user;
 		api_post.edit_append_text(talkpage, comment, message, false, 
 				this.edit_pkg.get_token(), true, 
-				api_post.convert_wl(watchlist_opt, true), true);
+				api_post.convert_wl(watchlist_opt, true), true, true);
 	}
 	
 	/**

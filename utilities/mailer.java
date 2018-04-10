@@ -92,7 +92,7 @@ public class mailer{
 			api_post.edit_append_text(pages.get(i), COMMENT, MESSAGE.replace(
 					"#u#", pages.get(i).replace("User_talk:", "")), 
 					false, edit_token, false, 
-					EDIT_WATCHLIST.NOCHANGE, true);
+					EDIT_WATCHLIST.NOCHANGE, true, false);
 			System.out.println("Message posted to: " + pages.get(i));
 			Thread.sleep(1000 * 45);
 		}  // iterate over all users to be targeted
