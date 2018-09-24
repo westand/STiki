@@ -90,6 +90,13 @@ public class cluebotng_listener implements IRCEventListener{
 	public long num_edits_complete(){
 		return(this.edits_processed);
 	}
+	
+	/**
+	 * If there are errors, this is likely how they will be reported out
+	 */
+	public void onNotice(String target, IRCUser u, String msg){
+		System.out.println("NOTICE: " + msg);
+	}
 		
 		// There are a host of methods required for interface compliance (all
 		// those below). However, we are not interested in their content, only
@@ -105,7 +112,6 @@ public class cluebotng_listener implements IRCEventListener{
 	public void onMode(IRCUser u, String nickPass, String mode) {}
 	public void onMode(String chan, IRCUser u, IRCModeParser mp) {}
 	public void onNick(IRCUser u, String nickNew) {}
-	public void onNotice(String target, IRCUser u, String msg) {}
 	public void onPart(String chan, IRCUser u, String msg) {}
 	public void onQuit(IRCUser u, String msg) {}
 	public void onTopic(String chan, IRCUser u, String topic) {}

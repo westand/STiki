@@ -19,13 +19,13 @@ public class cluebotng_irc extends Thread{
 	/**
 	 * The channel to which the listener needs to connect.
 	 */
-	public static final String CHANNEL = "#cluebotng-spam";
+	public static final String CHANNEL = "#wikipedia-en-cbngfeed";
 	
 	
 	// **************************** PRIVATE FIELDS ***************************
 	
 	/**
-	 * Connection to the IRC Server (#cluebotng-spam @ irc.cluenet.org).
+	 * Connection to the IRC Server (#wikipedia-en-cbngfeed @ chat.freenode.net).
 	 */
 	private IRCConnection con_irc;
 	
@@ -49,11 +49,11 @@ public class cluebotng_irc extends Thread{
 			throws Exception{
 		
 			// Connection and username settings
-		String host = "irc.cluenet.org";
+		String host = "chat.freenode.net";
 		int p_min = 6667; // Port-range minimum
 		int p_max = 6669; // Port-range maximum
-		String pass = null;
-		String user = "STikiQueue99";
+		String pass = null; // does exist in non GitHub source
+		String user = "STikiQueue";
 
 			// Prepare connection, event-handler, and basic-settings
 		con_irc = new IRCConnection(host, p_min, p_max, pass, user, user, user);
@@ -63,8 +63,7 @@ public class cluebotng_irc extends Thread{
 		con_irc.setColors(false); 
 		con_irc.setPong(true);
 
-		irc_connect(50);	// ClueNet servers seem to be funky as of late:
-							// a very large, but functional, retry count
+		irc_connect(5);
 		
 			// Fork the thread. Notice that the connection has not yet
 			// joined a channel. The semantics of the ClueBot's IRC requires
