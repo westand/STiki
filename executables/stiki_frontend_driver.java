@@ -43,7 +43,7 @@ import gui_support.gui_settings;
 /**
  * Andrew G. West - stiki_frontend_driver.java - This class is a driver
  * for the STiki vandalism detection GUI (i.e., the front-end). This class
- * launches the GUI and all the backend support it requires. 
+ * launches the GUI and all the backend support it requires.
  */
 @SuppressWarnings("serial")
 public class stiki_frontend_driver extends JFrame{
@@ -65,7 +65,7 @@ public class stiki_frontend_driver extends JFrame{
 	 * While this should be updated at every distribution, it is only checked
 	 * against to see if a forced update is required.
 	 */
-	public static final int CUR_VERSION = 20160814;
+	public static final int CUR_VERSION = 20181208;
 	
 	
 	// ******* VISUAL ELEMENTS ********

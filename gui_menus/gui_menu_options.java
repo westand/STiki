@@ -63,6 +63,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 	private JCheckBoxMenuItem agf_comment_cb;
 	private JCheckBoxMenuItem title_csd_cb;
 	private JCheckBoxMenuItem aiv_popup_cb;
+	private JCheckBoxMenuItem verify_session_cb;
 	
 
 	// ***************************** CONSTRUCTORS ****************************
@@ -92,6 +93,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		this.add(agf_comment_cb);
 		this.add(title_csd_cb);
 		this.add(aiv_popup_cb);
+		this.add(verify_session_cb);
 		
 			// Set default menu selections (per persistent settings)
 		this.selected_browser_font_size(gui_settings.get_int_def(
@@ -111,6 +113,8 @@ public class gui_menu_options extends JMenu implements ActionListener{
 				gui_settings.SETTINGS_BOOL.options_title_csd, true));
 		this.set_aiv_popup_policy(gui_settings.get_bool_def(
 				gui_settings.SETTINGS_BOOL.options_aiv_popup, false));
+		this.set_verify_session_policy(gui_settings.get_bool_def(
+				gui_settings.SETTINGS_BOOL.options_verify_session, false));
 	}
 	
 	
@@ -137,6 +141,10 @@ public class gui_menu_options extends JMenu implements ActionListener{
 			// Do nothing
 				
 		} else if(event.getSource().equals(aiv_popup_cb)){
+			
+			// Do nothing
+				
+		} else if(event.getSource().equals(verify_session_cb)){
 			
 			// Do nothing
 				
@@ -377,6 +385,23 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		return(aiv_popup_cb.isSelected());
 	}
 	
+	/**
+	 * Set the 'verify session' policy in the menu
+	 * @param enable TRUE if session viability will be confirmed at login 
+	 * by performing a test edit/AGF. Else, false.
+	 */
+	public void set_verify_session_policy(boolean enable){
+		verify_session_cb.setSelected(enable);
+	}
+	
+	/**
+	 * Return whether the 'verify session' checkbox is selected.
+	 * @return whether the 'verify session' checkbox is selected
+	 */
+	public boolean get_verify_session_policy(){
+		return(verify_session_cb.isSelected());
+	}
+	
 
 	// **************************** PRIVATE FIELDS ***************************
 	
@@ -457,6 +482,7 @@ public class gui_menu_options extends JMenu implements ActionListener{
 		agf_comment_cb = create_cb_item("Message AGF reverted users", KeyEvent.VK_A);
 		title_csd_cb = create_cb_item("CSD check on articles", KeyEvent.VK_S);
 		aiv_popup_cb = create_cb_item("Explicit notify on AIV post", KeyEvent.VK_V);
+		verify_session_cb = create_cb_item("Verify session at login", KeyEvent.VK_Y);
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.InputStream;
 import java.util.Set;
 
 import javax.swing.Box;
@@ -24,14 +25,15 @@ import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import core_objects.pair;
 import core_objects.stiki_utils;
 import executables.stiki_frontend_driver;
-
 import gui_support.gui_globals;
 import gui_support.gui_settings;
 import gui_support.url_browse;
-
 import mediawiki_api.api_post;
+import mediawiki_api.api_post.EDIT_OUTCOME;
+import mediawiki_api.api_post.EDIT_WATCHLIST;
 import mediawiki_api.api_retrieve;
 import mediawiki_api.api_xml_user_perm;
 
@@ -100,6 +102,18 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	
 	
 	// **************************** PRIVATE FIELDS ***************************
+
+	/**
+	 * Wiki page that will be edited and reverted silently by user
+	 * in order to confirm viability of session tokens. 
+	 */
+	private static final String DUMMY_SESSION_TEST_PAGE = 
+			"WP:STiki/SessionVerification";
+	
+	/**
+	 * Page ID corresponding to above test page title
+	 */
+	private static final long DUMMY_SESSION_TEST_PID = 59303768;
 	
 	/**
 	 * The user-name or IP address of the editor using the STiki-frontend.
@@ -242,7 +256,7 @@ public class gui_login_panel extends JPanel implements ActionListener{
 				else // if(this.anon_checkbox.isSelected())
 					this.anonymous_unchecked();
 			} else if(event.getSource().equals(this.button_login))
-				this.login_clicked();
+				this.login_clicked(5);
 			else if(event.getSource().equals(this.button_logout))
 				this.logout_clicked();
 			else if(event.getSource().equals(this.anon_link))
@@ -582,8 +596,11 @@ public class gui_login_panel extends JPanel implements ActionListener{
 	 * If the user has clicked the "login" button -- pull content from user/
 	 * pass field and attempt to log-in user. Setting the class state and 
 	 * reporting result to user no matter what the outcome.
+	 * @param retries Number of times to *programatically* reattempt
+	 * login in the case session verification fails
+	 * @return TRUE if login succeeds; false otherwise
 	 */
-	private void login_clicked() throws Exception{
+	private boolean login_clicked(int sessionRetries) throws Exception{
 		
 			// Attempt the login via MediaWiki API
 		String user = field_user.getText();
@@ -592,35 +609,44 @@ public class gui_login_panel extends JPanel implements ActionListener{
 			// Check block status (because credentials would still work)
 		if(api_retrieve.process_block_status(user, false)){
 			blocked_dialog();
-			return;
+			return(false);
 		}	
 		
 			// Check qualification conditions:
 		Set<String> user_perms = api_retrieve.process_user_perm(user);
 		boolean native_rb = api_xml_user_perm.has_rollback(user_perms);
 		if(!login_qualified(user, native_rb))
-			return;
+			return(false);
 		
 			// Having passed reqs; proceed with login
 		boolean login_success = api_post.process_login(user, pass);
-		if(!login_success) // if login fails
+		if(!login_success){ // if login fails
 			label_status.setText("Log-in Failed");
-		else{
-				// We have a new editing user
-			this.is_state_stable = true;
-			this.state_changed = true;
-			this.editing_user = user;
-			this.editor_has_native_rb = native_rb;
-					
-				// Disable login, enable logout
-			field_user.setEditable(false);
-			field_pass.setEditable(false);
-			button_login.setEnabled(false);
-			button_logout.setEnabled(true);
-			
-				// Visually report success
-			this.set_status_to_current_editor(this.editing_user);
-		} // If login succeeds
+			return(false);
+		} else{
+		
+			if(!sessionVerified(user, sessionRetries)){
+				label_status.setText("Session Failed");
+				return(false);
+			} else{
+				
+					// We have a new editing user
+				this.is_state_stable = true;
+				this.state_changed = true;
+				this.editing_user = user;
+				this.editor_has_native_rb = native_rb;
+						
+					// Disable login, enable logout
+				field_user.setEditable(false);
+				field_pass.setEditable(false);
+				button_login.setEnabled(false);
+				button_logout.setEnabled(true);
+				
+					// Visually report success
+				this.set_status_to_current_editor(this.editing_user);
+				return(true);
+			} // Consider testing session viability
+		} // If login succeeds at credential granularity
 	}
 	
 	/**
@@ -778,6 +804,74 @@ public class gui_login_panel extends JPanel implements ActionListener{
 				"and therefore unable to use STiki.\n\n",
 				"Error: User is blocked",
 				JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/**
+	 * Verify the viability of a user's session just after logon
+	 * @param user User that just successfully logged in
+	 * @param sessionRetries Number of times to try re-login while trying
+	 * to obtain a session that is confirmed viable
+	 * @return TRUE if session viability is confirmed, either because
+	 * the user did not request testing, or because the testing
+	 * succeeded. Otherwise, FALSE.
+	 */
+	private boolean sessionVerified(String user, int sessionRetries) 
+				throws Exception{
+		
+			// If the setting is not checked to verify the session, we just
+			// assume the session will be in good condition
+		if(!parent.menu_bar.get_options_menu().get_verify_session_policy())
+			return(true);
+			
+			// Get edit token; make appending edit to dummy page
+		System.err.println("Entering session verification process with " + 
+				sessionRetries + " retries remaining");
+		pair<String,String> edit_token = api_retrieve.process_edit_token(
+				DUMMY_SESSION_TEST_PAGE);
+		InputStream in = api_post.edit_append_text(DUMMY_SESSION_TEST_PAGE, 
+				"Verifying append capability of " + user, 
+				user + "appended this text", 
+				true, edit_token, true, EDIT_WATCHLIST.NOCHANGE, 
+				true, false);
+		
+		EDIT_OUTCOME editSuccess = api_post.edit_was_made(in);
+		if(!editSuccess.equals(EDIT_OUTCOME.SUCCESS)){
+			System.err.println("Append FAILED w/: " + editSuccess.toString());
+			if(sessionRetries > 0){
+				System.err.println("Retrying ...");
+				return(this.login_clicked(sessionRetries-1)); // reattempt
+			} else{
+				System.err.println("TOTAL FAILURE: no retries remain");
+				return(false);
+			}
+		} else{
+			
+				// If the append succeeded; try to revert in same fashion
+			System.err.println("Append SUCCESS; attempting revert");
+			long ridOfAppend = api_retrieve.process_latest_page(
+					DUMMY_SESSION_TEST_PID);
+			InputStream in2 = api_post.edit_revert(
+					ridOfAppend, 
+					DUMMY_SESSION_TEST_PAGE, 
+					"Verifying revert capability of " + user, 
+					true, edit_token, EDIT_WATCHLIST.NOCHANGE, true, false);
+			
+			editSuccess = api_post.edit_was_made(in2);
+			if(!editSuccess.equals(EDIT_OUTCOME.SUCCESS)){
+				System.err.println("Revert FAILED w/: " + editSuccess.toString());
+				if(sessionRetries > 0){
+					System.err.println("Retrying ...");
+					return(this.login_clicked(sessionRetries-1)); // reattempt
+				} else{
+					System.err.println("TOTAL FAILURE: no retries remain");
+					return(false);
+				}
+			} else{
+				System.err.println("SUCCESS! Verification passed!");
+				return(true);
+			}
+			
+		} // Initial append must succeed to attempt self-revert	
 	}
 
 }

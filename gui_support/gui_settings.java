@@ -78,6 +78,7 @@ public class gui_settings extends Properties{
 		options_agf_comment,    // Whether to message AGF-reverted users
 		options_title_csd,		// Whether to check if a title is CSD
 		options_aiv_popup,		// Whether to pop-up notify on AIV post
+		options_verify_session,	// Whether to confirm session tokens at login
 		filter_privileged,      // Show edits by privileged editors?
 		filter_numerical};      // Show small numerical edits?
 		
@@ -333,6 +334,10 @@ public class gui_settings extends Properties{
 		props.setProperty(SETTINGS_BOOL.options_aiv_popup.toString(),
 				String.valueOf(parent.menu_bar.
 				get_options_menu().get_aiv_popup_policy()));
+		props.setProperty(SETTINGS_BOOL.options_verify_session.toString(),
+				String.valueOf(parent.menu_bar.
+				get_options_menu().get_verify_session_policy()));
+		
 		
 			// Custom AGF messages internal to that dialog
 		props.setProperty(SETTINGS_STR.agf_custom1.toString(), 

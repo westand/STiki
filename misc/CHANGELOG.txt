@@ -12,6 +12,19 @@
   formal version number (e.g., 2.1) is in too many places to be 
   conveniently altered for small changes:
   
+  * 2018-12-08
+  		# Added "Verify session at login" to the "Options" menu. This is an
+  			attempt to solve the "session dropped" errors experienced 
+  			intermittently by some users. If checked, immediately after login,
+  			a test edit and AGF of that edit will be made to a dummy page
+  			in [[WP:STiki]] space (a workflow that shows promise in surfacing
+  			session issues). If successful, we proceed as normal. If not,
+  			credentials are available to transparently re-login and try again.
+  			Debugging information will be written to STDOUT. This option
+  			is disabled by default and should not be enabled by those not having
+  			issues. Hopefully this temporarily patches and helps in identifying
+  			the root cause of this ongoing bug (T#063).
+  			
   * 2018-04-10 (minor)
   		# Edits made by STiki (reverts/rollbacks/warnings) will now be 
   			tagged with the "STiki" label. A backend process is available to label
